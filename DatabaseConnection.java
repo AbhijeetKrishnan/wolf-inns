@@ -1,9 +1,14 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class DatabaseConnection {
 
-	private static final String user = "xzheng6";
-	private static final String password = "200016878";
+	private static final String user = "mamoran";
+	private static final String password = "MyMaria";
+	
+	//private static final String user = "xzheng6";
+	//private static final String password = "200016878";	
 	private static final String connectionURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user;	
 	
 	/**
@@ -18,7 +23,48 @@ public class DatabaseConnection {
 			return DriverManager.getConnection(connectionURL, user, password);
 		} catch (SQLException | ClassNotFoundException ex) {
 			// Throw a RuntimeException to go back to main to be caught so the program exits. We cannot continue.
-			throw new RuntimeException("ERROR: Cannot connection to the database.\n" + ex.getMessage());
+			throw new RuntimeException("ERROR: Cannot connect to the database.\n" + ex.getMessage());
 		}
+	}
+	
+	public static ArrayList<LinkedHashMap<String, String>> resultsToHashMap(String sqlStatement) {
+		ArrayList<LinkedHashMap<String, String>> queryResults = new ArrayList<LinkedHashMap<String, String>>();
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+		ResultSetMetaData metaData = null;
+
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			results = statement.executeQuery(sqlStatement);
+			metaData = results.getMetaData();
+			
+			// Create a list of all columns to be used as the keys in the HashMap rows
+			ArrayList<String> columns = new ArrayList<String>();
+			for (int i = 1; i <= metaData.getColumnCount(); i++) {
+				columns.add(metaData.getColumnName(i));
+			}
+			
+			while (results.next()) {
+				LinkedHashMap<String, String> row = new LinkedHashMap<String, String>(metaData.getColumnCount());
+				for (String column : columns) {
+					row.put(column,  results.getString(column));
+				}
+				
+				queryResults.add(row);
+			}
+				
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+
+		return queryResults;
 	}
 }
