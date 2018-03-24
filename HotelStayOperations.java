@@ -137,4 +137,45 @@ public class HotelStayOperations {
 			try { connection.close(); } catch (Exception ex) {};
 		}
 	}
+	
+	/**
+	 * Assigns dedicated staff to Presidential Suite
+	 * @param hotelId: the hotel ID where the Presidential Suite is located
+	 * @param roomNumber: the room number of the Presidential Suite to which staff is to be assigned
+	 * @param cateringStaffId: ID of available dedicated catering staff
+	 * @param roomServiceStaffId: ID of available dedicated room service staff
+	 * @return true on success, or false on failure
+	 */
+	public static boolean assignDedicatedPresidentialSuiteStaff(int hotelId, String roomNumber, int cateringStaffId, int roomServiceStaffId) {
+		
+		String sqlStatement = "INSERT INTO occupied_presidential_suite (hotelId, roomNumber, cateringStaffId, roomServiceStaffId) VALUES (?, ?, ?, ?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		boolean returnValue = false;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, hotelId);
+			statement.setString(2, roomNumber);
+			statement.setInt(3, cateringStaffId);
+			statement.setInt(4, roomServiceStaffId);
+			
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been inserted
+			if (rowsAffected == 1) {
+				returnValue = true;
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		
+		return returnValue;
+	}
 }
