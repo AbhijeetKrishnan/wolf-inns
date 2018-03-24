@@ -338,12 +338,13 @@ public class InformationProcessing {
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------
-//******BEGIN CRUD HOTEL*****
+//******BEGIN CRUD HOTEL******
 //----------------------------------------------------------------------------------------------------------------------------------
 	public static Hotels createHotel(String name, String address, String city, String state, String phone, int managerId) {
 		String sqlStatement = "INSERT INTO hotels(name, address, city, state, phone, managerId) VALUES (?, ?, ?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
+		ResultSet generatedKeys = null;
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
@@ -357,7 +358,7 @@ public class InformationProcessing {
 			// A single row should have been inserted
 			if (1==rowsAffected) {
 				Hotels hotel = new Hotels();
-				ResultSet generatedKeys = statement.getGeneratedKeys();
+				generatedKeys = statement.getGeneratedKeys();
 				generatedKeys.next();
 				hotel.setHotelId(generatedKeys.getInt(1));
 				hotel.setName(name);
@@ -373,6 +374,7 @@ public class InformationProcessing {
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures
+			try { generatedKeys.close(); } catch (Exception ex) {};
 			try { statement.close(); } catch (Exception ex) {};
 			try { connection.close(); } catch (Exception ex) {};
 		}
@@ -455,7 +457,7 @@ public class InformationProcessing {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
-			statement.setString(1, hotel.getHotelId());
+			statement.setInt(1, hotel.getHotelId());
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been deleted
 			if (1==rowsAffected) {
@@ -472,7 +474,155 @@ public class InformationProcessing {
 		return false;
 	}
 //----------------------------------------------------------------------------------------------------------------------------------
-//******END CRUD HOTEL*****
+//******END CRUD HOTEL******
+//----------------------------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------------------------
+//******BEGIN CRUD STAFF******
+//----------------------------------------------------------------------------------------------------------------------------------
+	public static Staff createStaff(String name, String titleCode, String deptCode, String address, String city, String state, String phone, String dob) {
+		String sqlStatement = "INSERT INTO staff(name, titleCode, deptCode, address, city, state, phone, dob) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet generatedKeys = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, name);
+			statement.setString(2, titleCode);
+			statement.setString(3, deptCode);
+			statement.setString(4, address);
+			statement.setString(5, city);
+			statement.setString(6, state);
+			statement.setString(7, phone);
+			statement.setString(8, dob);
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				Staff staff = new Staff();
+				generatedKeys = statement.getGeneratedKeys();
+				generatedKeys.next();
+				staff.setStaffId(generatedKeys.getInt(1));
+				staff.setName(name);
+				staff.setTitleCode(titleCode);
+				staff.setDeptCode(deptCode);
+				staff.setAddress(address);
+				staff.setCity(city);
+				staff.setState(state);
+				staff.setPhone(phone);
+				staff.setDob(dob);
+				return staff;
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures
+			try { generatedKeys.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return null;
+	}
+
+	public static Staff retrieveStaff(int staffId) {
+		Staff staff = new Staff();
+		String sqlStatement = "SELECT staffId, name, titleCode, deptCode, address, city, state, phone, dob FROM staff WHERE staffId=?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, staffId);
+			results = statement.executeQuery(sqlStatement);
+			results.last();
+			int rowsAffected = results.getRow();
+			// A single row should have been retrieved
+			if (1==rowsAffected) {
+				results.first();
+				staff.setStaffId(staffId);
+				staff.setName(results.getString("name"));
+				staff.setTitleCode(results.getString("titleCode"));
+				staff.setDeptCode(results.getString("deptCode"));
+				staff.setAddress(results.getString("address"));
+				staff.setCity(results.getString("city"));
+				staff.setState(results.getString("state"));
+				staff.setPhone(results.getString("phone"));
+				staff.setDob(results.getString("dob");
+			} else {
+				// Throw exception
+				throw new SQLException("Multiple rows or no row returned when selecting staff with staffId = " + staffId + ".");
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return staff;
+	}
+
+	public static boolean updateStaff(Staff staff) {
+		String sqlStatement = "UPDATE staff SET name=?, titleCode=?, deptCode=?, address=?, city=?, state=?, phone=?, dob=? WHERE staffId=?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, staff.getName());
+			statement.setString(2, staff.getTitleCode());
+			statement.setString(3, staff.getDeptCode());
+			statement.setString(4, staff.getAddress());
+			statement.setString(5, staff.getCity());
+			statement.setString(6, staff.getState());
+			statement.setString(7, staff.getPhone());
+			statement.setString(8, staff.getDob());
+			statement.setInt(9, staff.getStaffId());
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been updated
+			if (1==rowsAffected) {
+				return true;
+			}
+		} catch (SQLException ex) {
+			// Log and return false
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return false;
+	}
+
+	public static boolean deleteStaff(Staff staff) {
+		String sqlStatement = "DELETE FROM staff WHERE staffId=?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, staff.getStaffId());
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been deleted
+			if (1==rowsAffected) {
+				return true;
+			}
+		} catch (SQLException ex) {
+			// Log and return false
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return false;
+	}
+//----------------------------------------------------------------------------------------------------------------------------------
+//******END CRUD STAFF******
 //----------------------------------------------------------------------------------------------------------------------------------
 
 }
