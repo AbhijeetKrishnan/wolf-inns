@@ -625,4 +625,29 @@ public class InformationProcessing {
 //******END CRUD STAFF******
 //----------------------------------------------------------------------------------------------------------------------------------
 
+	public static boolean assignServiceStaffToHotel(int staffId, int hotelId) {
+		String sqlStatement = "INSERT INTO service_staff(staffId, hotelId) VALUES(?, ?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, staffId);
+			statement.setInt(2, hotelId);
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				return true;
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return false;
+	}
+
 }
