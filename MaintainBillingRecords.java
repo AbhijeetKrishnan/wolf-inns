@@ -301,6 +301,4 @@ public class MaintainBillingRecords {
 		
 		return returnValue;
 	}
-	
-	
 }
