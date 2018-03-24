@@ -302,4 +302,38 @@ public class InformationProcessing {
 
 		return staffIds;
 	}
+	
+	/**
+     * Return hotelId of hotel that staff has been assigned to.
+     * @param staffId A staff ID representing a particular staff member.
+     * @return An integer representing the hotelId of the hotel that the staff is assigned to, or -1 
+	 * if the staff is not assigned to any hotel
+     */
+    public static int retrieveServiceStaffAssignmentsByStaff(int staffId) {
+
+        int hotelId = -1; // default value to return
+        String sqlStatement = "SELECT hotelId FROM service_staff WHERE staffId = ?";
+        Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		
+		try {
+			statement.setString(1, Integer.toString(staffId));
+			results = statement.executeQuery();
+			
+			while (results.next()) {
+				hotelId = results.getInt("hotelId")); // only one result set is expected
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+
+		return hotelId;
+	}
 }
