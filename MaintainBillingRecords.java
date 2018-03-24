@@ -202,7 +202,7 @@ public class MaintainBillingRecords {
 			int rowsAffected = statement.executeUpdate();
 			
 			if (rowsAffected == 1) {
-				billingInfo = new BilingInfo();
+				billingInfo = new BillingInfo();
 				generatedKeys = statement.getGeneratedKeys();
 				generatedKeys.next();
 				billingInfo.setBillingId(generatedKeys.getInt(1));
@@ -229,7 +229,7 @@ public class MaintainBillingRecords {
 	 * @param int billingId: the billingId of the record which is to be retrieved from the table
 	 * @return BillingInfo object which is null in case billingId does not exist in the table
 	 */
-	public static boolean retrieveBillingInfo(int billingId) {
+	public static BillingInfo retrieveBillingInfo(int billingId) {
 		
 		String sqlStatement = "SELECT * FROM billing_info WHERE billingId = ?";
 		Connection connection = null;
@@ -279,12 +279,12 @@ public class MaintainBillingRecords {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			
-			statement.setString(1, responsiblePartySSN);
-			statement.setString(2, address);
-			statement.setString(3, city);
-			statement.setString(4, state);
-			statement.setString(5, payMethodCode);
-			statement.setString(6, cardNumber);
+			statement.setString(1, billingInfo.getResponsiblePartySSN());
+			statement.setString(2, billingInfo.getAddress());
+			statement.setString(3, billingInfo.getCity());
+			statement.setString(4, billingInfo.getState());
+			statement.setString(5, billingInfo.getPayMethodCode());
+			statement.setString(6, billingInfo.getCardNumber());
 			statement.setInt(7, billingInfo.getBillingId());
 			
 			int rowsAffected = statement.executeUpdate();
