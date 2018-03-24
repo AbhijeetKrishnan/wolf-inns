@@ -154,4 +154,40 @@ public class InformationProcessing {
 		
 		return false;
 	}
+
+    /**
+     * Return list of staffIds assigned to a particular hotel.
+     * @param hotelId A hotel ID representing a particular hotel.
+     * @return An ArrayList containing staff IDs working at that hotel
+     */
+    public static ArrayList<Integer> retrieveServiceStaffAssignmentsByHotel(int hotelId) {
+
+        ArrayList<Integer> staffIds = new ArrayList<Integer>();
+        String sqlStatement = "SELECT staffId FROM service_staff WHERE hotelId = ?";
+        Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, Integer.toString(hotelId));
+			results = statement.executeQuery();
+			
+			while (results.next()) {
+				staffIds.add(results.getInt("staffId"));
+			}
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+
+		return staffIds;
+	}
 }
