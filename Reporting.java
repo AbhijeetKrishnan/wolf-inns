@@ -22,6 +22,19 @@ public class Reporting {
 	}
 	
 	
+
+	public static void occupancyByRoomType() {
+		String sqlStatement = "SELECT categoryDesc AS \"Room Category\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS \"Percentage Occupied\" " +
+            "FROM (SELECT  categoryCode, COUNT(stayId) AS occupied_rooms FROM rooms NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY categoryCode) AS occ " +
+            "RIGHT JOIN (SELECT rooms.categoryCode, COUNT(roomNumber) AS total_rooms, room_categories.categoryDesc FROM rooms RIGHT JOIN room_categories " +
+            "ON rooms.categoryCode=room_categories.categoryCode GROUP BY categoryCode) AS avail ON occ.categoryCode=avail.categoryCode;";
+		
+		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+		
+		easyReport(queryResults);
+	}
+	
+	
 	/**
 	 * This method will convert any ArrayList of query results in LinkedHashMaps into arrays 
 	 * containing the column names and rows of data to be printed by the printTable() method.
