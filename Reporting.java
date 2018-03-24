@@ -21,8 +21,6 @@ public class Reporting {
 		easyReport(queryResults);
 	}
 	
-	
-
 	public static void occupancyByRoomType() {
 		String sqlStatement = "SELECT categoryDesc AS \"Room Category\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS \"Percentage Occupied\" " +
             "FROM (SELECT  categoryCode, COUNT(stayId) AS occupied_rooms FROM rooms NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY categoryCode) AS occ " +
@@ -33,7 +31,6 @@ public class Reporting {
 		
 		easyReport(queryResults);
 	}
-	
 	
 	/**
 	 * This method will convert any ArrayList of query results in LinkedHashMaps into arrays 
@@ -58,7 +55,6 @@ public class Reporting {
 		printTable(headers, data);
 	}
 	
-	
 	/**
 	 * This method will print query results in an ASCII-based tabular format using a ASCII table library.
 	 * @param headers A String[] array of column headings
@@ -66,5 +62,56 @@ public class Reporting {
 	 */
 	public static void printTable(String[] headers, String[][] data) {
 		ASCIITable.getInstance().printTable(headers, data);
+	}
+	
+	/**
+	 * Report occupancy by date range
+	 * @param String startDate: starting date for range
+	 * @param String endDate: ending date for range
+	 */
+	public static void occupancyByDateRange(String beginDate, String endDate) {
+		
+		String sqlStatement = "SELECT total_occupancy, (total_occupancy/total_rooms) AS percentage_occupied FROM"
+			+ "(SELECT (COUNT(roomNumber)*(DATEDIFF(" + endDate + ", " + beginDate + ")+1)) AS total_rooms FROM rooms) AS avail, "
+			+ "(SELECT SUM(occupied_room_days) AS total_occupancy FROM"
+			+ "(SELECT SUM(DATEDIFF(checkoutDate, checkinDate)+1) AS occupied_room_days FROM stays WHERE " + beginDate + "=checkinDate AND " + endDate + "=checkoutDate"
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(" + endDate + ", " + beginDate + ")+1) AS occupied_room_days FROM stays WHERE checkinDate<=" + beginDate + " AND " + endDate + " < checkoutDate"
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(" + endDate + ", checkinDate)+1) AS occupied_room_days FROM stays WHERE " + beginDate + "<checkinDate AND checkinDate<=" + endDate + " AND " + endDate + "<=checkoutDate"
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(checkoutDate, " + beginDate + ")+1) AS occupied_room_days FROM stays WHERE checkinDate<" + beginDate + " AND " + beginDate + "<=checkoutDate AND checkoutDate<=" + endDate + ""
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(checkoutDate, checkinDate)+1) AS occupied_room_days FROM stays WHERE " + beginDate + "<=checkinDate AND checkoutDate<" + endDate + ""
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(" + endDate + ", " + beginDate + ")+1) AS occupied_room_days FROM stays WHERE checkoutDate IS NULL AND checkinDate=" + beginDate + " AND " + endDate + "=CURDATE()"
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(" + endDate + ", " + beginDate + ")+1) AS occupied_room_days FROM stays WHERE checkoutDate IS NULL AND checkinDate<=" + beginDate + " AND " + endDate + "<CURDATE()"
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(" + endDate + ", checkinDate)+1) AS occupied_room_days FROM stays WHERE checkoutDate IS NULL AND " + beginDate + "<checkinDate AND " + endDate + "<=CURDATE()"
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(CURDATE(), " + beginDate + ")+1) AS occupied_room_days FROM stays WHERE checkoutDate IS NULL AND checkinDate<" + beginDate + " AND CURDATE()<=" + endDate + ""
+			+ "UNION"
+			+ "SELECT SUM(DATEDIFF(CURDATE(), checkinDate)+1) AS occupied_room_days FROM stays WHERE checkoutDate IS NULL AND " + beginDate + "<=checkinDate AND CURDATE()<" + endDate + ") AS occupancy_union"
+			+ ") AS occ";
+		
+		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+		
+		easyReport(queryResults);
+	}
+	
+	/**
+	 * Report occupancy by city
+	 */
+	public static void occupancyByCity() {
+		
+		String sqlStatement = "SELECT avail.city, avail.state, COALESCE(occupied_rooms, 0) AS total_occupancy, (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS percentage_occupied"
+			+ "FROM (SELECT  city, state, COUNT(stayId) AS occupied_rooms FROM hotels NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY city, state) AS occ"
+			+ "RIGHT JOIN (SELECT city, state, COUNT(roomNumber) AS total_rooms FROM hotels NATURAL JOIN rooms GROUP BY city, state) AS avail"
+			+ "ON occ.city=avail.city AND occ.state=avail.state ORDER BY avail.state, avail.city";
+		
+		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+		
+		easyReport(queryResults);
 	}
 }
