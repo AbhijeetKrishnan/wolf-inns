@@ -305,8 +305,7 @@ public class InformationProcessing {
 	/**
      * Return hotelId of hotel that staff has been assigned to.
      * @param staffId A staff ID representing a particular staff member.
-     * @return An integer representing the hotelId of the hotel that the staff is assigned to, or -1 
-	 * if the staff is not assigned to any hotel
+     * @return An integer representing the hotelId of the hotel that the staff is assigned to, or -1 if the staff is not assigned to any hotel
      */
     public static int retrieveServiceStaffAssignmentsByStaff(int staffId) {
 
