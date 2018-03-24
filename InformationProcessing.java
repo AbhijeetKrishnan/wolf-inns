@@ -1,8 +1,9 @@
 import java.sql.*;
 import java.util.ArrayList;
 
-
 public class InformationProcessing {
+	
+	private static final int FAILURE = -1;
 
 	/**
 	 * Create a new room category in the database.
@@ -278,7 +279,7 @@ public class InformationProcessing {
     public static ArrayList<Integer> retrieveServiceStaffAssignmentsByHotel(int hotelId) {
 
         ArrayList<Integer> staffIds = new ArrayList<Integer>();
-        String sqlStatement = "SELECT staffId FROM service_staff WHERE hotelId = ?";
+        String sqlStatement = "SELECT staffId FROM service_staff WHERE hotelId = ?;";
         Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
@@ -312,7 +313,7 @@ public class InformationProcessing {
     public static int retrieveServiceStaffAssignmentsByStaff(int staffId) {
 
         int hotelId = -1; // default value to return
-        String sqlStatement = "SELECT hotelId FROM service_staff WHERE staffId = ?";
+        String sqlStatement = "SELECT hotelId FROM service_staff WHERE staffId = ?;";
         Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
@@ -625,29 +626,157 @@ public class InformationProcessing {
 //******END CRUD STAFF******
 //----------------------------------------------------------------------------------------------------------------------------------
 
-	public static boolean assignServiceStaffToHotel(int staffId, int hotelId) {
-		String sqlStatement = "INSERT INTO service_staff(staffId, hotelId) VALUES(?, ?)";
+	/**
+	 * Create a customer record with given data
+	 * @param name represents the customer name
+	 * @param DOB represents the customer's date of birth
+	 * @param phone represents the customer's phone number
+	 * @param email represents the customer's email ID
+	 * @return Customers object if successful, else null
+	 */
+	public static Customers createCustomer(String name, String DOB, String phone, String email) {
+		String sqlStatement = "INSERT INTO customers(name, DOB, phone, email) VALUES (?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
+		Customers customer = null // default value
+		ResultSet generatedKeys = null;
+		
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
-			statement.setInt(1, staffId);
-			statement.setInt(2, hotelId);
+			statement.setString(1, name);
+			statement.setString(2, DOB);
+			statement.setString(3, phone);
+			statement.setString(4, email);
 			int rowsAffected = statement.executeUpdate();
+			
 			// A single row should have been inserted
-			if (1==rowsAffected) {
-				return true;
+			if (rowsAffected == 1) {
+				customer = new Customers();
+				generatedKeys = statement.getGeneratedKeys();
+				generatedKeys.next();
+				
+				customer.setCustomerId(generatedKeys.getInt(1));
+				customer.setName(name);
+				customer.setDob(DOB);
+				customer.setPhone(phone);
+				customer.setEmail(email);
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return customer;
+	}
+
+	/**
+	 * Retrieve a customer by customerId
+	 * @param customerId represents the customer ID
+	 * @return Customers object if given customer exists else null
+	 */
+	public static Customers retrieveCustomers(int customerId) {
+		Customers customer = null;
+		String sqlStatement = "SELECT * FROM customers WHERE customerId = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, customerId);
+			results = statement.executeQuery(sqlStatement);
+
+			while (results.next()) { //expecting only 0 or 1 row
+				customer = new Customers();
+				customer.setCustomerId(hotelId);
+				customer.setName(results.getString("name"));
+				customer.setAddress(results.getString("DOB"));
+				customer.setCity(results.getString("phone"));
+				customer.setState(results.getString("email"));
 			}
 		} catch (SQLException ex) {
 			// Log and return null
-			return false;
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		
+		return customer;
+	}
+	
+	/**
+	 * Update a customer record in the database with new field values
+	 * @param customer: the Customers object with new field values that needs to be updated in the database
+	 * @return true on success or false on failure
+	 */
+	public static boolean updateCustomer(Customers customer) {
+		String sqlStatement = "UPDATE hotels SET name = ?, DOB = ?, phone = ?, email = ? WHERE customerId = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		boolean returnValue = false;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, customer.getName());
+			statement.setString(2, customer.getDob());
+			statement.setString(3, customer.getPhone());
+			statement.setString(4, customer.getEmail());
+			statement.setInt(5, customer.getCustomerId());
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been updated
+			if (rowsAffected == 1) {
+				returnValue = true;
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
 		} finally {
 			// Attempt to close all resources, ignore failures.
 			try { statement.close(); } catch (Exception ex) {};
 			try { connection.close(); } catch (Exception ex) {};
 		}
-		return false;
+		return returnValue;
+	}
+
+	/**
+	 * Delete a customer record from the database
+	 * @param customer: the Customers object that needs to be deleted from the database
+	 * @return true on success or false on failure
+	 */
+	public static boolean deleteCustomer(Customers customer) {
+		String sqlStatement = "DELETE FROM customers WHERE customerId = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		boolean returnValue = false;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, customer.getCustomerId());
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been deleted
+			if (rowsAffected == 1) {
+				returnValue = true;
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return returnValue;
 	}
 
 }
