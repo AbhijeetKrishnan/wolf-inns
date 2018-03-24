@@ -32,7 +32,11 @@ public class WolfInns {
 				System.out.println("Michael's room category has not been deleted. Maybe somebody already checked into it?");
 			}			
 			
-			printRoomCategories();			
+			printRoomCategories();	
+			
+			
+			System.out.println("\n\nNow is the time to run a report.\n\n");
+			Reporting.occupancyByHotel();
 			
 		} catch (RuntimeException ex) {
 			System.err.println(ex.getMessage());
