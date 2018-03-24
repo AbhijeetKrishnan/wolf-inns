@@ -323,7 +323,7 @@ public class InformationProcessing {
 			results = statement.executeQuery();
 			
 			while (results.next()) {
-				hotelId = results.getInt("hotelId")); // only one result set is expected
+				hotelId = results.getInt("hotelId"); // only one result set is expected
 			}
 		} catch (SQLException ex) {
 			// Log and return null
@@ -404,7 +404,7 @@ public class InformationProcessing {
 				hotel.setCity(results.getString("city"));
 				hotel.setState(results.getString("state"));
 				hotel.setPhone(results.getString("phone"));
-				hotel.setManagerId(results.getInt("managerId");
+				hotel.setManagerId(results.getInt("managerId"));
 			} else {
 				// Throw exception
 				throw new SQLException("Multiple rows or no row returned when selecting hotel with hotelId = " + hotelId + ".");
@@ -550,7 +550,7 @@ public class InformationProcessing {
 				staff.setCity(results.getString("city"));
 				staff.setState(results.getString("state"));
 				staff.setPhone(results.getString("phone"));
-				staff.setDob(results.getString("dob");
+				staff.setDob(results.getString("DOB"));
 			} else {
 				// Throw exception
 				throw new SQLException("Multiple rows or no row returned when selecting staff with staffId = " + staffId + ".");
@@ -638,7 +638,7 @@ public class InformationProcessing {
 		String sqlStatement = "INSERT INTO customers(name, DOB, phone, email) VALUES (?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
-		Customers customer = null // default value
+		Customers customer = null; // default value
 		ResultSet generatedKeys = null;
 		
 		try {
@@ -693,11 +693,11 @@ public class InformationProcessing {
 
 			while (results.next()) { //expecting only 0 or 1 row
 				customer = new Customers();
-				customer.setCustomerId(hotelId);
+				customer.setCustomerId(customerId);
 				customer.setName(results.getString("name"));
-				customer.setAddress(results.getString("DOB"));
-				customer.setCity(results.getString("phone"));
-				customer.setState(results.getString("email"));
+				customer.setDob(results.getString("DOB"));
+				customer.setPhone(results.getString("phone"));
+				customer.setEmail(results.getString("email"));
 			}
 		} catch (SQLException ex) {
 			// Log and return null
