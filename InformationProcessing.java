@@ -2,8 +2,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class InformationProcessing {
-	
-	private static final int FAILURE = -1;
 
 	/**
 	 * Create a new room category in the database.
@@ -480,6 +478,7 @@ public class InformationProcessing {
 
 //----------------------------------------------------------------------------------------------------------------------------------
 //******BEGIN CRUD STAFF******
+//TODO: dob needs to be rewritten to DOB since the field name in SQL is DOB
 //----------------------------------------------------------------------------------------------------------------------------------
 	public static Staff createStaff(String name, String titleCode, String deptCode, String address, String city, String state, String phone, String dob) {
 		String sqlStatement = "INSERT INTO staff(name, titleCode, deptCode, address, city, state, phone, dob) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
@@ -763,6 +762,162 @@ public class InformationProcessing {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, customer.getCustomerId());
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been deleted
+			if (rowsAffected == 1) {
+				returnValue = true;
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return returnValue;
+	}
+	
+	/**
+	 * Create a Rooms record with given data
+	 * @param hotelId represents the hotel in which the room is located
+	 * @param roomNumber
+	 * @param categoryCode represents the room's category
+	 * @param maxAllowedOcc represents the maximum number of guests that can stay in the room
+	 * @param rate the nightly rate of the room
+	 * @return Rooms object if successful, else null
+	 */
+	public static Rooms createRoom(int hotelId, String roomNumber, int maxAllowedOcc, double rate, String categoryCode) {
+		String sqlStatement = "INSERT INTO rooms(hotelId, roomNumber, maxAllowedOcc, rate, categoryCode) VALUES (?, ?, ?, ?, ?);";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		Rooms room = null; // default value
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, hotelId);
+			statement.setString(2, roomNumber);
+			statement.setInt(3, maxAllowedOcc);
+			statement.setDouble(4, rate);
+			statement.setString(5, categoryCode);
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been inserted
+			if (rowsAffected == 1) {
+				room = new Rooms();
+				
+				// could possible retrieve the newly inserted record from the database and update values from there
+				room.setHotelId(hotelId);
+				room.setRoomNumber(roomNumber);
+				room.setMaxAllowedOcc(maxAllowedOcc);
+				room.setRate(rate);
+				room.setCategoryCode(categoryCode);
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return room;
+	}
+
+	/**
+	 * Retrieve a room by roomNumber and hotelId
+	 * @param hotelId represents the hotel in which the room is located
+	 * @param roomNumber
+	 * @return Rooms object if given room exists else null
+	 */
+	public static Rooms retrieveRoom(int hotelId, String roomNumber) {
+		Rooms room = null;
+		String sqlStatement = "SELECT * FROM rooms WHERE hotelId = ? AND roomNumber = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, hotelId);
+			statement.setString(2, roomNumber);
+			results = statement.executeQuery(sqlStatement);
+
+			while (results.next()) { //expecting only 0 or 1 row
+				room = new Rooms();
+				room.setHotelId(results.getInt("hotelId"));
+				room.setRoomNumber(results.getString("roomNumber"));
+				room.setMaxAllowedOcc(results.getInt("maxAllowedOcc"));
+				room.setRate(results.getDouble("rate"));
+				room.setCategoryCode(results.getString("categoryCode"));
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		
+		return room;
+	}
+	
+	/**
+	 * Update a room record in the database with new field values
+	 * @param room: the Rooms object with new field values that needs to be updated in the database
+	 * @return true on success or false on failure
+	 */
+	public static boolean updateRoom(Rooms room) {
+		String sqlStatement = "UPDATE rooms SET maxAllowedOcc = ?, rate = ?, categoryCode = ? WHERE hotelId = ? AND roomNumber = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		boolean returnValue = false;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, room.getMaxAllowedOcc());
+			statement.setDouble(2, room.getRate());
+			statement.setString(3, room.getCategoryCode());
+			statement.setInt(4, room.getHotelId());
+			statement.setString(5, room.getRoomNumber());
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been updated
+			if (rowsAffected == 1) {
+				returnValue = true;
+			}
+		} catch (SQLException ex) {
+			// Log
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return returnValue;
+	}
+
+	/**
+	 * Delete a room record from the database
+	 * @param room: the Rooms object that needs to be deleted from the database
+	 * @return true on success or false on failure
+	 */
+	public static boolean deleteRoom(Rooms room) {
+		String sqlStatement = "DELETE FROM rooms WHERE hotelId = ? AND roomNumber = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		boolean returnValue = false;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, room.getHotelId());
+			statement.setString(2, room.getRoomNumber());
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been deleted
 			if (rowsAffected == 1) {
