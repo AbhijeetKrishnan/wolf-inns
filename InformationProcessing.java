@@ -336,4 +336,143 @@ public class InformationProcessing {
 
 		return hotelId;
 	}
+
+//----------------------------------------------------------------------------------------------------------------------------------
+//******BEGIN CRUD HOTEL*****
+//----------------------------------------------------------------------------------------------------------------------------------
+	public static Hotels createHotel(String name, String address, String city, String state, String phone, int managerId) {
+		String sqlStatement = "INSERT INTO hotels(name, address, city, state, phone, managerId) VALUES (?, ?, ?, ?, ?, ?);";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, name);
+			statement.setString(2, address);
+			statement.setString(3, city);
+			statement.setString(4, state);
+			statement.setString(5, phone);
+			statement.setInt(6, managerId);
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				Hotels hotel = new Hotels();
+				ResultSet generatedKeys = statement.getGeneratedKeys();
+				generatedKeys.next();
+				hotel.setHotelId(generatedKeys.getInt(1));
+				hotel.setName(name);
+				hotel.setAddress(address);
+				hotel.setCity(city);
+				hotel.setState(state);
+				hotel.setPhone(phone);
+				hotel.setManagerId(managerId);
+				return hotel;
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return null;
+	}
+
+	public static Hotels retrieveHotel(int hotelId) {
+		Hotels hotel = new Hotels();
+		String sqlStatement = "SELECT hotelId, name, address, city, state, phone, managerId FROM hotels WHERE hotelId=?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, hotelId);
+			results = statement.executeQuery(sqlStatement);
+			results.last();
+			int rowsAffected = results.getRow();
+			// A single row should have been retrieved
+			if (1==rowsAffected) {
+				results.first();
+				hotel.setHotelId(hotelId);
+				hotel.setName(results.getString("name"));
+				hotel.setAddress(results.getString("address"));
+				hotel.setCity(results.getString("city"));
+				hotel.setState(results.getString("state"));
+				hotel.setPhone(results.getString("phone"));
+				hotel.setManagerId(results.getInt("managerId");
+			} else {
+				// Throw exception
+				throw new SQLException("Multiple rows or no row returned when selecting hotel with hotelId = " + hotelId + ".");
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return hotel;
+	}
+
+	public static boolean updateHotel(Hotels hotel) {
+		String sqlStatement = "UPDATE hotels SET name=?, address=?, city=?, state=?, phone=?, managerId=? WHERE hotelId=?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, hotel.getName());
+			statement.setString(2, hotel.getAddress());
+			statement.setString(3, hotel.getCity());
+			statement.setString(4, hotel.getState());
+			statement.setString(5, hotel.getPhone());
+			statement.setInt(6, hotel.getManagerId());
+			statement.setInt(7, hotel.getHotelId());
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been updated
+			if (1==rowsAffected) {
+				return true;
+			}
+		} catch (SQLException ex) {
+			// Log and return false
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return false;
+	}
+
+	public static boolean deleteHotel(Hotels hotel) {
+		String sqlStatement = "DELETE FROM hotels WHERE hotelId=?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, hotel.getHotelId());
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been deleted
+			if (1==rowsAffected) {
+				return true;
+			}
+		} catch (SQLException ex) {
+			// Log and return false
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+		return false;
+	}
+//----------------------------------------------------------------------------------------------------------------------------------
+//******END CRUD HOTEL*****
+//----------------------------------------------------------------------------------------------------------------------------------
+
 }
