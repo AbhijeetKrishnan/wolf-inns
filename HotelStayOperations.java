@@ -101,7 +101,12 @@ public class HotelStayOperations {
 		}
 	}
 	
-	
+	/**
+	 * This method will remove the record associated the dedicated staff to a presidential suite.
+	 * @param hotelId The ID of the hotel the presidential suite is associated with.
+	 * @param roomNumber The room number of the presidential suite.
+	 * @return A value representing a success (true) or failure (false) of the delete.
+	 */
     public static boolean unassignDedicatedPresidentialSuiteStaff(int hotelId, String roomNumber) {
 		
 		String sqlStatement = "DELETE FROM occupied_presidential_suite WHERE hotelId = ? AND roomNumber = ?";
