@@ -4,11 +4,9 @@ import java.util.LinkedHashMap;
 
 public class DatabaseConnection {
 
-	private static final String user = "mamoran";
-	private static final String password = "MyMaria";
+	private static final String user = "xzheng6";
+	private static final String password = "200016878";	
 	
-	//private static final String user = "xzheng6";
-	//private static final String password = "200016878";	
 	private static final String connectionURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user;	
 	
 	/**
@@ -27,6 +25,12 @@ public class DatabaseConnection {
 		}
 	}
 	
+	/**
+	 * This method executes a select query and populates each row into a LinkedHashMap which is added to ArrayList
+	 * to be processed by the calling method.
+	 * @param sqlStatement String A fully formed SQL SELECT query
+	 * @return ArrayList<LinkedHashMap<String, String>> A data structure to contain variably sized results of the SQL SELECT
+	 */
 	public static ArrayList<LinkedHashMap<String, String>> resultsToHashMap(String sqlStatement) {
 		ArrayList<LinkedHashMap<String, String>> queryResults = new ArrayList<LinkedHashMap<String, String>>();
 		Connection connection = null;
