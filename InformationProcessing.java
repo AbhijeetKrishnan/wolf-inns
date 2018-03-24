@@ -282,6 +282,8 @@ public class InformationProcessing {
         Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
+		
+		try {
 			statement.setString(1, Integer.toString(hotelId));
 			results = statement.executeQuery();
 			
