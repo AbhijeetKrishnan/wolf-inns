@@ -98,7 +98,8 @@ public class MaintainingServiceRecords {
 	 * @return true if successful, else false
 	 */
 	public static boolean updateServiceRecord(ServiceRecords serviceRecords) {
-		String sqlStatement = "UPDATE service_records SET serviceCode=?, staffId=?, charge=? WHERE stayId=? AND serviceDate=? AND serviceTime=?;";
+		// Assume that we are only able to update service record when the stay is still active.
+		String sqlStatement = "UPDATE service_records SET serviceCode=?, staffId=?, charge=? WHERE stayId=? AND serviceDate=? AND serviceTime=? AND stayId IN (SELECT stayId FROM stays WHERE checkoutDate IS NULL AND checkoutTime IS NULL);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
@@ -116,7 +117,7 @@ public class MaintainingServiceRecords {
 				System.out.println("An existing service record was updated successfully!");
 				return true;
 			} else if (0==rowsAffected) {
-				System.out.println("There is no corresponding existing service record.");
+				System.out.println("There is no corresponding existing service record or the customer stay is not active any more.");
 				return false;
 			} else {
 				// Throw exception
