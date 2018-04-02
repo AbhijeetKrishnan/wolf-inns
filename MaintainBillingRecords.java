@@ -101,6 +101,7 @@ public class MaintainBillingRecords {
 				paymentMethod.setPayMethodDesc(results.getString("payMethodDesc"));
 				paymentMethods.add(paymentMethod);
 			}
+			System.out.println("A list of existing payment methods was retrieved successfully!");
 			return paymentMethods;
 		} catch (SQLException ex) {
 			// Log and return null
