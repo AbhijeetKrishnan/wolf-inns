@@ -150,12 +150,12 @@ public class InformationProcessing {
 		return false;
 	}
 	
-    /**
-     * This method will associate an existing service with an existing room category.
-     * @param categoryCode Four character code used to uniquely identify the room category
-     * @param serviceCode Four character code used to uniquely identify the service
-     * @return A value representing a success (true) or failure (false) of the insert.
-     */
+	/**
+	 * This method will associate an existing service with an existing room category.
+	 * @param categoryCode Four character code used to uniquely identify the room category
+	 * @param serviceCode Four character code used to uniquely identify the service
+	 * @return A value representing a success (true) or failure (false) of the insert.
+	 */
 	public static boolean assignServiceToRoomCategory(String categoryCode, String serviceCode) {
 		
 		String sqlStatement = "INSERT INTO room_categories_services(categoryCode, serviceCode) VALUES(?, ?)";
@@ -240,7 +240,7 @@ public class InformationProcessing {
 	 * @param stay An object representing the existing stay
 	 * @return A value representing a success (true) or failure (false) of the delete.
 	 */
-    public static boolean deleteStay(Stays stay) {
+	public static boolean deleteStay(Stays stay) {
 		
 		String sqlStatement = "DELETE FROM stays WHERE stayId=?";
 		Connection connection = null;
@@ -270,15 +270,15 @@ public class InformationProcessing {
 	}
 	
 	/**
-     * Return list of staffIds assigned to a particular hotel.
-     * @param hotelId A hotel ID representing a particular hotel.
-     * @return An ArrayList containing staff IDs working at that hotel
-     */
-    public static ArrayList<Integer> retrieveServiceStaffAssignmentsByHotel(int hotelId) {
+	 * Return list of staffIds assigned to a particular hotel.
+	 * @param hotelId A hotel ID representing a particular hotel.
+	 * @return An ArrayList containing staff IDs working at that hotel
+	 */
+	public static ArrayList<Integer> retrieveServiceStaffAssignmentsByHotel(int hotelId) {
 
-        ArrayList<Integer> staffIds = new ArrayList<Integer>();
-        String sqlStatement = "SELECT staffId FROM service_staff WHERE hotelId = ?;";
-        Connection connection = null;
+		ArrayList<Integer> staffIds = new ArrayList<Integer>();
+		String sqlStatement = "SELECT staffId FROM service_staff WHERE hotelId = ?;";
+		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
 		
@@ -303,15 +303,15 @@ public class InformationProcessing {
 	}
 	
 	/**
-     * Return hotelId of hotel that staff has been assigned to.
-     * @param staffId A staff ID representing a particular staff member.
-     * @return An integer representing the hotelId of the hotel that the staff is assigned to, or -1 if the staff is not assigned to any hotel
-     */
-    public static int retrieveServiceStaffAssignmentsByStaff(int staffId) {
+	 * Return hotelId of hotel that staff has been assigned to.
+	 * @param staffId A staff ID representing a particular staff member.
+	 * @return An integer representing the hotelId of the hotel that the staff is assigned to, or -1 if the staff is not assigned to any hotel
+	 */
+	public static int retrieveServiceStaffAssignmentsByStaff(int staffId) {
 
-        int hotelId = -1; // default value to return
-        String sqlStatement = "SELECT hotelId FROM service_staff WHERE staffId = ?;";
-        Connection connection = null;
+		int hotelId = -1; // default value to return
+		String sqlStatement = "SELECT hotelId FROM service_staff WHERE staffId = ?;";
+		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
 		
@@ -334,10 +334,17 @@ public class InformationProcessing {
 
 		return hotelId;
 	}
-
-//----------------------------------------------------------------------------------------------------------------------------------
-//******BEGIN CRUD HOTEL******
-//----------------------------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * Create a hotel
+	 * @param name the hotel's name
+	 * @param address the hotel's address
+	 * @param city the hotel's city
+	 * @param state the hotel's state
+	 * @param phone the hotel's phone number
+	 * @param managerId the hotel's manager's staff ID
+	 * @return Hotels object if successful, else null
+	 */
 	public static Hotels createHotel(String name, String address, String city, String state, String phone, int managerId) {
 		String sqlStatement = "INSERT INTO hotels(name, address, city, state, phone, managerId) VALUES (?, ?, ?, ?, ?, ?);";
 		Connection connection = null;
@@ -365,22 +372,30 @@ public class InformationProcessing {
 				hotel.setState(state);
 				hotel.setPhone(phone);
 				hotel.setManagerId(managerId);
+				System.out.println("A new hotel was inserted successfully!");
 				return hotel;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log and return null
+			ex.printStackTrace();
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures
-			try { generatedKeys.close(); } catch (Exception ex) {};
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(generatedKeys != null) { try { generatedKeys.close(); } catch (Exception ex) {}; }
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return null;
 	}
 
+	/**
+	 * Retrieve a hotel by hotel ID
+	 * @param hotelId the hotel's ID
+	 * @return Hotels object if given hotel exists, else null
+	 */
 	public static Hotels retrieveHotel(int hotelId) {
-		Hotels hotel = new Hotels();
 		String sqlStatement = "SELECT hotelId, name, address, city, state, phone, managerId FROM hotels WHERE hotelId=?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -395,6 +410,7 @@ public class InformationProcessing {
 			// A single row should have been retrieved
 			if (1==rowsAffected) {
 				results.first();
+				Hotels hotel = new Hotels();
 				hotel.setHotelId(hotelId);
 				hotel.setName(results.getString("name"));
 				hotel.setAddress(results.getString("address"));
@@ -402,22 +418,32 @@ public class InformationProcessing {
 				hotel.setState(results.getString("state"));
 				hotel.setPhone(results.getString("phone"));
 				hotel.setManagerId(results.getInt("managerId"));
+				System.out.println("An existing hotel was retrieved successfully!");
+				return hotel;
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing hotel with hotelId = " + hotelId + ".");
+				return null;
 			} else {
 				// Throw exception
-				throw new SQLException("Multiple rows or no row returned when selecting hotel with hotelId = " + hotelId + ".");
+				throw new SQLException("Multiple rows returned when selecting hotel with hotelId = " + hotelId + ".");
 			}
 		} catch (SQLException ex) {
 			// Log and return null
 			ex.printStackTrace();
+			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { results.close(); } catch (Exception ex) {};
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return hotel;
 	}
 
+	/**
+	 * Update a hotel record in the database with new field values
+	 * @param hotel the Hotels object with new field values that needs to be updated in the database
+	 * @return true if successful, else false
+	 */
 	public static boolean updateHotel(Hotels hotel) {
 		String sqlStatement = "UPDATE hotels SET name=?, address=?, city=?, state=?, phone=?, managerId=? WHERE hotelId=?;";
 		Connection connection = null;
@@ -435,19 +461,28 @@ public class InformationProcessing {
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been updated
 			if (1==rowsAffected) {
+				System.out.println("An existing hotel was updated successfully!");
 				return true;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log and return false
+			ex.printStackTrace();			
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return false;
 	}
 
+	/**
+	 * Delete a hotel record from the database
+	 * @param hotel the Hotels object that needs to be deleted from the database
+	 * @return true if successful, else false
+	 */
 	public static boolean deleteHotel(Hotels hotel) {
 		String sqlStatement = "DELETE FROM hotels WHERE hotelId=?;";
 		Connection connection = null;
@@ -459,21 +494,22 @@ public class InformationProcessing {
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been deleted
 			if (1==rowsAffected) {
+				System.out.println("An existing hotel was deleted successfully!");				
 				return true;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log and return false
+			ex.printStackTrace();			
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return false;
 	}
-//----------------------------------------------------------------------------------------------------------------------------------
-//******END CRUD HOTEL******
-//----------------------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------------------
 //******BEGIN CRUD STAFF******
