@@ -384,9 +384,9 @@ public class InformationProcessing {
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures
-			if(generatedKeys != null) { try { generatedKeys.close(); } catch (Exception ex) {}; }
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (generatedKeys != null) { try { generatedKeys.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 
@@ -433,9 +433,9 @@ public class InformationProcessing {
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			if(results != null) { try { results.close(); } catch (Exception ex) {}; }
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 
@@ -476,8 +476,8 @@ public class InformationProcessing {
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 
@@ -512,8 +512,8 @@ public class InformationProcessing {
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 
@@ -572,9 +572,9 @@ public class InformationProcessing {
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures
-			if(generatedKeys != null) { try { generatedKeys.close(); } catch (Exception ex) {}; }
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (generatedKeys != null) { try { generatedKeys.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 
@@ -623,9 +623,9 @@ public class InformationProcessing {
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			if(results != null) { try { results.close(); } catch (Exception ex) {}; }
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 
@@ -657,7 +657,7 @@ public class InformationProcessing {
 				return true;
 			} else if (0==rowsAffected) {
 				System.out.println("There is no existing staff member with staffId = " + staff.getStaffId() + ".");
-				return null;
+				return false;
 			} else {
 				// Throw exception
 				throw new SQLException("Error seems to have occured. Check the logs.");
@@ -669,8 +669,8 @@ public class InformationProcessing {
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 
@@ -705,8 +705,8 @@ public class InformationProcessing {
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
-			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
 

@@ -43,133 +43,150 @@ public class MaintainBillingRecords {
 		}
 	}
 
+	/**
+	 * Create a payment method
+	 * @param payMethodCode the payment method's code
+	 * @param payMethodDesc the payment method's description
+	 * @return PaymentMethods object if successful, else null
+	 */
 	public static PaymentMethods createPaymentMethod(String payMethodCode, String payMethodDesc) {
-		
 		String sqlStatement = "INSERT INTO payment_methods(payMethodCode, payMethodDesc) VALUES(?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
-		
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setString(1, payMethodCode);
 			statement.setString(2, payMethodDesc);
 			int rowsAffected = statement.executeUpdate();
-			
 			// A single row should have been inserted
 			if (1==rowsAffected) {
 				PaymentMethods paymentMethod = new PaymentMethods();
 				paymentMethod.setPayMethodCode(payMethodCode);
 				paymentMethod.setPayMethodDesc(payMethodDesc);
+				System.out.println("A new payment method was inserted successfully!");
 				return paymentMethod;
-			} 
-			
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
+			}	
 		} catch (SQLException ex) {
 			// Log and return null
+			ex.printStackTrace();
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		
-		return null;
 	}
 
+	/**
+	 * Retrieve all payment method records from the database.
+	 * @return An ArrayList containing PaymentMethods objects for each of the returned records if successful, else null
+	 */
 	public static ArrayList<PaymentMethods> retrieveAllPaymentMethods() {
-		
-		ArrayList<PaymentMethods> paymentMethods = new ArrayList<PaymentMethods>();
 		String sqlStatement = "SELECT payMethodCode, payMethodDesc FROM payment_methods;";
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet results = null;
-
 		try {
+			ArrayList<PaymentMethods> paymentMethods = new ArrayList<PaymentMethods>();
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			results = statement.executeQuery(sqlStatement);
-			
 			while (results.next()) {
 				PaymentMethods paymentMethod = new PaymentMethods();
-
 				paymentMethod.setPayMethodCode(results.getString("payMethodCode"));
 				paymentMethod.setPayMethodDesc(results.getString("payMethodDesc"));
-
 				paymentMethods.add(paymentMethod);
 			}
-				
+			return paymentMethods;
 		} catch (SQLException ex) {
 			// Log and return null
 			ex.printStackTrace();
+			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { results.close(); } catch (Exception ex) {};
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-
-		return paymentMethods;
 	}
 
+	/**
+	 * Update a payment method record in the database with new field values
+	 * @param paymentMethod the PaymentMethods object with new field values that needs to be updated in the database
+	 * @return true if successful, else false
+	 */
 	public static boolean updatePaymentMethod(PaymentMethods paymentMethod) {
-		
 		String sqlStatement = "UPDATE payment_methods SET payMethodDesc=? WHERE payMethodCode=?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
-		
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setString(1, paymentMethod.getPayMethodDesc());
 			statement.setString(2, paymentMethod.getPayMethodCode());
 			int rowsAffected = statement.executeUpdate();
-			
 			// A single row should have been updated
 			if (1==rowsAffected) {
+				System.out.println("An existing payment method was updated successfully!");
 				return true;
-			} 
-			
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing payment method with payMethodCode = " + paymentMethod.getPayMethodCode() + ".");
+				return false;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
+			}
 		} catch (SQLException ex) {
 			// Log and return false
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		
-		return false;
-	}	
+	}
 
+	/**
+	 * Delete a payment method record from the database
+	 * @param paymentMethod the PaymentMethods object that needs to be deleted from the database
+	 * @return true if successful, else false
+	 */
 	public static boolean deletePaymentMethod(PaymentMethods paymentMethod) {
-		
 		String sqlStatement = "DELETE FROM payment_methods WHERE payMethodCode=?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
-		
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setString(1, paymentMethod.getPayMethodCode());
 			int rowsAffected = statement.executeUpdate();
-			
 			// A single row should have been deleted
 			if (1==rowsAffected) {
+				System.out.println("An existing payment method was deleted successfully!");
 				return true;
-			} 
-			
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing payment method with payMethodCode = " + paymentMethod.getPayMethodCode() + ".");
+				return false;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
+			}	
 		} catch (SQLException ex) {
 			// Log and return false
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		
-		return false;
 	}
-	
+
 	/**
 	 * Creates a new billing_info record
 	 * @param String responsiblePartySSN
