@@ -463,13 +463,16 @@ public class InformationProcessing {
 			if (1==rowsAffected) {
 				System.out.println("An existing hotel was updated successfully!");
 				return true;
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing hotel with hotelId = " + hotel.getHotelId() + ".");
+				return false;
 			} else {
 				// Throw exception
 				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log and return false
-			ex.printStackTrace();			
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
@@ -494,15 +497,18 @@ public class InformationProcessing {
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been deleted
 			if (1==rowsAffected) {
-				System.out.println("An existing hotel was deleted successfully!");				
+				System.out.println("An existing hotel was deleted successfully!");
 				return true;
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing hotel with hotelId = " + hotel.getHotelId() + ".");
+				return false;
 			} else {
 				// Throw exception
 				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log and return false
-			ex.printStackTrace();			
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
@@ -511,10 +517,18 @@ public class InformationProcessing {
 		}
 	}
 
-//----------------------------------------------------------------------------------------------------------------------------------
-//******BEGIN CRUD STAFF******
-//TODO: dob needs to be rewritten to DOB since the field name in SQL is DOB
-//----------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Create a staff member
+	 * @param name the staff's name
+	 * @param titleCode the staff's title code
+	 * @param deptCode the staff's department code
+	 * @param address the staff's address
+	 * @param city the staff's city
+	 * @param state the staff's state
+	 * @param phone the staff's phone number
+	 * @param dob the staff's date of birth
+	 * @return Staff object if successful, else null
+	 */
 	public static Staff createStaff(String name, String titleCode, String deptCode, String address, String city, String state, String phone, String dob) {
 		String sqlStatement = "INSERT INTO staff(name, titleCode, deptCode, address, city, state, phone, dob) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 		Connection connection = null;
@@ -546,22 +560,30 @@ public class InformationProcessing {
 				staff.setState(state);
 				staff.setPhone(phone);
 				staff.setDob(dob);
+				System.out.println("A new staff member was inserted successfully!");
 				return staff;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log and return null
+			ex.printStackTrace();
 			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures
-			try { generatedKeys.close(); } catch (Exception ex) {};
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(generatedKeys != null) { try { generatedKeys.close(); } catch (Exception ex) {}; }
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return null;
 	}
 
+	/**
+	 * Retrieve a staff member by staff ID
+	 * @param staffId the staff's ID
+	 * @return Staff object if given staff member exists, else null
+	 */
 	public static Staff retrieveStaff(int staffId) {
-		Staff staff = new Staff();
 		String sqlStatement = "SELECT staffId, name, titleCode, deptCode, address, city, state, phone, dob FROM staff WHERE staffId=?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -576,6 +598,7 @@ public class InformationProcessing {
 			// A single row should have been retrieved
 			if (1==rowsAffected) {
 				results.first();
+				Staff staff = new Staff();
 				staff.setStaffId(staffId);
 				staff.setName(results.getString("name"));
 				staff.setTitleCode(results.getString("titleCode"));
@@ -585,22 +608,32 @@ public class InformationProcessing {
 				staff.setState(results.getString("state"));
 				staff.setPhone(results.getString("phone"));
 				staff.setDob(results.getString("DOB"));
+				System.out.println("An existing staff member was retrieved successfully!");
+				return staff;
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing staff member with staffId = " + staffId + ".");
+				return null;
 			} else {
 				// Throw exception
-				throw new SQLException("Multiple rows or no row returned when selecting staff with staffId = " + staffId + ".");
+				throw new SQLException("Multiple rows returned when selecting staff with staffId = " + staffId + ".");
 			}
 		} catch (SQLException ex) {
 			// Log and return null
 			ex.printStackTrace();
+			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { results.close(); } catch (Exception ex) {};
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return staff;
 	}
 
+	/**
+	 * Update a staff member record in the database with new field values
+	 * @param staff the Staff object with new field values that needs to be updated in the database
+	 * @return true if successful, else false
+	 */
 	public static boolean updateStaff(Staff staff) {
 		String sqlStatement = "UPDATE staff SET name=?, titleCode=?, deptCode=?, address=?, city=?, state=?, phone=?, dob=? WHERE staffId=?;";
 		Connection connection = null;
@@ -620,19 +653,32 @@ public class InformationProcessing {
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been updated
 			if (1==rowsAffected) {
+				System.out.println("An existing staff member was updated successfully!");
 				return true;
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing staff member with staffId = " + staff.getStaffId() + ".");
+				return null;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
+
 		} catch (SQLException ex) {
 			// Log and return false
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return false;
 	}
 
+	/**
+	 * Delete a staff record from the database
+	 * @param staff the Staff object that needs to be deleted from the database
+	 * @return true if successful, else false
+	 */
 	public static boolean deleteStaff(Staff staff) {
 		String sqlStatement = "DELETE FROM staff WHERE staffId=?;";
 		Connection connection = null;
@@ -644,21 +690,25 @@ public class InformationProcessing {
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been deleted
 			if (1==rowsAffected) {
+				System.out.println("An existing staff member was deleted successfully!");
 				return true;
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing staff member with staffId = " + staff.getStaffId() + ".");
+				return false;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log and return false
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if(statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if(connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
-		return false;
 	}
-//----------------------------------------------------------------------------------------------------------------------------------
-//******END CRUD STAFF******
-//----------------------------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * Create a customer record with given data
