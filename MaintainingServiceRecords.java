@@ -113,6 +113,7 @@ public class MaintainingServiceRecords {
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been updated
 			if (1==rowsAffected) {
+				System.out.println("An existing service record was updated successfully!");
 				return true;
 			} else if (0==rowsAffected) {
 				System.out.println("There is no corresponding existing service record.");
