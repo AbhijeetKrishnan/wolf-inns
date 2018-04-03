@@ -189,7 +189,7 @@ public class HotelStayOperations {
 	public static ArrayList<Rooms> retrieveAvailableRooms(int hotelId, String categoryCode) {
 		String sqlStatement = "SELECT hotelId, roomNumber, maxAllowedOcc, rate, categoryCode FROM rooms WHERE hotelId=? AND categoryCode=? AND roomNumber NOT IN (SELECT roomNumber FROM stays WHERE hotelId=? AND checkoutDate IS NULL AND checkoutTime IS NULL);";
 		Connection connection = null;
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet results = null;
 		try {
 			ArrayList<Rooms> rooms = new ArrayList<Rooms>();
