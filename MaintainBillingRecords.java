@@ -14,7 +14,7 @@ public class MaintainBillingRecords {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1,  stayId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			
 			results.last();
 			int rowsAffected = results.getRow();

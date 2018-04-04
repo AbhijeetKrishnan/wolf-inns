@@ -67,7 +67,7 @@ public class MaintainingServiceRecords {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, stayId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			while (results.next()) {
 				ServiceRecords serviceRecord = new ServiceRecords();
 				serviceRecord.setStayId(results.getInt("stayId"));

@@ -198,7 +198,7 @@ public class InformationProcessing {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1,  stayId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			
 			results.last();
 			int rowsAffected = results.getRow();
@@ -404,7 +404,7 @@ public class InformationProcessing {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, hotelId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			results.last();
 			int rowsAffected = results.getRow();
 			// A single row should have been retrieved
@@ -592,7 +592,7 @@ public class InformationProcessing {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, staffId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			results.last();
 			int rowsAffected = results.getRow();
 			// A single row should have been retrieved
@@ -773,7 +773,7 @@ public class InformationProcessing {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, customerId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 
 			while (results.next()) { //expecting only 0 or 1 row
 				customer = new Customers();
@@ -928,7 +928,7 @@ public class InformationProcessing {
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, hotelId);
 			statement.setString(2, roomNumber);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 
 			while (results.next()) { //expecting only 0 or 1 row
 				room = new Rooms();
@@ -1071,7 +1071,7 @@ public class InformationProcessing {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, staffId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			results.last();
 			int rowsAffected = results.getRow();
 			// A single row should have been retrieved

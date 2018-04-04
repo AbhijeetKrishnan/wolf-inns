@@ -22,7 +22,7 @@ public class HotelStayOperations {
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1,  hotelId);
 			statement.setString(2,  roomNumber);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			
 			results.last();
 			int rowsAffected = results.getRow();
@@ -72,7 +72,7 @@ public class HotelStayOperations {
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1,  hotelId);
 			statement.setString(2,  roomNumber);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			
 			results.last();
 			int rowsAffected = results.getRow();
@@ -198,7 +198,7 @@ public class HotelStayOperations {
 			statement.setInt(1, hotelId);
 			statement.setString(2, categoryCode);
 			statement.setInt(3, hotelId);
-			results = statement.executeQuery(sqlStatement);
+			results = statement.executeQuery();
 			while (results.next()) {
 				Rooms room = new Rooms();
 				room.setHotelId(results.getInt("hotelId"));
