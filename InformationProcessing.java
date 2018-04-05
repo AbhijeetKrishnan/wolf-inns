@@ -727,7 +727,7 @@ public class InformationProcessing {
 		
 		try {
 			connection = DatabaseConnection.getConnection();
-			statement = connection.prepareStatement(sqlStatement);
+			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
 			statement.setString(1, name);
 			statement.setString(2, DOB);
 			statement.setString(3, phone);
@@ -1113,7 +1113,8 @@ public class InformationProcessing {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
-			statement.setInt(1, serviceStaff.getStaffId());
+			statement.setInt(1, serviceStaff.getHotelId());
+			statement.setInt(2, serviceStaff.getStaffId());
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been updated
 			if (1==rowsAffected) {

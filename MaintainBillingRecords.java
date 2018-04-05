@@ -208,7 +208,7 @@ public class MaintainBillingRecords {
 		
 		try {
 			connection = DatabaseConnection.getConnection();
-			statement = connection.prepareStatement(sqlStatement);
+			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
 			
 			statement.setString(1, responsiblePartySSN);
 			statement.setString(2, address);

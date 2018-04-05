@@ -208,8 +208,41 @@ public class HotelStayOperations {
 				room.setCategoryCode(results.getString("categoryCode"));
 				rooms.add(room);
 			}
-			System.out.println("A list of available rooms in hotelId = " + hotelId + "was retrieved successfully!");
+			System.out.println("A list of available rooms in hotelId = " + hotelId + " was retrieved successfully!");
 			return rooms;
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
+	}
+
+	public static ArrayList<ServiceStaff> retrieveAvailableRoomServiceStaff(int hotelId) {
+		String sqlStatement = "SELECT staffId, hotelId FROM service_staff WHERE hotelId=? AND staffId IN (SELECT staffId FROM staff WHERE titleCode=?) AND staffId NOT IN (SELECT roomServiceStaffId FROM occupied_presidential_suite WHERE hotelId=?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		try {
+			ArrayList<ServiceStaff> roomServiceStaff = new ArrayList<ServiceStaff>();
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, hotelId);
+			statement.setString(2, "RSST");
+			statement.setInt(3, hotelId);
+			results = statement.executeQuery();
+			while (results.next()) {
+				ServiceStaff rss = new ServiceStaff();
+				rss.setHotelId(results.getInt("hotelId"));
+				rss.setStaffId(results.getInt("staffId"));
+				roomServiceStaff.add(rss);
+			}
+			System.out.println("A list of available room service staff in hotelId = " + hotelId + " was retrieved successfully!");
+			return roomServiceStaff;
 		} catch (SQLException ex) {
 			// Log and return null
 			ex.printStackTrace();
