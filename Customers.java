@@ -41,8 +41,8 @@ public class Customers {
 		if (o==this) {return true;}
 		if (!(o instanceof Customers)) {return false;}
 		Customers c = (Customers) o;
-		return (customerId==c.customerId && name==c.name &&
-                        dob==c.dob && phone==c.phone &&
-                        email==c.email);
+		return (customerId==c.customerId && name.equals(c.name) &&
+                        dob.equals(c.dob) && phone.equals(c.phone) &&
+                        email.equals(c.email));
 	}
 }

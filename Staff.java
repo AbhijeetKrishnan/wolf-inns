@@ -69,10 +69,10 @@ public class Staff {
 		if (o==this) {return true;}
 		if (!(o instanceof Staff)) {return false;}
 		Staff s = (Staff) o;
-		return (staffId==s.staffId && name==s.name &&
-                        titleCode==s.titleCode && deptCode==s.deptCode &&
-                        address==s.address && city==s.city &&
-                        state==s.state && phone==s.phone &&
-                        dob==s.dob);
+		return (staffId==s.staffId && name.equals(s.name) &&
+                        titleCode.equals(s.titleCode) && deptCode.equals(s.deptCode) &&
+                        address.equals(s.address) && city.equals(s.city) &&
+                        state.equals(s.state) && phone.equals(s.phone) &&
+                        dob.equals(s.dob));
 	}
 }

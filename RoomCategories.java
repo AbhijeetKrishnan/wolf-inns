@@ -20,7 +20,7 @@ public class RoomCategories{
 		if (o==this) {return true;}
 		if (!(o instanceof RoomCategories)) {return false;}
 		RoomCategories r = (RoomCategories) o;
-		return (categoryCode==r.categoryCode &&
-                        categoryDesc==r.categoryDesc);
+		return (categoryCode.equals(r.categoryCode) &&
+                        categoryDesc.equals(r.categoryDesc));
 	}
 }

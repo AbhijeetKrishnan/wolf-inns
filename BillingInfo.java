@@ -62,9 +62,9 @@ public class BillingInfo {
 		if (o==this) {return true;}
 		if (!(o instanceof BillingInfo)) {return false;}
 		BillingInfo b = (BillingInfo) o;
-		return (billingId==b.billingId && responsiblePartySSN==b.responsiblePartySSN &&
-                        address==b.address && city==b.city &&
-                        state==b.state && payMethodCode==b.payMethodCode &&
-                        cardNumber==b.cardNumber && totalCharges==b.totalCharges);
+		return (billingId==b.billingId && responsiblePartySSN.equals(b.responsiblePartySSN) &&
+                        address.equals(b.address) && city.equals(b.city) &&
+                        state.equals(b.state) && payMethodCode.equals(b.payMethodCode) &&
+                        cardNumber.equals(b.cardNumber) && totalCharges==b.totalCharges);
 	}
 }

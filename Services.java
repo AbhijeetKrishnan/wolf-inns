@@ -20,6 +20,6 @@ public class Services {
 		if (o==this) {return true;}
 		if (!(o instanceof Services)) {return false;}
 		Services s = (Services) o;
-		return (serviceCode==s.serviceCode && serviceDesc==s.serviceDesc);
+		return (serviceCode.equals(s.serviceCode) && serviceDesc.equals(s.serviceDesc));
 	}
 }

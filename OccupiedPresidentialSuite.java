@@ -35,7 +35,7 @@ public class OccupiedPresidentialSuite {
 		if (!(o instanceof OccupiedPresidentialSuite)) {return false;}
 		OccupiedPresidentialSuite ops = (OccupiedPresidentialSuite) o;
 		return (hotelId==ops.hotelId &&
-                        roomNumber==ops.roomNumber &&
+                        roomNumber.equals(ops.roomNumber) &&
                         cateringStaffId==ops.cateringStaffId && 
                         roomServiceStaffId==ops.roomServiceStaffId);
 	}

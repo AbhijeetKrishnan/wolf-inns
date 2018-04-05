@@ -352,7 +352,7 @@ public class InformationProcessing {
 		ResultSet generatedKeys = null;
 		try {
 			connection = DatabaseConnection.getConnection();
-			statement = connection.prepareStatement(sqlStatement);
+			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
 			statement.setString(1, name);
 			statement.setString(2, address);
 			statement.setString(3, city);
@@ -536,7 +536,7 @@ public class InformationProcessing {
 		ResultSet generatedKeys = null;
 		try {
 			connection = DatabaseConnection.getConnection();
-			statement = connection.prepareStatement(sqlStatement);
+			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
 			statement.setString(1, name);
 			statement.setString(2, titleCode);
 			statement.setString(3, deptCode);

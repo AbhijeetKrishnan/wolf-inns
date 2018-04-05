@@ -20,7 +20,7 @@ public class Departments {
 		if (o==this) {return true;}
 		if (!(o instanceof Departments)) {return false;}
 		Departments d = (Departments) o;
-		return (deptCode==d.deptCode &&
-                        deptDesc==d.deptDesc);
+		return (deptCode.equals(d.deptCode) &&
+                        deptDesc.equals(d.deptDesc));
 	}
 }

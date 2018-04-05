@@ -77,9 +77,9 @@ public class Stays {
 		if (!(o instanceof Stays)) {return false;}
 		Stays s = (Stays) o;
 		return (stayId==s.stayId && hotelId==s.hotelId &&
-                        roomNumber==s.roomNumber && customerId==s.customerId &&
-                        numOfGuests==s.numOfGuests && checkinDate==s.checkinDate &&
-                        checkinTime==s.checkinTime && checkoutDate==s.checkoutDate &&
-                        checkoutTime==s.checkoutTime && billingId==s.billingId);
+                        roomNumber.equals(s.roomNumber) && customerId==s.customerId &&
+                        numOfGuests==s.numOfGuests && checkinDate.equals(s.checkinDate) &&
+                        checkinTime.equals(s.checkinTime) && checkoutDate.equals(s.checkoutDate) &&
+                        checkoutTime.equals(s.checkoutTime) && billingId==s.billingId);
 	}
 }

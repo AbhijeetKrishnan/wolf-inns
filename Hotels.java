@@ -55,9 +55,9 @@ public class Hotels {
 		if (o==this) {return true;}
 		if (!(o instanceof Hotels)) {return false;}
 		Hotels h = (Hotels) o;
-		return (hotelId==h.hotelId && name==h.name &&
-                        address==h.address && city==h.city &&
-                        state==h.state && phone==h.phone &&
+		return (hotelId==h.hotelId && name.equals(h.name) &&
+                        address.equals(h.address) && city.equals(h.city) &&
+                        state.equals(h.state) && phone.equals(h.phone) &&
                         managerId==h.managerId);
 	}
 }

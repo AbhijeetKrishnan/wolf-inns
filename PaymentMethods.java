@@ -20,7 +20,7 @@ public class PaymentMethods {
 		if (o==this) {return true;}
 		if (!(o instanceof PaymentMethods)) {return false;}
 		PaymentMethods p = (PaymentMethods) o;
-		return (payMethodCode==p.payMethodCode &&
-                        payMethodDesc==p.payMethodDesc);
+		return (payMethodCode.equals(p.payMethodCode) &&
+                        payMethodDesc.equals(p.payMethodDesc));
 	}
 }

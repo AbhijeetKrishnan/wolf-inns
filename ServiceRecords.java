@@ -48,8 +48,8 @@ public class ServiceRecords {
 		if (o==this) {return true;}
 		if (!(o instanceof ServiceRecords)) {return false;}
 		ServiceRecords s = (ServiceRecords) o;
-		return (stayId==s.stayId && serviceCode==s.serviceCode &&
-                        staffId==s.staffId && serviceDate==s.serviceDate &&
-                        serviceTime==s.serviceTime && charge==s.charge);
+		return (stayId==s.stayId && serviceCode.equals(s.serviceCode) &&
+                        staffId==s.staffId && serviceDate.equals(s.serviceDate) &&
+                        serviceTime.equals(s.serviceTime) && charge==s.charge);
 	}
 }

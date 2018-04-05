@@ -20,7 +20,7 @@ public class JobTitles{
 		if (o==this) {return true;}
 		if (!(o instanceof JobTitles)) {return false;}
 		JobTitles j = (JobTitles) o;
-		return (titleCode==j.titleCode &&
-                        titleDesc==j.titleDesc);
+		return (titleCode.equals(j.titleCode) &&
+                        titleDesc.equals(j.titleDesc));
 	}
 }

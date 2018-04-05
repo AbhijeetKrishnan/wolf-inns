@@ -41,8 +41,8 @@ public class Rooms {
 		if (o==this) {return true;}
 		if (!(o instanceof Rooms)) {return false;}
 		Rooms r = (Rooms) o;
-		return (hotelId==r.hotelId && roomNumber==r.roomNumber &&
+		return (hotelId==r.hotelId && roomNumber.equals(r.roomNumber) &&
                         maxAllowedOcc==r.maxAllowedOcc && rate==r.rate &&
-                        categoryCode == r.categoryCode);
+                        categoryCode.equals(r.categoryCode));
 	}
 }
