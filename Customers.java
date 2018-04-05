@@ -1,12 +1,10 @@
-
 public class Customers {
-
 	private int customerId;
 	private String name;
 	private String dob;
 	private String phone;
 	private String email;
-	
+
 	public int getCustomerId() {
 		return customerId;
 	}
@@ -36,5 +34,15 @@ public class Customers {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o==this) {return true;}
+		if (!(o instanceof Customers)) {return false;}
+		Customers c = (Customers) o;
+		return (customerId==c.customerId && name==c.name &&
+                        dob==c.dob && phone==c.phone &&
+                        email==c.email);
 	}
 }

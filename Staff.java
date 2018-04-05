@@ -1,6 +1,4 @@
-
 public class Staff {
-	
 	private int staffId;
 	private String name;
 	private String titleCode;
@@ -10,7 +8,7 @@ public class Staff {
 	private String state;
 	private String phone;
 	private String dob;
-	
+
 	public int getStaffId() {
 		return staffId;
 	}
@@ -64,5 +62,17 @@ public class Staff {
 	}
 	public void setDob(String dob) {
 		this.dob = dob;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o==this) {return true;}
+		if (!(o instanceof Staff)) {return false;}
+		Staff s = (Staff) o;
+		return (staffId==s.staffId && name==s.name &&
+                        titleCode==s.titleCode && deptCode==s.deptCode &&
+                        address==s.address && city==s.city &&
+                        state==s.state && phone==s.phone &&
+                        dob==s.dob);
 	}
 }

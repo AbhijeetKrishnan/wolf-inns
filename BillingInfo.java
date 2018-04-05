@@ -1,5 +1,4 @@
 public class BillingInfo {
-
 	private int billingId;
 	private String responsiblePartySSN;
 	private String address;
@@ -8,7 +7,7 @@ public class BillingInfo {
 	private String payMethodCode;
 	private String cardNumber;
 	private double totalCharges;
-	
+
 	public int getBillingId() {
 		return billingId;
 	}
@@ -56,5 +55,16 @@ public class BillingInfo {
 	}
 	public void setTotalCharges(double totalCharges) {
 		this.totalCharges = totalCharges;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o==this) {return true;}
+		if (!(o instanceof BillingInfo)) {return false;}
+		BillingInfo b = (BillingInfo) o;
+		return (billingId==b.billingId && responsiblePartySSN==b.responsiblePartySSN &&
+                        address==b.address && city==b.city &&
+                        state==b.state && payMethodCode==b.payMethodCode &&
+                        cardNumber==b.cardNumber && totalCharges==b.totalCharges);
 	}
 }

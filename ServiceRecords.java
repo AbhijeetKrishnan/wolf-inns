@@ -1,12 +1,11 @@
 public class ServiceRecords {
-
 	private int stayId;
 	private String serviceCode;
 	private int staffId;
 	private String serviceDate;
 	private String serviceTime;
 	private double charge;
-	
+
 	public int getStayId() {
 		return stayId;
 	}
@@ -42,5 +41,15 @@ public class ServiceRecords {
 	}
 	public void setCharge(double charge) {
 		this.charge = charge;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o==this) {return true;}
+		if (!(o instanceof ServiceRecords)) {return false;}
+		ServiceRecords s = (ServiceRecords) o;
+		return (stayId==s.stayId && serviceCode==s.serviceCode &&
+                        staffId==s.staffId && serviceDate==s.serviceDate &&
+                        serviceTime==s.serviceTime && charge==s.charge);
 	}
 }

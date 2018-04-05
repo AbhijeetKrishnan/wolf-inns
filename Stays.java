@@ -1,5 +1,4 @@
 public class Stays {
-
 	private int stayId;
 	private int hotelId;
 	private String roomNumber;
@@ -10,7 +9,7 @@ public class Stays {
 	private String checkoutDate;
 	private String checkoutTime;
 	private int billingId;
-	
+
 	public int getStayId() {
 		return stayId;
 	}
@@ -70,5 +69,17 @@ public class Stays {
 	}
 	public void setBillingId(int billingId) {
 		this.billingId = billingId;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o==this) {return true;}
+		if (!(o instanceof Stays)) {return false;}
+		Stays s = (Stays) o;
+		return (stayId==s.stayId && hotelId==s.hotelId &&
+                        roomNumber==s.roomNumber && customerId==s.customerId &&
+                        numOfGuests==s.numOfGuests && checkinDate==s.checkinDate &&
+                        checkinTime==s.checkinTime && checkoutDate==s.checkoutDate &&
+                        checkoutTime==s.checkoutTime && billingId==s.billingId);
 	}
 }

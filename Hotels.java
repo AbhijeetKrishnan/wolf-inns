@@ -1,6 +1,4 @@
-
 public class Hotels {
-
 	private int hotelId;
 	private String name;
 	private String address;
@@ -8,7 +6,7 @@ public class Hotels {
 	private String state;
 	private String phone;
 	private int managerId;
-	
+
 	public int getHotelId() {
 		return hotelId;
 	}
@@ -50,5 +48,16 @@ public class Hotels {
 	}
 	public void setManagerId(int managerId) {
 		this.managerId = managerId;
-	}	
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o==this) {return true;}
+		if (!(o instanceof Hotels)) {return false;}
+		Hotels h = (Hotels) o;
+		return (hotelId==h.hotelId && name==h.name &&
+                        address==h.address && city==h.city &&
+                        state==h.state && phone==h.phone &&
+                        managerId==h.managerId);
+	}
 }
