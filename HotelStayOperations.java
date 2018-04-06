@@ -254,4 +254,45 @@ public class HotelStayOperations {
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
+  
+  /**
+   * Retrieve list of catering staff in a hotel that can be assigned to a Presidential Suite in that hotel
+   * @param hotelId: the hotel in which we check the catering staff availability
+   * @return list of catering staff not assigned to a Presidential Suite in that hotel
+   */
+  public static ArrayList<ServiceStaff> retrieveAvailableCateringStaff(int hotelId) {
+		String sqlStatement = "SELECT staffId, hotelId FROM service_staff WHERE hotelId=? AND " //why do we need to retrieve hotelId here?
+                          + "staffId IN (SELECT staffId FROM staff WHERE titleCode=?) AND "
+                          + "staffId NOT IN (SELECT cateringStaffId FROM occupied_presidential_suite WHERE hotelId=?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+    ArrayList<ServiceStaff> cateringStaffList = null;
+    
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, hotelId);
+			statement.setString(2, "CATS");
+			statement.setInt(3, hotelId);
+			results = statement.executeQuery();
+      cateringStaffList = new ArrayList<ServiceStaff>();
+			while (results.next()) {
+				ServiceStaff cats = new ServiceStaff();
+				cats.setHotelId(results.getInt("hotelId"));
+				cats.setStaffId(results.getInt("staffId"));
+				cateringStaffList.add(cats);
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
+    
+    return cateringStaffList;
+	}
 }
