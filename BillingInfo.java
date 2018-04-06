@@ -65,6 +65,6 @@ public class BillingInfo {
 		return (billingId==b.billingId && responsiblePartySSN.equals(b.responsiblePartySSN) &&
                         address.equals(b.address) && city.equals(b.city) &&
                         state.equals(b.state) && payMethodCode.equals(b.payMethodCode) &&
-                        cardNumber.equals(b.cardNumber) && totalCharges==b.totalCharges);
+                        cardNumber.equals(b.cardNumber)); // don't use totalCharges since that is set by system ops
 	}
 }

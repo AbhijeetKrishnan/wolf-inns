@@ -712,14 +712,15 @@ public class InformationProcessing {
 
 	/**
 	 * Create a customer record with given data
+   * @param customerId represents the customer's ID in the database
 	 * @param name represents the customer name
 	 * @param DOB represents the customer's date of birth
 	 * @param phone represents the customer's phone number
 	 * @param email represents the customer's email ID
 	 * @return Customers object if successful, else null
 	 */
-	public static Customers createCustomer(String name, String DOB, String phone, String email) {
-		String sqlStatement = "INSERT INTO customers(name, DOB, phone, email) VALUES (?, ?, ?, ?);";
+	public static Customers createCustomer(int customerId, String name, String DOB, String phone, String email) {
+		String sqlStatement = "INSERT INTO customers(customerId, name, DOB, phone, email) VALUES (?, ?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		Customers customer = null; // default value
@@ -728,19 +729,17 @@ public class InformationProcessing {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
-			statement.setString(1, name);
-			statement.setString(2, DOB);
-			statement.setString(3, phone);
-			statement.setString(4, email);
+      statement.setInt(1, customerId);
+			statement.setString(2, name);
+			statement.setString(3, DOB);
+			statement.setString(4, phone);
+			statement.setString(5, email);
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been inserted
 			if (rowsAffected == 1) {
 				customer = new Customers();
-				generatedKeys = statement.getGeneratedKeys();
-				generatedKeys.next();
-				
-				customer.setCustomerId(generatedKeys.getInt(1));
+				customer.setCustomerId(customerId);
 				customer.setName(name);
 				customer.setDob(DOB);
 				customer.setPhone(phone);
@@ -762,7 +761,7 @@ public class InformationProcessing {
 	 * @param customerId represents the customer ID
 	 * @return Customers object if given customer exists else null
 	 */
-	public static Customers retrieveCustomers(int customerId) {
+	public static Customers retrieveCustomer(int customerId) {
 		Customers customer = null;
 		String sqlStatement = "SELECT * FROM customers WHERE customerId = ?;";
 		Connection connection = null;
@@ -802,7 +801,7 @@ public class InformationProcessing {
 	 * @return true on success or false on failure
 	 */
 	public static boolean updateCustomer(Customers customer) {
-		String sqlStatement = "UPDATE hotels SET name = ?, DOB = ?, phone = ?, email = ? WHERE customerId = ?;";
+		String sqlStatement = "UPDATE customers SET name = ?, DOB = ?, phone = ?, email = ? WHERE customerId = ?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		boolean returnValue = false;

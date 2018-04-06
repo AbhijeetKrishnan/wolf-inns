@@ -263,6 +263,7 @@ public class MaintainBillingRecords {
 			
 			while (results.next()) { // expect only 0/1 row
 				billingInfo = new BillingInfo();
+        billingInfo.setBillingId(billingId);
 				billingInfo.setResponsiblePartySSN(results.getString("responsiblePartySSN"));
 				billingInfo.setAddress(results.getString("address"));
 				billingInfo.setCity(results.getString("city"));
@@ -319,4 +320,38 @@ public class MaintainBillingRecords {
 		
 		return returnValue;
 	}
+  
+  /**
+   * Delete a billing_info record
+   * @param billingInfo: a BillingInfo object representing the record to be deleted
+   * @return true on success, false on error
+   */
+  public static boolean deleteBillingInfo(BillingInfo billingInfo) {
+    String sqlStatement = "DELETE FROM billing_info WHERE billingId=?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+    boolean returnValue = false;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, billingInfo.getBillingId());
+			int rowsAffected = statement.executeUpdate();
+			// A single row should have been deleted
+			if (rowsAffected == 1) {
+				returnValue = true;
+			} else {
+				// Throw exception
+				throw new SQLException("Unexpected behaviour in deleteBillingInfo()");
+			}	
+		} catch (SQLException ex) {
+			// Log and return false
+			ex.printStackTrace();
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
+    
+    return returnValue;
+  }
 }
