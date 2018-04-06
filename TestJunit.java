@@ -286,6 +286,36 @@ public class TestJunit {
   
   @Test
   public void testRoomsCRUD() {
+    //create a new record
+    Rooms expected = new Rooms();
+    expected.setHotelId(1);
+    expected.setRoomNumber("Test");
+    expected.setMaxAllowedOcc(4); // max possible occupancy allowed by DB
+    expected.setRate(2.0);
+    expected.setCategoryCode("ECON");
+    
+    /* Create */
+    System.out.println("Testing createRoom...");
+    Rooms actual = InformationProcessing.createRoom(1, "Test", 4, 2.0, "ECON");
+    assertEquals("Create a Rooms record", expected, actual);
+    System.out.println("Test for createRooms passed!");
+    
+    /* Retrieve */
+    System.out.println("Testing retrieveRoom...");
+    Rooms retrieved = InformationProcessing.retrieveRoom(actual.getHotelId(), actual.getRoomNumber());
+    assertEquals("Retrieve a Rooms record", expected, retrieved);
+    System.out.println("Test for retrieveRoom passed!");
+    
+    /* Update */
+    System.out.println("Testing updateRoom...");
+    actual.setMaxAllowedOcc(1); // min possible occupancy allowed by DB
+    assertTrue("Update a Rooms record", InformationProcessing.updateRoom(actual));
+    System.out.println("Test for updateRoom passed!");
+    
+    /* Delete */
+    System.out.println("Testing deleteRoom...");
+    assertTrue("Delete a Rooms record", InformationProcessing.deleteRoom(actual));
+    System.out.println("Test for deleteRoom passed!");
   }
   
   @Test
