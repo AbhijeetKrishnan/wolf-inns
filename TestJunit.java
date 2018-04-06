@@ -211,12 +211,77 @@ public class TestJunit {
   
   /* Abhijeet APIs start */
   
+  // all my tests assume the existence of initial data entered as per Project Report #2
+  
   @Test
-  public void testBillingInfoCRU() {
+  public void testBillingInfoCRUD() {
+    
+    //create a new record
+    BillingInfo expected = new BillingInfo();
+    expected.setResponsiblePartySSN("--Test---");
+    expected.setAddress("Test");
+    expected.setCity("Test");
+    expected.setState("TT");
+    expected.setPayMethodCode("CCWF");
+    expected.setCardNumber("Test");
+    
+    /* Create */
+    System.out.println("Testing createBillingInfo...");
+    BillingInfo actual = MaintainBillingRecords.createBillingInfo("--Test---", "Test", "Test", "TT", "CCWF", "Test");
+    expected.setBillingId(actual.getBillingId()); //necessary since billingId is autoincrement
+    assertEquals("Create a BillingInfo record", expected, actual);
+    System.out.println("Test for createBillingInfo passed!");
+    
+    /* Retrieve */
+    System.out.println("Testing retrieveBillingInfo...");
+    BillingInfo retrieved = MaintainBillingRecords.retrieveBillingInfo(actual.getBillingId());
+    assertEquals("Retrieve a BillingInfo record", expected, retrieved);
+    System.out.println("Test for retrieveBillingInfo passed!");
+    
+    /* Update */
+    System.out.println("Testing updateBillingInfo...");
+    actual.setAddress("New Test");
+    assertTrue("Update a BillingInfo record", MaintainBillingRecords.updateBillingInfo(actual));
+    System.out.println("Test for retrieveBillingInfo passed!");
+    
+    /* Delete */
+    System.out.println("Testing deleteBillingInfo...");
+    assertTrue("Delete a BillingInfo record", MaintainBillingRecords.deleteBillingInfo(actual));
+    System.out.println("Test for deleteBillingInfo passed!");
   }
   
   @Test
   public void testCustomersCRUD() {
+    //create a new record
+    Customers expected = new Customers();
+    expected.setCustomerId(50000);
+    expected.setName("Test");
+    expected.setDob("2018-01-01");
+    expected.setPhone("Test");
+    expected.setEmail("Test");
+    
+    /* Create */
+    System.out.println("Testing createCustomer...");
+    Customers actual = InformationProcessing.createCustomer(50000, "Test", "2018-01-01", "Test", "Test");
+    assertEquals("Create a Customers record", expected, actual);
+    System.out.println("Test for createCustomer passed!");
+    
+    /* Retrieve */
+    System.out.println("Testing retrieveCustomer...");
+    Customers retrieved = InformationProcessing.retrieveCustomer(actual.getCustomerId());
+    assertEquals("Retrieve a Customers record", expected, retrieved);
+    System.out.println("Test for retrieveCustomer passed!");
+    
+    /* Update */
+    System.out.println("Testing updateCustomer...");
+    actual.setPhone("New Test");
+    assertTrue("Update a Customers record", InformationProcessing.updateCustomer(actual));
+    System.out.println("Test for updateCustomer passed!");
+    
+    /* Delete */
+    System.out.println("Testing deleteCustomer...");
+    assertTrue("Delete a Customers record", InformationProcessing.deleteCustomer(actual));
+    System.out.println("Test for deleteCustomer passed!");
   }
   
   @Test
