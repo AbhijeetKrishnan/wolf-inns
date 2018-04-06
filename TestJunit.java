@@ -128,7 +128,7 @@ public class TestJunit {
 	}
 
 	@Test
-	public void testServiceRecordsCRUD() {
+	public void testServiceRecordsCRUD() { //CRU only
 		// Stay 5 is still active
 		ServiceRecords expected = new ServiceRecords();
 		expected.setStayId(5);
@@ -208,4 +208,44 @@ public class TestJunit {
 		InformationProcessing.deleteServiceStaff(ss);
 		InformationProcessing.deleteStaff(s);
 	}
+  
+  /* Abhijeet APIs start */
+  
+  @Test
+  public void testBillingInfoCRU() {
+  }
+  
+  @Test
+  public void testCustomersCRUD() {
+  }
+  
+  @Test
+  public void testRoomsCRUD() {
+  }
+  
+  @Test
+  public void testRetrieveServiceStaffAssignmentsByHotel() {
+  }
+  
+  @Test
+  public void testRetrieveServiceStaffAssignmentsbyStaff() {
+  }
+  
+  @Test
+  public void testRetrieveAvailableCateringStaff() {
+  }
+  
+  @Test
+  public void testAssignDedicatedPresidentialSuiteStaff() {
+  }
+  
+  @Test
+  public void testReportOccupancyByDateRange() {
+  }
+  
+  @Test
+  public void testReportOccupancyByCity() {
+  }
+  
+  /* Abhijeet APIs end */
 }
