@@ -105,9 +105,9 @@ public class Reporting {
 	 */
 	public static void occupancyByCity() {
 		
-		String sqlStatement = "SELECT avail.city, avail.state, COALESCE(occupied_rooms, 0) AS total_occupancy, (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS percentage_occupied"
-			+ "FROM (SELECT  city, state, COUNT(stayId) AS occupied_rooms FROM hotels NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY city, state) AS occ"
-			+ "RIGHT JOIN (SELECT city, state, COUNT(roomNumber) AS total_rooms FROM hotels NATURAL JOIN rooms GROUP BY city, state) AS avail"
+		String sqlStatement = "SELECT avail.city, avail.state, COALESCE(occupied_rooms, 0) AS total_occupancy, (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS percentage_occupied "
+			+ "FROM (SELECT  city, state, COUNT(stayId) AS occupied_rooms FROM hotels NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY city, state) AS occ "
+			+ "RIGHT JOIN (SELECT city, state, COUNT(roomNumber) AS total_rooms FROM hotels NATURAL JOIN rooms GROUP BY city, state) AS avail "
 			+ "ON occ.city=avail.city AND occ.state=avail.state ORDER BY avail.state, avail.city";
 		
 		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);

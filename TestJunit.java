@@ -2,6 +2,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.sql.*;
+import java.io.*;
 
 public class TestJunit {
 	@Test
@@ -380,15 +381,37 @@ public class TestJunit {
     InformationProcessing.deleteServiceStaff(ss_rsst);
 		InformationProcessing.deleteStaff(s_cats);
     InformationProcessing.deleteStaff(s_rsst);
+    InformationProcessing.deleteRoom(r);
     System.out.println("Test for assignDedicatedPresidentialSuiteStaff passed!");
   }
   
   @Test
-  public void testReportOccupancyByDateRange() {
+  public void testOccupancyByDateRange() {
   }
   
   @Test
-  public void testReportOccupancyByCity() {
+  public void testOccupancyByCity() {
+    //ideally I should be checking the values in the default data and verifying that this query returns the correct output
+    /*
+    System.out.println("Testing occupancyByCity...");
+    //Output of query on default data
+    String expected =   "+--------------+-------+-----------------+---------------------+\n"
+                      + "| city         | state | total_occupancy | percentage_occupied |\n"
+                      + "+--------------+-------+-----------------+---------------------+\n"
+                      + "| Los Angeles  | CA    |               1 |             50.0000 |\n"
+                      + "| Fayetteville | NC    |               0 |              0.0000 |\n"
+                      + "| Raleigh      | NC    |               0 |              0.0000 |\n"
+                      + "| New York     | NY    |               0 |              0.0000 |\n"
+                      + "+--------------+-------+-----------------+---------------------+\n";
+
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent)); // set up streams
+    Reporting.occupancyByCity();
+    System.setOut(System.out); // restore streams
+    System.out.println(outContent.toString());
+    assertEquals("Report occupancy by city", expected, outContent.toString());
+    System.out.println("Test for occupancyByCity passed!");
+    */
   }
   
   /* Abhijeet APIs end */
