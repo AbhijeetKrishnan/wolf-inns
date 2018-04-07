@@ -320,18 +320,67 @@ public class TestJunit {
   
   @Test
   public void testRetrieveServiceStaffAssignmentsByHotel() {
+    System.out.println("Testing retrieveServiceStaffAssignmentsByHotel...");
+    ArrayList<Integer> expected = new ArrayList<Integer>();
+    expected.add(1);
+    expected.add(4);
+    expected.add(5);
+    expected.add(10);
+    ArrayList<Integer> actual = InformationProcessing.retrieveServiceStaffAssignmentsByHotel(1);
+    assertEquals("Retrieve Service Staff assignment by hotel", expected, actual);
+    System.out.println("Test for retrieveServiceStaffAssignmentsByHotel passed!");
   }
   
   @Test
   public void testRetrieveServiceStaffAssignmentsbyStaff() {
+    System.out.println("Testing retrieveServiceStaffAssignmentsbyStaff...");
+    int expected = 1;
+    int actual = InformationProcessing.retrieveServiceStaffAssignmentsByStaff(1);
+    assertEquals("Retrieve Service Staff assignment by staff", expected, actual);
+    
+    // can't test default value case since all service staff have been assigned to hotels in default data
+    // create that scenario in test code?
+    System.out.println("Test for retrieveServiceStaffAssignmentsbyStaff passed!");
   }
   
   @Test
   public void testRetrieveAvailableCateringStaff() {
+    System.out.println("Testing retrieveAvailableCateringStaff...");
+    ArrayList<ServiceStaff> expected = new ArrayList<ServiceStaff>();
+    ServiceStaff expectedStaff = new ServiceStaff();
+    expectedStaff.setStaffId(1);
+    expectedStaff.setHotelId(1);
+    expected.add(expectedStaff);
+    ArrayList<ServiceStaff> actual = HotelStayOperations.retrieveAvailableCateringStaff(1);
+    assertEquals("Retrieve available catering staff", expected, actual);
+    System.out.println("Test for retrieveAvailableCateringStaff passed!");
   }
   
   @Test
   public void testAssignDedicatedPresidentialSuiteStaff() {
+    System.out.println("Testing assignDedicatedPresidentialSuiteStaff...");
+    //create temp records for available service room service staff since there is none in default data
+    //create room in hotel 1
+    Rooms r = InformationProcessing.createRoom(1, "Test", 4, 2.0, "PRES");
+    //create new staff to assign to hotel
+    Staff s_rsst = InformationProcessing.createStaff("Test RSST", "RSST", "SRVD", "Test", "Test", "TT", "Test1", "2018-01-01");
+    Staff s_cats = InformationProcessing.createStaff("Test CATS", "CATS", "SRVD", "Test", "Test", "TT", "Test2", "2018-01-01");
+    //assign staff to hotel 1
+		ServiceStaff ss_rsst = InformationProcessing.createServiceStaff(s_rsst.getStaffId(), 1);
+    ServiceStaff ss_cats = InformationProcessing.createServiceStaff(s_cats.getStaffId(), 1);
+    
+    ArrayList<ServiceStaff> availCateringStaff = HotelStayOperations.retrieveAvailableCateringStaff(1);
+    ArrayList<ServiceStaff> availRoomServiceStaff = HotelStayOperations.retrieveAvailableRoomServiceStaff(1);
+    
+    assertTrue("Assign dedicated staff to a Presidential Suite", HotelStayOperations.assignDedicatedPresidentialSuiteStaff(1, "Test", availCateringStaff.get(0).getStaffId(), availRoomServiceStaff.get(0).getStaffId()));
+    
+    //clean up
+    assertTrue("Unassign dedicated staff from a Presidential Suite", HotelStayOperations.unassignDedicatedPresidentialSuiteStaff(1, "Test"));
+		InformationProcessing.deleteServiceStaff(ss_cats);
+    InformationProcessing.deleteServiceStaff(ss_rsst);
+		InformationProcessing.deleteStaff(s_cats);
+    InformationProcessing.deleteStaff(s_rsst);
+    System.out.println("Test for assignDedicatedPresidentialSuiteStaff passed!");
   }
   
   @Test

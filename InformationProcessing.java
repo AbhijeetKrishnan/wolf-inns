@@ -275,7 +275,6 @@ public class InformationProcessing {
 	 * @return An ArrayList containing staff IDs working at that hotel
 	 */
 	public static ArrayList<Integer> retrieveServiceStaffAssignmentsByHotel(int hotelId) {
-
 		ArrayList<Integer> staffIds = new ArrayList<Integer>();
 		String sqlStatement = "SELECT staffId FROM service_staff WHERE hotelId = ?;";
 		Connection connection = null;
@@ -283,9 +282,10 @@ public class InformationProcessing {
 		ResultSet results = null;
 		
 		try {
-			statement.setString(1, Integer.toString(hotelId));
+      connection = DatabaseConnection.getConnection();
+      statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, hotelId);
 			results = statement.executeQuery();
-			
 			while (results.next()) {
 				staffIds.add(results.getInt("staffId"));
 			}
@@ -298,7 +298,7 @@ public class InformationProcessing {
 			try { statement.close(); } catch (Exception ex) {};
 			try { connection.close(); } catch (Exception ex) {};
 		}
-
+    
 		return staffIds;
 	}
 	
@@ -316,6 +316,8 @@ public class InformationProcessing {
 		ResultSet results = null;
 		
 		try {
+      connection = DatabaseConnection.getConnection();
+      statement = connection.prepareStatement(sqlStatement);
 			statement.setString(1, Integer.toString(staffId));
 			results = statement.executeQuery();
 			
