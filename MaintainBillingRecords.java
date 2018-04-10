@@ -354,4 +354,78 @@ public class MaintainBillingRecords {
     
     return returnValue;
   }
+    /**
+     * the sum of service record charges and room charge, if paid with hotel CC 
+     * gives discount
+     * @param stayId
+     */
+    public static void generateBillingTotal(int stayId) throws SQLException {
+        double totalCharge = -1;
+
+        Connection con = null;
+        PreparedStatement prst1 = null;
+        PreparedStatement prst2 = null;
+        ResultSet rs1 = null;
+        ResultSet rs2 = null;
+        String sqlString1 = "SELECT sum(cg) as totCharge\n"
+                + "FROM (\n"
+                + "(SELECT (DATEDIFF(checkoutDate, checkinDate) + 1) * rate  cg \n"
+                + "FROM stays NATURAL JOIN rooms GROUP BY stayId HAVING stayId = ?)\n"
+                + "\n"
+                + "UNION ALL\n"
+                + "\n"
+                + "(SELECT sum(charge) cg\n"
+                + "FROM stays NATURAL JOIN service_records NATURAL JOIN services\n"
+                + "GROUP BY stayId HAVING stayId =? )\n"
+                + ") a;";
+        
+        String SqlString2 = String.format("SELECT payMethodCode FROM stays\n"
+                + "NATURAL JOIN billing_info\n"
+                + "WHERE stayId = ? ;");
+
+        try {
+            con = DatabaseConnection.getConnection();
+            con.setAutoCommit(false);
+            prst1 = con.prepareStatement(sqlString1);
+            prst1.setInt(1, stayId);
+            prst1.setInt(2, stayId);
+            rs1 = prst1.executeQuery();
+            prst2 = con.prepareStatement(SqlString2);
+            prst2.setInt(1, stayId);
+            rs2 = prst2.executeQuery();
+            con.commit();
+            if (rs1.next()) {
+                totalCharge = rs1.getInt("totCharge");
+            }
+            if (rs2.next()) {
+                if ("CCWF".equals(rs2.getString("payMethodCode"))){
+                    System.out.println("You are paying discounted Charge.");
+                    totalCharge *= (1-CCWF_DISCOUNT);
+                }
+            }
+
+            System.out.printf("total Charge for stay %d is %.2f%n", stayId, totalCharge);
+            System.out.printf("You saved $%.2f.%n",  CCWF_DISCOUNT*totalCharge);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch (SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } finally {
+            if (prst1 != null) {
+                prst1.close();
+            }
+            if (prst2 != null) {
+                prst2.close();
+            }
+            con.setAutoCommit(true);
+        }
+
+    }
 }
