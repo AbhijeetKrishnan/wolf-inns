@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class MaintainBillingRecords {
-	
+	public static final double CCWI_DISCOUNT = .05;
 	public static double calculateRoomCharge(int stayId) {
 		double roomCharge = 0.0;
 		String sqlStatement = "SELECT ((DATEDIFF(checkoutDate, checkinDate)+1)*rate) AS \"Room Charge\" FROM stays NATURAL JOIN rooms WHERE stayId = ?";
