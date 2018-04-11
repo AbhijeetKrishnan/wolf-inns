@@ -355,11 +355,12 @@ public class MaintainBillingRecords {
     return returnValue;
   }
     /**
-     * the sum of service record charges and room charge, if paid with hotel CC 
-     * gives discount
-     * @param stayId
+     * The sum of service record charges and room charge, if paid with hotel CC 
+     * gives discounted charge.
+     * @param stayId The stayId of the stay which the billing should be generated for.
+     * @return double The total charge minus any applicable discount.
      */
-    public static void generateBillingTotal(int stayId) throws SQLException {
+    public static double generateBillingTotal(int stayId) throws SQLException {
         double totalCharge = -1;
 
         Connection con = null;
@@ -385,7 +386,6 @@ public class MaintainBillingRecords {
 
         try {
             con = DatabaseConnection.getConnection();
-            con.setAutoCommit(false);
             prst1 = con.prepareStatement(sqlString1);
             prst1.setInt(1, stayId);
             prst1.setInt(2, stayId);
@@ -393,30 +393,24 @@ public class MaintainBillingRecords {
             prst2 = con.prepareStatement(SqlString2);
             prst2.setInt(1, stayId);
             rs2 = prst2.executeQuery();
-            con.commit();
             if (rs1.next()) {
                 totalCharge = rs1.getInt("totCharge");
             }
             if (rs2.next()) {
                 if ("CCWF".equals(rs2.getString("payMethodCode"))){
-                    System.out.println("You are paying discounted Charge.");
+                    //System.out.println("You are paying discounted Charge.");
                     totalCharge *= (1-CCWF_DISCOUNT);
                 }
             }
 
-            System.out.printf("total Charge for stay %d is %.2f%n", stayId, totalCharge);
-            System.out.printf("You saved $%.2f.%n",  CCWF_DISCOUNT*totalCharge);
+            //System.out.printf("total Charge for stay %d is %.2f%n", stayId, totalCharge);
+            //System.out.printf("You saved $%.2f.%n",  CCWF_DISCOUNT*totalCharge);
+            
+            return totalCharge;
             
         } catch (SQLException e) {
-            e.printStackTrace();
-            if (con != null) {
-                try {
-                    System.err.print("Transaction is being rolled back");
-                    con.rollback();
-                } catch (SQLException excep) {
-                    excep.printStackTrace();
-                }
-            }
+            e.printStackTrace();            
+            return -1;
         } finally {
             if (prst1 != null) {
                 prst1.close();
@@ -424,8 +418,37 @@ public class MaintainBillingRecords {
             if (prst2 != null) {
                 prst2.close();
             }
-            con.setAutoCommit(true);
+            try { rs1.close(); } catch (Exception ex) {};
+            try { rs2.close(); } catch (Exception ex) {};
+            try { con.close(); } catch (Exception ex) {};
         }
-
     }
+    
+    public static boolean updateBillingInfoTotalCharges(int billingId, double totalCharges, Connection connection) {
+		
+		String sqlStatement = "UPDATE billing_info SET totalCharges = ? WHERE billingId = ?";
+		
+		PreparedStatement statement = null;
+		boolean returnValue = false;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			
+			statement.setDouble(1, totalCharges);
+			statement.setInt(2, billingId);
+			
+			int rowsAffected = statement.executeUpdate();
+			
+			if (rowsAffected == 1) {
+				returnValue = true;
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (Exception ex) {};
+		}
+		
+		return returnValue;
+	}
 }

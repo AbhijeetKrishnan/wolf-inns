@@ -1,5 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;  
 
 public class HotelStayOperations {
 
@@ -108,14 +110,12 @@ public class HotelStayOperations {
 	 * @param roomNumber The room number of the presidential suite.
 	 * @return A value representing a success (true) or failure (false) of the delete.
 	 */
-    public static boolean unassignDedicatedPresidentialSuiteStaff(int hotelId, String roomNumber) {
+    public static boolean unassignDedicatedPresidentialSuiteStaff(int hotelId, String roomNumber, Connection connection) {
 		
 		String sqlStatement = "DELETE FROM occupied_presidential_suite WHERE hotelId = ? AND roomNumber = ?";
-		Connection connection = null;
 		PreparedStatement statement = null;
 		
 		try {
-			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1,  hotelId);
 			statement.setString(2,  roomNumber);
@@ -135,7 +135,6 @@ public class HotelStayOperations {
 		} finally {
 			// Attempt to close all resources, ignore failures.
 			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
 		}
 	}
 	
@@ -147,15 +146,12 @@ public class HotelStayOperations {
 	 * @param roomServiceStaffId: ID of available dedicated room service staff
 	 * @return true on success, or false on failure
 	 */
-	public static boolean assignDedicatedPresidentialSuiteStaff(int hotelId, String roomNumber, int cateringStaffId, int roomServiceStaffId) {
+	public static boolean assignDedicatedPresidentialSuiteStaff(int hotelId, String roomNumber, int cateringStaffId, int roomServiceStaffId, Connection connection) {
 		
 		String sqlStatement = "INSERT INTO occupied_presidential_suite (hotelId, roomNumber, cateringStaffId, roomServiceStaffId) VALUES (?, ?, ?, ?)";
-		Connection connection = null;
 		PreparedStatement statement = null;
-		boolean returnValue = false;
 		
 		try {
-			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, hotelId);
 			statement.setString(2, roomNumber);
@@ -166,18 +162,18 @@ public class HotelStayOperations {
 			
 			// A single row should have been inserted
 			if (rowsAffected == 1) {
-				returnValue = true;
+				return true;
+			} else {
+				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 		} catch (SQLException ex) {
 			// Log
 			ex.printStackTrace();
+			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
 			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
 		}
-		
-		return returnValue;
 	}
 
 	/**
@@ -267,7 +263,7 @@ public class HotelStayOperations {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
-    ArrayList<ServiceStaff> cateringStaffList = null;
+        ArrayList<ServiceStaff> cateringStaffList = null;
     
 		try {
 			connection = DatabaseConnection.getConnection();
@@ -276,23 +272,171 @@ public class HotelStayOperations {
 			statement.setString(2, "CATS");
 			statement.setInt(3, hotelId);
 			results = statement.executeQuery();
-      cateringStaffList = new ArrayList<ServiceStaff>();
+			
+            cateringStaffList = new ArrayList<ServiceStaff>();
 			while (results.next()) {
 				ServiceStaff cats = new ServiceStaff();
 				cats.setHotelId(results.getInt("hotelId"));
 				cats.setStaffId(results.getInt("staffId"));
 				cateringStaffList.add(cats);
 			}
+			
+			return cateringStaffList;
+			
 		} catch (SQLException ex) {
 			// Log and return null
 			ex.printStackTrace();
+			return null;
 		} finally {
 			// Attempt to close all resources, ignore failures.
 			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
 			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
+    }
+  
+  
+    public static boolean updateStayCheckoutDateTime(int stayId, Connection connection) {
+		
+		String sqlStatement = "UPDATE stays SET checkoutDate=?, checkoutTime=? WHERE stayId=?";
+		PreparedStatement statement = null;
+		  
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String checkoutDate = dateFormat.format(now);
+		String checkoutTime = timeFormat.format(now);
+		
+		//System.out.println("Updating date to: " + dateFormat.format(now));
+		//System.out.println("Updating time to: " + timeFormat.format(now));
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, checkoutDate);
+			statement.setString(2, checkoutTime);
+			statement.setInt(3, stayId);
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been updated
+			if (1==rowsAffected) {
+				return true;
+			} else {
+				throw new SQLException("More than one row was updated while updating stays with stayId = " + stayId + ".");
+			}
+			
+		} catch (SQLException ex) {
+			// Log and return false
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+		}
+	}
     
-    return cateringStaffList;
+    public static boolean checkinStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int billingId, int servicingStaffId) {
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			
+			connection = DatabaseConnection.getConnection();
+			connection.setAutoCommit(false);			
+			Savepoint save1 = connection.setSavepoint();
+			
+			// Create the stays record
+			Stays stay = InformationProcessing.createStay(hotelId, roomNumber, customerId, numOfGuests, billingId, connection);
+			if (null == stay) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Retrieve room information to determine if it is a presidential suite
+			Rooms room = InformationProcessing.retrieveRoom(hotelId, roomNumber);
+			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Check for presidential suite
+			if (room.getCategoryCode() == "PRES") {
+				// Retrieve available catering staff
+				ArrayList<ServiceStaff> cateringStaff = retrieveAvailableCateringStaff(hotelId);
+				if (null == cateringStaff && cateringStaff.size() > 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				
+				// Retrieve available room service staff
+				ArrayList<ServiceStaff> roomServiceStaff = retrieveAvailableRoomServiceStaff(hotelId);
+				if (null == roomServiceStaff && roomServiceStaff.size() > 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				
+				int cateringStaffId = cateringStaff.get(0).getStaffId();
+				int roomServiceStaffId = roomServiceStaff.get(0).getStaffId();
+				
+				// Assign dedicated staff to presidential suite
+				if (!assignDedicatedPresidentialSuiteStaff(hotelId, roomNumber, cateringStaffId, roomServiceStaffId, connection)) {
+					throw new SQLException("Error seems to have occured. Check the logs.");
+				}
+			}
+			
+			// Add a checkin service record
+			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, true, connection);	
+			if (null == serviceRecord) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			connection.commit();
+			
+			return true;
+			
+		} catch (SQLException ex) {
+			try { connection.rollback(); } catch (Exception e) {};
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { connection.setAutoCommit(true); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+	}
+    
+    public static boolean checkoutStay(Stays stay, int servicingStaffId) {
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {			
+			connection = DatabaseConnection.getConnection();
+			connection.setAutoCommit(false);			
+			Savepoint save1 = connection.setSavepoint();			
+			
+			if(!HotelStayOperations.updateStayCheckoutDateTime(stay.getStayId(), connection)) {
+				throw new SQLException("Error seems to have occured. Check the logs.");
+			}
+			
+			// Retrieve room information to determine if it is a presidential suite
+			Rooms room = InformationProcessing.retrieveRoom(stay.getHotelId(), stay.getRoomNumber());			
+			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Check for presidential suite
+			if (room.getCategoryCode() == "PRES") {
+				// Unassign dedicated staff for presidential suite
+				if (!unassignDedicatedPresidentialSuiteStaff(stay.getHotelId(), stay.getRoomNumber(), connection)) {
+					throw new SQLException("Error seems to have occured. Check the logs.");
+				}
+			}
+			
+			double totalCharges = MaintainBillingRecords.generateBillingTotal(stay.getStayId());
+			if (totalCharges < 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			if (!MaintainBillingRecords.updateBillingInfoTotalCharges(stay.getBillingId(), totalCharges, connection)) {
+				throw new SQLException("Error seems to have occured. Check the logs.");
+			}
+			
+			// Add checkout service record
+			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, false, connection);	
+			if (null == serviceRecord) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			connection.commit();			
+			
+			return true;
+			
+		} catch (SQLException ex) {
+			try { connection.rollback(); } catch (Exception e) {};
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { connection.setAutoCommit(true); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
 	}
 }

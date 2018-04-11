@@ -1,5 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;
 
 public class MaintainingServiceRecords {
 
@@ -133,6 +135,54 @@ public class MaintainingServiceRecords {
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
-
+	
+	public static ServiceRecords createCheckinCheckoutRecord(int stayId, int staffId, boolean checkinFlag, Connection connection) {
+		String sqlStatement = "INSERT INTO service_records(stayId, serviceCode, staffId, serviceDate, serviceTime, charge) VALUES (?, ?, ?, ?, ?, ?);";
+		PreparedStatement statement = null;
+		
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String serviceDate = dateFormat.format(now);
+		String serviceTime = timeFormat.format(now);
+		String serviceCode = "";
+		
+		try {
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setInt(1, stayId);
+			if (checkinFlag) {
+				serviceCode = "CKIN";
+			} else {
+				serviceCode = "CKOT";		
+			}
+			statement.setString(2, serviceCode);		
+			statement.setInt(3, staffId);
+			statement.setString(4, serviceDate);
+			statement.setString(5, serviceTime);
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				ServiceRecords serviceRecords = new ServiceRecords();
+				serviceRecords.setStayId(stayId);
+				serviceRecords.setServiceCode(serviceCode);
+				serviceRecords.setStaffId(staffId);
+				serviceRecords.setServiceDate(serviceDate);
+				serviceRecords.setServiceTime(serviceTime);
+				System.out.println("A new service record was inserted successfully!");
+				return serviceRecords;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+		}
+	}
 }
 

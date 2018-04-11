@@ -1,5 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;  
+import java.time.LocalDateTime;  
 
 public class InformationProcessing {
 
@@ -28,6 +30,8 @@ public class InformationProcessing {
 				roomCategory.setCategoryCode(categoryCode);
 				roomCategory.setCategoryDesc(categoryDesc);
 				return roomCategory;
+			}  else {
+				throw new SQLException("More than one row was affected while inserting into room_categories with categoryCode = " + categoryCode + ".");
 			} 
 			
 		} catch (SQLException ex) {
@@ -38,8 +42,6 @@ public class InformationProcessing {
 			try { statement.close(); } catch (Exception ex) {};
 			try { connection.close(); } catch (Exception ex) {};
 		}
-		
-		return null;
 	}
 	
 	/**
@@ -102,6 +104,8 @@ public class InformationProcessing {
 			// A single row should have been updated
 			if (1==rowsAffected) {
 				return true;
+			} else {
+				throw new SQLException("More than one row was updated while updating room_categories with categoryCode = " + roomCategory.getCategoryCode() + ".");
 			} 
 			
 		} catch (SQLException ex) {
@@ -112,8 +116,6 @@ public class InformationProcessing {
 			try { statement.close(); } catch (Exception ex) {};
 			try { connection.close(); } catch (Exception ex) {};
 		}
-		
-		return false;
 	}	
 	
 	/**
@@ -136,6 +138,8 @@ public class InformationProcessing {
 			// A single row should have been deleted
 			if (1==rowsAffected) {
 				return true;
+			} else {
+				throw new SQLException("More than one row was deleted while updating room_categories with categoryCode = " + roomCategory.getCategoryCode() + ".");
 			} 
 			
 		} catch (SQLException ex) {
@@ -146,8 +150,6 @@ public class InformationProcessing {
 			try { statement.close(); } catch (Exception ex) {};
 			try { connection.close(); } catch (Exception ex) {};
 		}
-		
-		return false;
 	}
 	
 	/**
@@ -173,7 +175,9 @@ public class InformationProcessing {
 			// A single row should have been inserted
 			if (1==rowsAffected) {
 				return true;
-			} 
+			} else {
+				throw new SQLException("More than one row was updated while updating room_categories_services with categoryCode = " + categoryCode + ".");
+			}
 			
 		} catch (SQLException ex) {
 			// Log and return null
@@ -183,9 +187,65 @@ public class InformationProcessing {
 			try { statement.close(); } catch (Exception ex) {};
 			try { connection.close(); } catch (Exception ex) {};
 		}
-		
-		return false;
 	}	
+	
+	public static Stays createStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int billingId, Connection connection) {
+		String sqlStatement = "INSERT INTO stays (hotelId, roomNumber, customerId, numOfGuests, checkinDate, checkinTime, checkoutDate, checkoutTime, billingId) VALUES(?, ?, ?, ?, ?, ?, NULL, NULL, ?);";
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+		String checkinDate = dateFormat.format(now);
+		String checkinTime = timeFormat.format(now);
+		//System.out.println("Updating date to: " + dateFormat.format(now));
+		//System.out.println("Updating time to: " + timeFormat.format(now));
+		
+		try {
+			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
+			statement.setInt(1, hotelId);
+			statement.setString(2, roomNumber);
+			statement.setInt(3, customerId);
+			statement.setInt(4, numOfGuests);
+			statement.setString(5, checkinDate);
+			statement.setString(6, checkinTime);
+			statement.setInt(7, billingId);			
+			int rowsAffected = statement.executeUpdate();
+			
+			
+			
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				Stays stay = new Stays();
+				results = statement.getGeneratedKeys();
+				results.next();
+				stay.setStayId(results.getInt(1));
+				stay.setHotelId(hotelId);
+				stay.setRoomNumber(roomNumber);
+				stay.setCustomerId(customerId);
+				stay.setNumOfGuests(numOfGuests);
+				stay.setCheckinDate(checkinDate);
+				stay.setCheckinTime(checkinTime);
+				stay.setCheckoutDate(null);
+				stay.setCheckoutTime(null);
+				stay.setBillingId(billingId);
+				
+				return stay;
+			} else {
+				// Throw exception
+				throw new SQLException("Error seems to have occured. Check the logs.");
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+		}
+	}
 	
 	public static Stays retrieveStay(int stayId) {
 		Stays stay = new Stays();
