@@ -12,11 +12,10 @@ public class MaintainingServiceRecords {
 	 * @param staffId the staff's ID
 	 * @param serviceDate the service's date
 	 * @param serviceTime the service's time
-	 * @param charge the service's charge
 	 * @return ServiceRecords object if successful, else null
 	 */
-	public static ServiceRecords createServiceRecord(int stayId, String serviceCode, int staffId, String serviceDate, String serviceTime, double charge) {
-		String sqlStatement = "INSERT INTO service_records(stayId, serviceCode, staffId, serviceDate, serviceTime, charge) VALUES (?, ?, ?, ?, ?, ?);";
+	public static ServiceRecords createServiceRecord(int stayId, String serviceCode, int staffId, String serviceDate, String serviceTime) {
+		String sqlStatement = "INSERT INTO service_records(stayId, serviceCode, staffId, serviceDate, serviceTime) VALUES (?, ?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
@@ -27,7 +26,6 @@ public class MaintainingServiceRecords {
 			statement.setInt(3, staffId);
 			statement.setString(4, serviceDate);
 			statement.setString(5, serviceTime);
-			statement.setDouble(6, charge);
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been inserted
 			if (1==rowsAffected) {
@@ -37,7 +35,6 @@ public class MaintainingServiceRecords {
 				serviceRecords.setStaffId(staffId);
 				serviceRecords.setServiceDate(serviceDate);
 				serviceRecords.setServiceTime(serviceTime);
-				serviceRecords.setCharge(charge);
 				System.out.println("A new service record was inserted successfully!");
 				return serviceRecords;
 			} else {
@@ -60,7 +57,7 @@ public class MaintainingServiceRecords {
 	 * @return An ArrayList containing ServiceRecords objects for each of the returned records if successful, else null
 	 */
 	public static ArrayList<ServiceRecords> retrieveServiceRecordsForStay(int stayId) {
-		String sqlStatement = "SELECT stayId, serviceCode, staffId, serviceDate, serviceTime, charge FROM service_records WHERE stayId=?;";
+		String sqlStatement = "SELECT stayId, serviceCode, staffId, serviceDate, serviceTime FROM service_records WHERE stayId=?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
@@ -77,7 +74,6 @@ public class MaintainingServiceRecords {
 				serviceRecord.setStaffId(results.getInt("staffId"));
 				serviceRecord.setServiceDate(results.getString("serviceDate"));
 				serviceRecord.setServiceTime(results.getString("serviceTime"));
-				serviceRecord.setCharge(results.getDouble("charge"));
 				serviceRecords.add(serviceRecord);
 			}
 			System.out.println("A list of existing service records for stayId = " + stayId + " was retrieved successfully!");
@@ -101,7 +97,7 @@ public class MaintainingServiceRecords {
 	 */
 	public static boolean updateServiceRecord(ServiceRecords serviceRecords) {
 		// Assume that we are only able to update service record when the stay is still active.
-		String sqlStatement = "UPDATE service_records SET serviceCode=?, staffId=?, charge=? WHERE stayId=? AND serviceDate=? AND serviceTime=? AND stayId IN (SELECT stayId FROM stays WHERE checkoutDate IS NULL AND checkoutTime IS NULL);";
+		String sqlStatement = "UPDATE service_records SET serviceCode=?, staffId=? WHERE stayId=? AND serviceDate=? AND serviceTime=? AND stayId IN (SELECT stayId FROM stays WHERE checkoutDate IS NULL AND checkoutTime IS NULL);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
@@ -109,10 +105,9 @@ public class MaintainingServiceRecords {
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setString(1, serviceRecords.getServiceCode());
 			statement.setInt(2, serviceRecords.getStaffId());
-			statement.setDouble(3, serviceRecords.getCharge());
-			statement.setInt(4, serviceRecords.getStayId());
-			statement.setString(5, serviceRecords.getServiceDate());
-			statement.setString(6, serviceRecords.getServiceTime());
+			statement.setInt(3, serviceRecords.getStayId());
+			statement.setString(4, serviceRecords.getServiceDate());
+			statement.setString(5, serviceRecords.getServiceTime());
 			int rowsAffected = statement.executeUpdate();
 			// A single row should have been updated
 			if (1==rowsAffected) {
@@ -137,7 +132,7 @@ public class MaintainingServiceRecords {
 	}
 	
 	public static ServiceRecords createCheckinCheckoutRecord(int stayId, int staffId, boolean checkinFlag, Connection connection) {
-		String sqlStatement = "INSERT INTO service_records(stayId, serviceCode, staffId, serviceDate, serviceTime, charge) VALUES (?, ?, ?, ?, ?, ?);";
+		String sqlStatement = "INSERT INTO service_records(stayId, serviceCode, staffId, serviceDate, serviceTime) VALUES (?, ?, ?, ?, ?);";
 		PreparedStatement statement = null;
 		
 		LocalDateTime now = LocalDateTime.now();

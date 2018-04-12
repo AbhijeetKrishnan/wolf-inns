@@ -50,6 +50,6 @@ public class Rooms {
 		Rooms r = (Rooms) o;
 		return (hotelId==r.hotelId && roomNumber.equals(r.roomNumber) &&
                         maxAllowedOcc==r.maxAllowedOcc && rate==r.rate &&
-                        categoryCode.equals(r.categoryCode));
+                        categoryCode.equals(r.categoryCode) && available.equals(r.available));
 	}
 }

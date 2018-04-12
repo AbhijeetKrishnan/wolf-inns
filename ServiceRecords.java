@@ -4,7 +4,6 @@ public class ServiceRecords {
 	private int staffId;
 	private String serviceDate;
 	private String serviceTime;
-	private double charge;
 
 	public int getStayId() {
 		return stayId;
@@ -36,12 +35,6 @@ public class ServiceRecords {
 	public void setServiceTime(String serviceTime) {
 		this.serviceTime = serviceTime;
 	}
-	public double getCharge() {
-		return charge;
-	}
-	public void setCharge(double charge) {
-		this.charge = charge;
-	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -50,6 +43,6 @@ public class ServiceRecords {
 		ServiceRecords s = (ServiceRecords) o;
 		return (stayId==s.stayId && serviceCode.equals(s.serviceCode) &&
                         staffId==s.staffId && serviceDate.equals(s.serviceDate) &&
-                        serviceTime.equals(s.serviceTime) && charge==s.charge);
+                        serviceTime.equals(s.serviceTime));
 	}
 }

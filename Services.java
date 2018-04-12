@@ -1,6 +1,7 @@
 public class Services {
 	private String serviceCode;
 	private String serviceDesc;
+	private double charge;
 
 	public String getServiceCode() {
 		return serviceCode;
@@ -14,12 +15,19 @@ public class Services {
 	public void setServiceDesc(String serviceDesc) {
 		this.serviceDesc = serviceDesc;
 	}
+	public double getCharge() {
+		return charge;
+	}
+	public void setCharge(double charge) {
+		this.charge = charge;
+	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (o==this) {return true;}
 		if (!(o instanceof Services)) {return false;}
 		Services s = (Services) o;
-		return (serviceCode.equals(s.serviceCode) && serviceDesc.equals(s.serviceDesc));
+		return (serviceCode.equals(s.serviceCode) && serviceDesc.equals(s.serviceDesc) &&
+			charge==s.charge);
 	}
 }
