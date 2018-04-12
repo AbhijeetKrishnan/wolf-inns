@@ -873,8 +873,8 @@ public class InformationProcessing {
 	 * @param rate the nightly rate of the room
 	 * @return Rooms object if successful, else null
 	 */
-	public static Rooms createRoom(int hotelId, String roomNumber, int maxAllowedOcc, double rate, String categoryCode) {
-		String sqlStatement = "INSERT INTO rooms(hotelId, roomNumber, maxAllowedOcc, rate, categoryCode) VALUES (?, ?, ?, ?, ?);";
+	public static Rooms createRoom(int hotelId, String roomNumber, int maxAllowedOcc, double rate, String categoryCode, String available) {
+		String sqlStatement = "INSERT INTO rooms(hotelId, roomNumber, maxAllowedOcc, rate, categoryCode, available) VALUES (?, ?, ?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		Rooms room = null; // default value
@@ -887,6 +887,7 @@ public class InformationProcessing {
 			statement.setInt(3, maxAllowedOcc);
 			statement.setDouble(4, rate);
 			statement.setString(5, categoryCode);
+			statement.setString(6, available);
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been inserted
@@ -899,6 +900,7 @@ public class InformationProcessing {
 				room.setMaxAllowedOcc(maxAllowedOcc);
 				room.setRate(rate);
 				room.setCategoryCode(categoryCode);
+				room.setAvailable(available);
 			}
 		} catch (SQLException ex) {
 			// Log
@@ -938,6 +940,7 @@ public class InformationProcessing {
 				room.setMaxAllowedOcc(results.getInt("maxAllowedOcc"));
 				room.setRate(results.getDouble("rate"));
 				room.setCategoryCode(results.getString("categoryCode"));
+				room.setAvailable(results.getString("available"));
 			}
 		} catch (SQLException ex) {
 			// Log
@@ -958,7 +961,7 @@ public class InformationProcessing {
 	 * @return true on success or false on failure
 	 */
 	public static boolean updateRoom(Rooms room) {
-		String sqlStatement = "UPDATE rooms SET maxAllowedOcc = ?, rate = ?, categoryCode = ? WHERE hotelId = ? AND roomNumber = ?;";
+		String sqlStatement = "UPDATE rooms SET maxAllowedOcc = ?, rate = ?, categoryCode = ?, available = ? WHERE hotelId = ? AND roomNumber = ?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		boolean returnValue = false;
@@ -969,8 +972,9 @@ public class InformationProcessing {
 			statement.setInt(1, room.getMaxAllowedOcc());
 			statement.setDouble(2, room.getRate());
 			statement.setString(3, room.getCategoryCode());
-			statement.setInt(4, room.getHotelId());
-			statement.setString(5, room.getRoomNumber());
+			statement.setString(4, room.getAvailable());
+			statement.setInt(5, room.getHotelId());
+			statement.setString(6, room.getRoomNumber());
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been updated

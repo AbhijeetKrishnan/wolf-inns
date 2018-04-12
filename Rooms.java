@@ -4,6 +4,7 @@ public class Rooms {
 	private int maxAllowedOcc;
 	private double rate;
 	private String categoryCode;
+	private String available;
 
 	public int getHotelId() {
 		return hotelId;
@@ -34,6 +35,12 @@ public class Rooms {
 	}
 	public void setCategoryCode(String categoryCode) {
 		this.categoryCode = categoryCode;
+	}
+	public String getAvailable() {
+		return available;
+	}
+	public void setAvailable(String available) {
+		this.available = available;
 	}
 
 	@Override
