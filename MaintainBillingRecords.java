@@ -2,7 +2,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class MaintainBillingRecords {
-	
+	public static final double CCWF_DISCOUNT = .05;
 	public static double calculateRoomCharge(int stayId) {
 		double roomCharge = 0.0;
 		String sqlStatement = "SELECT ((DATEDIFF(checkoutDate, checkinDate)+1)*rate) AS \"Room Charge\" FROM stays NATURAL JOIN rooms WHERE stayId = ?";
@@ -354,4 +354,101 @@ public class MaintainBillingRecords {
     
     return returnValue;
   }
+    /**
+     * The sum of service record charges and room charge, if paid with hotel CC 
+     * gives discounted charge.
+     * @param stayId The stayId of the stay which the billing should be generated for.
+     * @return double The total charge minus any applicable discount.
+     */
+    public static double generateBillingTotal(int stayId) throws SQLException {
+        double totalCharge = -1;
+
+        Connection con = null;
+        PreparedStatement prst1 = null;
+        PreparedStatement prst2 = null;
+        ResultSet rs1 = null;
+        ResultSet rs2 = null;
+        String sqlString1 = "SELECT sum(cg) as totCharge\n"
+                + "FROM (\n"
+                + "(SELECT (DATEDIFF(checkoutDate, checkinDate) + 1) * rate  cg \n"
+                + "FROM stays NATURAL JOIN rooms GROUP BY stayId HAVING stayId = ?)\n"
+                + "\n"
+                + "UNION ALL\n"
+                + "\n"
+                + "(SELECT sum(charge) cg\n"
+                + "FROM stays NATURAL JOIN service_records NATURAL JOIN services\n"
+                + "GROUP BY stayId HAVING stayId =? )\n"
+                + ") a;";
+        
+        String SqlString2 = String.format("SELECT payMethodCode FROM stays\n"
+                + "NATURAL JOIN billing_info\n"
+                + "WHERE stayId = ? ;");
+
+        try {
+            con = DatabaseConnection.getConnection();
+            prst1 = con.prepareStatement(sqlString1);
+            prst1.setInt(1, stayId);
+            prst1.setInt(2, stayId);
+            rs1 = prst1.executeQuery();
+            prst2 = con.prepareStatement(SqlString2);
+            prst2.setInt(1, stayId);
+            rs2 = prst2.executeQuery();
+            if (rs1.next()) {
+                totalCharge = rs1.getInt("totCharge");
+            }
+            if (rs2.next()) {
+                if ("CCWF".equals(rs2.getString("payMethodCode"))){
+                    //System.out.println("You are paying discounted Charge.");
+                    totalCharge *= (1-CCWF_DISCOUNT);
+                }
+            }
+
+            //System.out.printf("total Charge for stay %d is %.2f%n", stayId, totalCharge);
+            //System.out.printf("You saved $%.2f.%n",  CCWF_DISCOUNT*totalCharge);
+            
+            return totalCharge;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();            
+            return -1;
+        } finally {
+            if (prst1 != null) {
+                prst1.close();
+            }
+            if (prst2 != null) {
+                prst2.close();
+            }
+            try { rs1.close(); } catch (Exception ex) {};
+            try { rs2.close(); } catch (Exception ex) {};
+            try { con.close(); } catch (Exception ex) {};
+        }
+    }
+    
+    public static boolean updateBillingInfoTotalCharges(int billingId, double totalCharges, Connection connection) {
+		
+		String sqlStatement = "UPDATE billing_info SET totalCharges = ? WHERE billingId = ?";
+		
+		PreparedStatement statement = null;
+		boolean returnValue = false;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			
+			statement.setDouble(1, totalCharges);
+			statement.setInt(2, billingId);
+			
+			int rowsAffected = statement.executeUpdate();
+			
+			if (rowsAffected == 1) {
+				returnValue = true;
+			}
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (Exception ex) {};
+		}
+		
+		return returnValue;
+	}
 }

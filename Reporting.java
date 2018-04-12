@@ -114,4 +114,61 @@ public class Reporting {
 		
 		easyReport(queryResults);
 	}
+	
+	    /**
+     * Return staffId, name, titleDesc, deptDesc, DOB, phone, address, city,
+     * state grouped by their title
+     *
+     * @param tc title code
+     */
+    public static void reportStaffInformationByTitle(String tc) {
+        String sqlStatement = "SELECT staffId, name, titleDesc, deptDesc, address, city, state, phone, DOB"
+                + " FROM staff NATURAL JOIN job_titles NATURAL JOIN departments WHERE titleCode =\""
+                + tc + "\" ORDER BY titleCode, staffId;";
+        System.out.print("report Staff Information By Title =" + tc + "\n\n");
+        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+        easyReport(queryResults);
+    }
+
+    /**
+     * Return list of all staff IDs of staff which served a customer on a
+     * particular stay
+     *
+     * @param stayId
+     */
+    public static void reportStayStaff(int stayId) {
+        String stID = Integer.toString(stayId);
+        System.out.println("list of all staff IDs of staff which served a customer on Stay with ID =" + stayId + "\n\n");
+        String sqlStatement = "SELECT staffId, name, titleDesc, deptDesc, address, city, state, phone, DOB "
+                + " FROM staff INNER JOIN job_titles ON staff.titleCode=job_titles.titleCode"
+                + " NATURAL JOIN departments NATURAL JOIN service_records WHERE service_records.stayId = \""
+                + stID + "\";";
+        System.out.println(sqlStatement);
+        System.out.print("report Stay Staff =" + stayId + "\n\n");
+        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+        easyReport(queryResults);
+
+    }
+
+    /**
+     * Return total revenue earned in the period between startDate and endDate
+     * for a given hotel
+     *
+     * @param hotelId
+     * @param startDate
+     * @param endDate
+     */
+    public static void reportRevenue(int hotelId, String startDate, String endDate) {
+        System.out.print("total revenue earned in the period between startDate and endDate" + "\n\n");
+        String sqlStatement = "SELECT SUM(totalCharges) AS rev FROM stays NATURAL JOIN billing_info "
+                + "WHERE (checkoutDate BETWEEN \""
+                + startDate
+                + "\" AND \""
+                + endDate
+                + "\") AND hotelId=\"" + hotelId + "\";";
+        System.out.println(sqlStatement);
+        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+        easyReport(queryResults);
+
+    }
 }
