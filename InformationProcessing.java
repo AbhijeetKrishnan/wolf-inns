@@ -931,8 +931,8 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	 * @param email represents the customer's email ID
 	 * @return Customers object if successful, else null
 	 */
-	public static Customers createCustomer(String name, String DOB, String phone, String email) {
-		String sqlStatement = "INSERT INTO customers(name, DOB, phone, email) VALUES (?, ?, ?, ?);";
+	public static Customers createCustomer(int customerId, String name, String DOB, String phone, String email) {
+		String sqlStatement = "INSERT INTO customers(customerId, name, DOB, phone, email) VALUES (?, ?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		Customers customer = null; // default value
@@ -941,15 +941,17 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
-			statement.setString(1, name);
-			statement.setString(2, DOB);
-			statement.setString(3, phone);
-			statement.setString(4, email);
+            statement.setInt(1, customerId);
+			statement.setString(2, name);
+			statement.setString(3, DOB);
+			statement.setString(4, phone);
+			statement.setString(5, email);
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been inserted
 			if (rowsAffected == 1) {
 				customer = new Customers();
+                customer.setCustomerId(customerId);
 				customer.setName(name);
 				customer.setDob(DOB);
 				customer.setPhone(phone);
@@ -1081,8 +1083,8 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	 * @param rate the nightly rate of the room
 	 * @return Rooms object if successful, else null
 	 */
-	public static Rooms createRoom(int hotelId, String roomNumber, int maxAllowedOcc, double rate, String categoryCode) {
-		String sqlStatement = "INSERT INTO rooms(hotelId, roomNumber, maxAllowedOcc, rate, categoryCode) VALUES (?, ?, ?, ?, ?);";
+	public static Rooms createRoom(int hotelId, String roomNumber, int maxAllowedOcc, double rate, String categoryCode, String available) {
+		String sqlStatement = "INSERT INTO rooms(hotelId, roomNumber, maxAllowedOcc, rate, categoryCode, available) VALUES (?, ?, ?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		Rooms room = null; // default value
@@ -1095,6 +1097,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			statement.setInt(3, maxAllowedOcc);
 			statement.setDouble(4, rate);
 			statement.setString(5, categoryCode);
+            statement.setString(6, available);
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been inserted
@@ -1107,6 +1110,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 				room.setMaxAllowedOcc(maxAllowedOcc);
 				room.setRate(rate);
 				room.setCategoryCode(categoryCode);
+                room.setAvailable(available);
 			}
 		} catch (SQLException ex) {
 			// Log
@@ -1146,6 +1150,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 				room.setMaxAllowedOcc(results.getInt("maxAllowedOcc"));
 				room.setRate(results.getDouble("rate"));
 				room.setCategoryCode(results.getString("categoryCode"));
+                room.setAvailable(results.getString("available"));
 			}
 		} catch (SQLException ex) {
 			// Log
@@ -1166,7 +1171,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	 * @return true on success or false on failure
 	 */
 	public static boolean updateRoom(Rooms room) {
-		String sqlStatement = "UPDATE rooms SET maxAllowedOcc = ?, rate = ?, categoryCode = ? WHERE hotelId = ? AND roomNumber = ?;";
+		String sqlStatement = "UPDATE rooms SET maxAllowedOcc = ?, rate = ?, categoryCode = ?, available = ? WHERE hotelId = ? AND roomNumber = ?;";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		boolean returnValue = false;
@@ -1177,8 +1182,9 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			statement.setInt(1, room.getMaxAllowedOcc());
 			statement.setDouble(2, room.getRate());
 			statement.setString(3, room.getCategoryCode());
-			statement.setInt(4, room.getHotelId());
-			statement.setString(5, room.getRoomNumber());
+            statement.setString(4, room.getAvailable());
+			statement.setInt(5, room.getHotelId());
+			statement.setString(6, room.getRoomNumber());
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been updated
@@ -1429,14 +1435,14 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		}
 	}
 	
-	    /**
+	/*
     /**
      * Create a service staff record
      *
      * @param staffId the staff's ID
      * @param hotelId the hotel's ID
      * @return ServiceStaff object if successful, else null
-     */
+     
     public static ServiceStaff createServiceStaff(int staffId,
             int hotelId) {
         String sqlStatement = "INSERT INTO service_staff(staffId, hotelId) VALUES (?, ?);";
@@ -1485,7 +1491,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      *
      * @param staffId the staff's ID
      * @return ServiceStaff object if given service staff exists, else null
-     */
+     
     public static ServiceStaff retrieveServiceStaff(int staffId) {
         String sqlStatement = "SELECT staffId, hotelId FROM service_staff WHERE staffId=?;";
         Connection connection = null;
@@ -1546,7 +1552,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @param serviceStaff the ServiceStaff object with new field values that
      * needs to be updated in the database
      * @return true if successful, else false
-     */
+     
     public static boolean updateServiceStaff(ServiceStaff serviceStaff) {
         String sqlStatement = "UPDATE service_staff SET hotelId=? WHERE staffId=?;";
         Connection connection = null;
@@ -1595,7 +1601,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @param serviceStaff the ServiceStaff object that needs to be deleted from
      * the database
      * @return true if successful, else false
-     */
+     
     public static boolean deleteServiceStaff(ServiceStaff serviceStaff) {
         String sqlStatement = "DELETE FROM service_staff WHERE staffId=?;";
         Connection connection = null;
@@ -1636,6 +1642,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
             }
         }
     }
+    */
 
     /**
      * Creates a table of services ( schema)
@@ -1725,13 +1732,17 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
             System.out.println();
 
             while (resultSet.next()) {
-
+                Services row = new Services();
+                /*
                 for (int i = 1; i <= numberOfColumns; i++) {
                     System.out.printf("%-8s\t", resultSet.getObject(i));
                 }
                 System.out.println();
-
-                services.add(new Services(resultSet.getString("serviceCode"), resultSet.getString("serviceDesc")));
+                */
+                row.setServiceCode(resultSet.getString("serviceCode"));
+                row.setServiceDesc(resultSet.getString("serviceDesc"));
+                services.add(row);
+                //services.add(new Services(resultSet.getString("serviceCode"), resultSet.getString("serviceDesc")));
 
             } // end while
             return services;
