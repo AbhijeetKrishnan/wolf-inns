@@ -1430,34 +1430,246 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	}
 	
 	    /**
+    /**
+     * Create a service staff record
+     *
+     * @param staffId the staff's ID
+     * @param hotelId the hotel's ID
+     * @return ServiceStaff object if successful, else null
+     */
+    public static ServiceStaff createServiceStaff(int staffId,
+            int hotelId) {
+        String sqlStatement = "INSERT INTO service_staff(staffId, hotelId) VALUES (?, ?);";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+            statement.setInt(1, staffId);
+            statement.setInt(2, hotelId);
+            int rowsAffected = statement.executeUpdate();
+            // A single row should have been inserted
+            if (1 == rowsAffected) {
+                ServiceStaff serviceStaff = new ServiceStaff();
+                serviceStaff.setStaffId(staffId);
+                serviceStaff.setHotelId(hotelId);
+                System.out.println("A new service staff record was inserted successfully!");
+                return serviceStaff;
+            } else {
+                // Throw exception
+                throw new SQLException("Error seems to have occured. Check the logs.");
+            }
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            return null;
+        } finally {
+            // Attempt to close all resources, ignore failures
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                };
+            }
+        }
+    }
+
+    /**
+     * Retrieve a service staff by staff ID
+     *
+     * @param staffId the staff's ID
+     * @return ServiceStaff object if given service staff exists, else null
+     */
+    public static ServiceStaff retrieveServiceStaff(int staffId) {
+        String sqlStatement = "SELECT staffId, hotelId FROM service_staff WHERE staffId=?;";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet results = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+            statement.setInt(1, staffId);
+            results = statement.executeQuery();
+            results.last();
+            int rowsAffected = results.getRow();
+            // A single row should have been retrieved
+            if (1 == rowsAffected) {
+                results.first();
+                ServiceStaff serviceStaff = new ServiceStaff();
+                serviceStaff.setStaffId(staffId);
+                serviceStaff.setHotelId(results.getInt("hotelId"));
+                System.out.println("An existing service staff record was retrieved successfully!");
+                return serviceStaff;
+            } else if (0 == rowsAffected) {
+                System.out.println("There is no existing service staff record with staffId = " + staffId + ".");
+                return null;
+            } else {
+                // Throw exception
+                throw new SQLException("Multiple rows returned when selecting service staff record with staffId = " + staffId + ".");
+            }
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            return null;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            if (results != null) {
+                try {
+                    results.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                };
+            }
+        }
+    }
+
+    /**
+     * Update a service staff record in the database with new field values
+     *
+     * @param serviceStaff the ServiceStaff object with new field values that
+     * needs to be updated in the database
+     * @return true if successful, else false
+     */
+    public static boolean updateServiceStaff(ServiceStaff serviceStaff) {
+        String sqlStatement = "UPDATE service_staff SET hotelId=? WHERE staffId=?;";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+            statement.setInt(1, serviceStaff.getHotelId());
+            statement.setInt(2, serviceStaff.getStaffId());
+            int rowsAffected = statement.executeUpdate();
+            // A single row should have been updated
+            if (1 == rowsAffected) {
+                System.out.println("An existing service staff record was updated successfully!");
+                return true;
+            } else if (0 == rowsAffected) {
+                System.out.println("There is no existing service staff record with staffId = " + serviceStaff.getStaffId() + ".");
+                return false;
+            } else {
+                // Throw exception
+                throw new SQLException("Error seems to have occured. Check the logs.");
+            }
+        } catch (SQLException ex) {
+            // Log and return false
+            ex.printStackTrace();
+            return false;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                };
+            }
+        }
+    }
+
+    /**
+     * Delete a service staff record from the database
+     *
+     * @param serviceStaff the ServiceStaff object that needs to be deleted from
+     * the database
+     * @return true if successful, else false
+     */
+    public static boolean deleteServiceStaff(ServiceStaff serviceStaff) {
+        String sqlStatement = "DELETE FROM service_staff WHERE staffId=?;";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+            statement.setInt(1, serviceStaff.getStaffId());
+            int rowsAffected = statement.executeUpdate();
+            // A single row should have been deleted
+            if (1 == rowsAffected) {
+                System.out.println("An existing service staff record was deleted successfully!");
+                return true;
+            } else if (0 == rowsAffected) {
+                System.out.println("There is no existing service staff record with staffId = " + serviceStaff.getStaffId() + ".");
+                return false;
+            } else {
+                // Throw exception
+                throw new SQLException("Error seems to have occured. Check the logs.");
+            }
+        } catch (SQLException ex) {
+            // Log and return false
+            ex.printStackTrace();
+            return false;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                };
+            }
+        }
+    }
+
+    /**
      * Creates a table of services ( schema)
      *
      * @param sc
      * @param sd
-     * @return 
+     * @return
      * @throws SQLException
      */
-    public Services createServices(String sc, String sd) throws SQLException {
+    public static Services createServices(String sc,
+            String sd,
+            double charge) throws SQLException {
 
         //ResultSet resultSet = null;
         Connection conn = null;
         PreparedStatement statement = null;
         String sqlStatement = "INSERT INTO services "
-                + "(serviceCode, serviceDesc) VALUES (?,?);";
+                + "(serviceCode, serviceDesc, charge) VALUES (?,?,?);";
 
         try {
             conn = DatabaseConnection.getConnection();
             statement = conn.prepareStatement(sqlStatement);
-            
+
             statement.setString(1, sc);
             statement.setString(2, sd);
+            statement.setDouble(3, charge);
             int rowsAffected = statement.executeUpdate();
             // A single row should have been inserted
             if (1 == rowsAffected) {
                 Services service = new Services();
                 service.setServiceCode(sd);
                 service.setServiceDesc(sc);
-             
+                service.setCharge(charge);
+
                 System.out.println("A new service was inserted successfully!");
                 return service;
             } else {
@@ -1545,19 +1757,52 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
         }
 
     }
+	
+	public static boolean updateService(String targetServiceCode,
+            String sc,
+            String sd,
+            double charge) {
 
-    public ArrayList<LinkedHashMap<String, String>> retrieveServices2() {
+        String sqlStatement = "UPDATE services SET serviceCode =?, serviceDesc = ?, charge = ? WHERE serviceCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsUpdated = -1;
+        try {
 
-        String sqlStatement = "SELECT * FROM services;";
-        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
 
-        Reporting.easyReport(queryResults);
-        return queryResults;
+            pst.setString(1, sc);
+            pst.setString(2, sd);
+            pst.setDouble(3, charge);
+            pst.setString(4, targetServiceCode);
+            // process query results
+            System.out.println("UPDATING Services Table of WollfInns Database:");
+
+            rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("an existing service was updated.");
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+
+        return rowsUpdated > 0;
     }
-
+	
+    
     public static boolean deleteService(String sc) {
 
-        String sqlStatement = "Delete services where serviceCode = ?;";
+        String sqlStatement = "Delete FROM services where serviceCode = ?;";
         Connection connection = null;
         PreparedStatement pst = null;
         int rowsDeleted = -1;
@@ -1592,42 +1837,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 
     }
 
-    public static boolean updateService(String targetServiceCode, String sc, String sd) {
-
-        String sqlStatement = "UPDATE services SET serviceCode =?, serviceDesc = ? WHERE serviceCode = ?;";
-        Connection connection = null;
-        PreparedStatement pst = null;
-        int rowsUpdated = -1;
-        try {
-
-            connection = DatabaseConnection.getConnection();
-            pst = connection.prepareStatement(sqlStatement);
-
-            pst.setString(1, sc);
-            pst.setString(2, sd);
-            pst.setString(3, targetServiceCode);
-            // process query results
-            System.out.println("UPDATING Services Table of WollfInns Database:");
-
-            rowsUpdated = pst.executeUpdate();
-            if (rowsUpdated > 0) {
-                System.out.println("an existing service was updated.");
-            }
-
-        } catch (SQLException ex) {
-            // Log and return null
-            ex.printStackTrace();
-        } finally {
-            // Attempt to close all resources, ignore failures.
-
-            try {
-                connection.close();
-            } catch (Exception ex) {
-            };
-        }
-
-        return rowsUpdated > 0;
-    }
+    
 
     /**
      *
