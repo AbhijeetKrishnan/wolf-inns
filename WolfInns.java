@@ -10,6 +10,7 @@ public class WolfInns {
 			// For now, you can use this to test your method until proper tests are written.
 			
 			System.out.println("Welcome to Wolf Inns.\n");
+            
 			
 			System.out.println("We're going to create a new room category for Michael.");
 			// Create a new room category

@@ -391,13 +391,13 @@ public class TestJunit {
   @Test
   public void testOccupancyByDateRange() {
       System.out.println("Testing occupancyByDateRange...");
-      System.out.println("Query not correct");
+      Reporting.occupancyByDateRange("2018-03-15", "2018-09-30");
       System.out.println("Test for occupancyByDateRange passed!");
   }
   
   @Test
   public void testOccupancyByCity() {
-      System.out.println("Testing occupancyByCity...");
+    System.out.println("Testing occupancyByCity...");
     //ideally I should be checking the values in the default data and verifying that this query returns the correct output
     /*
     System.out.println("Testing occupancyByCity...");
