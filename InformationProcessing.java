@@ -1429,5 +1429,553 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
+	
+	    /**
+     * Creates a table of services ( schema)
+     *
+     * @param sc
+     * @param sd
+     * @return 
+     * @throws SQLException
+     */
+    public Services createServices(String sc, String sd) throws SQLException {
+
+        //ResultSet resultSet = null;
+        Connection conn = null;
+        PreparedStatement statement = null;
+        String sqlStatement = "INSERT INTO services "
+                + "(serviceCode, serviceDesc) VALUES (?,?);";
+
+        try {
+            conn = DatabaseConnection.getConnection();
+            statement = conn.prepareStatement(sqlStatement);
+            
+            statement.setString(1, sc);
+            statement.setString(2, sd);
+            int rowsAffected = statement.executeUpdate();
+            // A single row should have been inserted
+            if (1 == rowsAffected) {
+                Services service = new Services();
+                service.setServiceCode(sd);
+                service.setServiceDesc(sc);
+             
+                System.out.println("A new service was inserted successfully!");
+                return service;
+            } else {
+                // Throw exception
+                throw new SQLException("Error seems to have occured. Check the logs.");
+            }
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            return null;
+        } finally {
+            // Attempt to close all resources, ignore failures
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (Exception ex) {
+                };
+            }
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static ArrayList<Services> retrieveServices() {
+
+        String sqlStatement = "SELECT * FROM services;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        ArrayList<Services> services = new ArrayList<Services>();
+        ResultSet resultSet = null;
+        try {
+
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+            resultSet = pst.executeQuery();
+
+            // process query results
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int numberOfColumns = metaData.getColumnCount();
+            System.out.println("Services Table of WollfInns Database:");
+
+            for (int i = 1; i <= numberOfColumns; i++) {
+                System.out.printf("%-8s\t", metaData.getColumnName(i));
+            }
+            System.out.println();
+
+            while (resultSet.next()) {
+
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    System.out.printf("%-8s\t", resultSet.getObject(i));
+                }
+                System.out.println();
+
+                services.add(new Services(resultSet.getString("serviceCode"), resultSet.getString("serviceDesc")));
+
+            } // end while
+            return services;
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            return null;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            try {
+                resultSet.close();
+            } catch (Exception ex) {
+            };
+            try {
+                pst.close();
+            } catch (Exception ex) {
+            };
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+
+    }
+
+    public ArrayList<LinkedHashMap<String, String>> retrieveServices2() {
+
+        String sqlStatement = "SELECT * FROM services;";
+        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+
+        Reporting.easyReport(queryResults);
+        return queryResults;
+    }
+
+    public static boolean deleteService(String sc) {
+
+        String sqlStatement = "Delete services where serviceCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsDeleted = -1;
+        try {
+
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+
+            pst.setString(1, sc);
+
+            // process query results
+            System.out.println("Deleting a row from Services Table of WollfInns Database:");
+
+            rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("an existing service was deleted.");
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+
+        return rowsDeleted > 0;
+
+    }
+
+    public static boolean updateService(String targetServiceCode, String sc, String sd) {
+
+        String sqlStatement = "UPDATE services SET serviceCode =?, serviceDesc = ? WHERE serviceCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsUpdated = -1;
+        try {
+
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+
+            pst.setString(1, sc);
+            pst.setString(2, sd);
+            pst.setString(3, targetServiceCode);
+            // process query results
+            System.out.println("UPDATING Services Table of WollfInns Database:");
+
+            rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("an existing service was updated.");
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+
+        return rowsUpdated > 0;
+    }
+
+    /**
+     *
+     * @param titleCode
+     * @param titleDesc
+     * @return
+     */
+    public boolean createJobTitle(String tc, String td) {
+        String sqlStatement = "INSERT INTO job_titles (titleCode,titleDesc) VALUES (?,?);";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsUpdated =-1;
+        try {
+
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+            
+            pst.setString(1,td);
+            pst.setString(2,tc);
+
+            // process query results
+            System.out.println("Inserting into job_titles Table of WollfInns Database:");
+
+            
+            rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println("a job title inserted.");// non existing
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+
+        return rowsUpdated>0;
+
+    }
+
+    /**
+     *
+     * @return list of jobs titles in WolfInns.
+     */
+    public static ArrayList<LinkedHashMap<String, String>> retrieveJobTitles() {
+        String sqlStatement = "SELECT * FROM job_titles;";
+        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+
+        Reporting.easyReport(queryResults);
+        return queryResults;
+    }
+
+    /**
+     *
+     * @param targetJT
+     * @param jtCode
+     * @param jtDesc
+     * @return true if updates takes place, otherwise false;
+     */
+    public static boolean updateJobTitle(String targetJT, String jtCode, String jtDesc) {
+        String sqlStatement = "UPDATE job_titles SET titleCode = ?, titleDesc = ? WHERE titleCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsUpdated =-1;
+        try {
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+            pst.setString(1,jtCode );
+            pst.setString(2,jtDesc);
+            pst.setString(3, targetJT);
+            // process query results
+            System.out.println("Updating into job_titles Table of WollfInns Database:");
+
+            
+            rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println("a job title updated.");// non existing
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+        return rowsUpdated>0;
+    }
+
+    /**
+     *
+     * @param titleCode
+     * @return removed the Job title
+     */
+    public static boolean deleteJobTitle(String tc) {
+        String sqlStatement = "DELETE job_titles WHERE titleCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsUpdated =-1;
+        try {
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+            pst.setString(1,tc);
+
+            // process query results
+            System.out.println("Updating into job_titles Table of WollfInns Database:");
+
+            
+            rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0){
+                System.out.println("a job title updated.");// non existing
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+        return rowsUpdated>0;
+
+    }
+    
+    /*public void close() {
+        try {
+            connection.close();
+        } catch (SQLException sqlException) {
+        }
+    }/*
+
+    /**
+     *
+     * @param dc department code
+     * @param dd department description
+     * @return true iff success
+     */
+    public void createDepartment(String dc,
+            String dd) throws SQLException {
+
+        Connection connection = null;
+        Statement stmt = null;
+
+        String sql = "CREATE TABLE IF NOT EXISTS " + "departments"
+                + "deptCode CHAR(4) NOT NULL, "
+                + "deptDesc VARCHAR(50),"
+                + "PRIMARY KEY (deptCode));";
+        try {
+            connection = DatabaseConnection.getConnection();
+            stmt = connection.createStatement();
+            stmt.executeUpdate(sql);
+            System.out.println("Created table in given database...");
+        } catch (SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+            //finally block used to close resources
+            try {
+                if (stmt != null) {
+                    connection.close();
+                }
+            } catch (SQLException se) {
+            }// do nothing
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }//end finally try
+        }//end try
+    }
+
+    /**
+     *
+     * @return list of departments
+     */
+    public void retrieveDepartments() {
+        //public ArrayList<Departments> retrieveDepartments() {
+
+        String sqlStatement = "SELECT * FROM departments;";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet results = null;
+        try {
+            ArrayList<Departments> depts = new ArrayList<>();
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+
+            results = statement.executeQuery();
+            ResultSetMetaData rsMetaData = results.getMetaData();
+            int numberOfColumns = rsMetaData.getColumnCount();
+            StringBuilder sb = new StringBuilder();
+            System.out.println("A list of available Departments:\n ");
+            for (int i = 1; i <= numberOfColumns; i++) {
+                sb.append(String.format("| %-15s", rsMetaData.getColumnLabel(i)));
+            }
+            String str = "-";
+       
+            String divider = new String(new char[sb.length()+1]).replace("\0", str);
+            System.out.println(divider);
+            System.out.println(sb + "|");
+            System.out.println(divider);
+            while (results.next()) {
+                //System.out.print("|  ");
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (i > 1) {
+                        //System.out.printf("|");
+                    }
+                    String columnValue = results.getString(i);
+                    System.out.printf("|%-15s ", columnValue);
+                }
+                System.out.println("|");
+                
+
+                /*Departments dept = new Departments();
+                dept.setDeptCode(results.getString("deptCode"));
+                dept.setDeptDesc(results.getString("deptDesc"));
+                depts.add(dept);*/
+            }
+            System.out.println(divider);
+
+            //return depts;
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            //return null;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            if (results != null) {
+                try {
+                    results.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                }
+                ;
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                }
+            }
+        }
+
+    }
+
+    /**
+     *
+     * @param dcTarget
+     * @param dc department code
+     * @param dd department description
+     * @return
+     */
+    public boolean updateDepartment(String dcTarget,
+            String dc,
+            String dd) {
+        String sqlStatement = "UPDATE departments SET deptCode =?, deptDesc = ? WHERE deptCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsUpdated = -1;
+        try {
+
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+
+            pst.setString(1, dc);
+            pst.setString(2, dd);
+            pst.setString(3, dcTarget);
+            // process query results
+            System.out.println("UPDATING department Table of WollfInns Database:");
+
+            rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("an existing department was updated.");
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+
+        return rowsUpdated > 0;
+    }
+
+    /**
+     *
+     * @param dc department code
+     * @return
+     */
+    public boolean deleteDepartment(String dc) {
+        String sqlStatement = "Delete departments where deptCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsDeleted = -1;
+        try {
+
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+
+            pst.setString(1, dc);
+
+            // process query results
+            System.out.println("Deleting a row from Services Table of WollfInns Database:");
+
+            rowsDeleted = pst.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("an existing service was deleted.");
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+
+        return rowsDeleted > 0;
+
+    }
 
 }
