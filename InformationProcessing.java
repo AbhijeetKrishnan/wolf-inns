@@ -931,8 +931,8 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	 * @param email represents the customer's email ID
 	 * @return Customers object if successful, else null
 	 */
-	public static Customers createCustomer(int customerId, String name, String DOB, String phone, String email) {
-		String sqlStatement = "INSERT INTO customers(customerId, name, DOB, phone, email) VALUES (?, ?, ?, ?, ?);";
+	public static Customers createCustomer(String name, String DOB, String phone, String email) {
+		String sqlStatement = "INSERT INTO customers(name, DOB, phone, email) VALUES (?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		Customers customer = null; // default value
@@ -941,17 +941,15 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
-      statement.setInt(1, customerId);
-			statement.setString(2, name);
-			statement.setString(3, DOB);
-			statement.setString(4, phone);
-			statement.setString(5, email);
+			statement.setString(1, name);
+			statement.setString(2, DOB);
+			statement.setString(3, phone);
+			statement.setString(4, email);
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been inserted
 			if (rowsAffected == 1) {
 				customer = new Customers();
-				customer.setCustomerId(customerId);
 				customer.setName(name);
 				customer.setDob(DOB);
 				customer.setPhone(phone);
