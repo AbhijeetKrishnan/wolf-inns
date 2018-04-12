@@ -132,18 +132,89 @@ public class Reporting {
 	}
 	
 	    /**
+     /**
      * Return staffId, name, titleDesc, deptDesc, DOB, phone, address, city,
      * state grouped by their title
      *
      * @param tc title code
      */
-    public static void reportStaffInformationByTitle(String tc) {
-        String sqlStatement = "SELECT staffId, name, titleDesc, deptDesc, address, city, state, phone, DOB"
-                + " FROM staff NATURAL JOIN job_titles NATURAL JOIN departments WHERE titleCode =\""
-                + tc + "\" ORDER BY titleCode, staffId;";
-        System.out.print("report Staff Information By Title =" + tc + "\n\n");
-        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
-        easyReport(queryResults);
+    public static void reportStaffInformationByTitle() {
+        String sqlStatement = "SELECT staffId, name, titleDesc, deptDesc, address, city, state, phone, DOB " +
+" FROM (staff NATURAL JOIN job_titles) NATURAL JOIN departments ORDER BY titleCode, staffId;";
+       // ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
+        //easyReport(queryResults);
+        
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet results = null;
+        try {
+            // ArrayList<Departments> depts = new ArrayList<>(); in case you want to return it!
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+
+            results = statement.executeQuery();
+            ResultSetMetaData rsMetaData = results.getMetaData();
+            int numberOfColumns = rsMetaData.getColumnCount();
+            StringBuilder sb = new StringBuilder();
+            System.out.println("A list of Staff ordered by their role:\n ");
+            for (int i = 1; i <= numberOfColumns; i++) {
+                //int width=rsMetaData.getPrecision(i);
+                int width =rsMetaData.getColumnDisplaySize(i);
+                //sb.append(String.format("| %-25s", rsMetaData.getColumnLabel(i)));
+                sb.append(String.format("| %-"+width+"s", rsMetaData.getColumnLabel(i)));
+            }
+            String str = "-";
+       
+            String divider = new String(new char[sb.length()+1]).replace("\0", str);
+            System.out.println(divider);
+            System.out.println(sb + "|");
+            System.out.println(divider);
+            while (results.next()) {
+                //System.out.print("|  ");
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    
+                    int width =rsMetaData.getColumnDisplaySize(i);
+                    String columnValue = results.getString(i);
+                    //System.out.printf("|%-15s ", columnValue);
+                    System.out.printf("|%-"+width+"s ", columnValue);
+                }
+                System.out.println("|");
+                
+
+                /*Departments dept = new Departments();
+                dept.setDeptCode(results.getString("deptCode"));
+                dept.setDeptDesc(results.getString("deptDesc"));
+                depts.add(dept);*/
+            }
+            System.out.println(divider);
+
+            //return depts;
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            //return null;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            if (results != null) {
+                try {
+                    results.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                }
+                ;
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                }
+            }
+        }
     }
 
     /**
@@ -187,4 +258,6 @@ public class Reporting {
         easyReport(queryResults);
 
     }
+	
+	
 }
