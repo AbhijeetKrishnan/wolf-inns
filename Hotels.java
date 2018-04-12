@@ -1,4 +1,6 @@
-public class Hotels {
+import java.util.ArrayList;
+
+public class Hotels extends DatabaseObject {
 	private int hotelId;
 	private String name;
 	private String address;
@@ -59,5 +61,45 @@ public class Hotels {
                         address.equals(h.address) && city.equals(h.city) &&
                         state.equals(h.state) && phone.equals(h.phone) &&
                         managerId==h.managerId);
+	}	
+	
+	public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(Integer.toString(this.getHotelId()));
+		fieldValues.add(this.getName());
+		fieldValues.add(this.getAddress());
+		fieldValues.add(this.getCity());
+		fieldValues.add(this.getState());
+		fieldValues.add(this.getPhone());
+		fieldValues.add(Integer.toString(this.getManagerId()));
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("Hotel Id");
+		fieldNames.add("Name");
+		fieldNames.add("Address");
+		fieldNames.add("City");
+		fieldNames.add("State");
+		fieldNames.add("Phone");
+		fieldNames.add("Manager Id");
+
+		return fieldNames;			
+	}
+	
+	
+	public static Hotels selectHotel() {
+		ArrayList<Hotels> hotelList = InformationProcessing.retrieveAllHotels();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) hotelList);
+		
+		Hotels selectedRecord = (Hotels)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 }

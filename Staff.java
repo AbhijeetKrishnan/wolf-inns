@@ -1,4 +1,6 @@
-public class Staff {
+import java.util.ArrayList;
+
+public class Staff extends DatabaseObject {
 	private int staffId;
 	private String name;
 	private String titleCode;
@@ -74,5 +76,49 @@ public class Staff {
                         address.equals(s.address) && city.equals(s.city) &&
                         state.equals(s.state) && phone.equals(s.phone) &&
                         dob.equals(s.dob));
+	}
+	
+	public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(Integer.toString(this.getStaffId()));
+		fieldValues.add(this.getName());
+		fieldValues.add(this.getTitleCode());
+		fieldValues.add(this.getDeptCode());
+		fieldValues.add(this.getAddress());
+		fieldValues.add(this.getCity());
+		fieldValues.add(this.getState());
+		fieldValues.add(this.getPhone());
+		fieldValues.add(this.getDob());		
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("Staff Id");
+		fieldNames.add("Name");
+		fieldNames.add("Job Title Code");
+		fieldNames.add("Department Code");
+		fieldNames.add("Address");
+		fieldNames.add("City");
+		fieldNames.add("State");
+		fieldNames.add("Phone");
+		fieldNames.add("Date of Birth");
+
+		return fieldNames;			
+	}
+	
+	
+	public static Staff selectStaff() {
+		ArrayList<Staff> staffList = InformationProcessing.retrieveAllStaff();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staffList);
+		
+		Staff selectedRecord = (Staff)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 }

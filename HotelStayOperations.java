@@ -183,7 +183,7 @@ public class HotelStayOperations {
 	 * @return An ArrayList containing Rooms objects for each of the returned records if successful, else null
 	 */
 	public static ArrayList<Rooms> retrieveAvailableRooms(int hotelId, String categoryCode) {
-		String sqlStatement = "SELECT hotelId, roomNumber, maxAllowedOcc, rate, categoryCode, available FROM rooms WHERE hotelId=? AND categoryCode=? AND available=?;";
+		String sqlStatement = "SELECT hotelId, roomNumber, maxAllowedOcc, rate, categoryCode FROM rooms WHERE hotelId=? AND categoryCode=? AND roomNumber NOT IN (SELECT roomNumber FROM stays WHERE hotelId=? AND checkoutDate IS NULL AND checkoutTime IS NULL);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet results = null;
@@ -193,7 +193,7 @@ public class HotelStayOperations {
 			statement = connection.prepareStatement(sqlStatement);
 			statement.setInt(1, hotelId);
 			statement.setString(2, categoryCode);
-			statement.setString(3, "Y");
+			statement.setInt(3, hotelId);
 			results = statement.executeQuery();
 			while (results.next()) {
 				Rooms room = new Rooms();
@@ -202,7 +202,6 @@ public class HotelStayOperations {
 				room.setMaxAllowedOcc(results.getInt("maxAllowedOcc"));
 				room.setRate(results.getDouble("rate"));
 				room.setCategoryCode(results.getString("categoryCode"));
-				room.setAvailable(results.getString("available"));
 				rooms.add(room);
 			}
 			System.out.println("A list of available rooms in hotelId = " + hotelId + " was retrieved successfully!");

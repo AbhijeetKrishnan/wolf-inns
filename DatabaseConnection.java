@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 public class DatabaseConnection {
 
 	private static final String user = "xzheng6";
-	private static final String password = "200016878";	
+	private static final String password = "200016878";
 	
 	private static final String connectionURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user;	
 	
