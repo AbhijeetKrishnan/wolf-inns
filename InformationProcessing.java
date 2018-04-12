@@ -1758,7 +1758,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 
     }
 	
-	public static boolean updateService(String targetServiceCode,
+	public static boolean updateServices(String targetServiceCode,
             String sc,
             String sd,
             double charge) {
