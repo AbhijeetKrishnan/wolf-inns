@@ -374,10 +374,12 @@ public class TestJunit {
     ArrayList<ServiceStaff> availCateringStaff = HotelStayOperations.retrieveAvailableCateringStaff(1);
     ArrayList<ServiceStaff> availRoomServiceStaff = HotelStayOperations.retrieveAvailableRoomServiceStaff(1);
     
-    assertTrue("Assign dedicated staff to a Presidential Suite", HotelStayOperations.assignDedicatedPresidentialSuiteStaff(1, "Test", availCateringStaff.get(0).getStaffId(), availRoomServiceStaff.get(0).getStaffId()));
+    Connection connection = DatabaseConnection.getConnection();
+    
+    assertTrue("Assign dedicated staff to a Presidential Suite", HotelStayOperations.assignDedicatedPresidentialSuiteStaff(1, "Test", availCateringStaff.get(0).getStaffId(), availRoomServiceStaff.get(0).getStaffId(), connection));
     
     //clean up
-    assertTrue("Unassign dedicated staff from a Presidential Suite", HotelStayOperations.unassignDedicatedPresidentialSuiteStaff(1, "Test"));
+    assertTrue("Unassign dedicated staff from a Presidential Suite", HotelStayOperations.unassignDedicatedPresidentialSuiteStaff(1, "Test", connection));
     InformationProcessing.deleteServiceStaff(ss_cats);
     InformationProcessing.deleteServiceStaff(ss_rsst);
     InformationProcessing.deleteStaff(s_cats);
