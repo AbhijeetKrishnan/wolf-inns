@@ -113,7 +113,7 @@ public class Staff extends DatabaseObject {
 	}
 	
 	
-	public static Staff selectStaff() {
+	public static Staff select() {
 		ArrayList<Staff> staffList = InformationProcessing.retrieveAllStaff();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staffList);
 		

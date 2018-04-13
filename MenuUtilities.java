@@ -99,7 +99,7 @@ public class MenuUtilities {
 				}
 				
 			} else {
-				System.out.println("Enter the record Id of the record you want to work with, press enter to go to restart from page 1, or enter 'X' to exit.");
+				System.out.println("Enter the record Id of the record you want to work with, press enter to restart from page 1, or enter 'X' to exit.");
 				currentRecordId = easyList(recordList.subList((currentRecordId-1), recordList.size()), currentRecordId);
 				System.out.print("===> ");
 				

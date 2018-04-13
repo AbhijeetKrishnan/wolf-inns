@@ -45,7 +45,7 @@ public class ServiceStaff extends DatabaseObject {
 		return fieldNames;			
 	}
 	
-	public static ServiceStaff selectServiceStaff() {
+	public static ServiceStaff select() {
 		// Get the list of service staff records to be selected from
 		ArrayList<ServiceStaff> serviceStaffList = InformationProcessing.retrieveAllServiceStaff();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) serviceStaffList);
