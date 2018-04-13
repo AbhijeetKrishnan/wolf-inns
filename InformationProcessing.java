@@ -1006,8 +1006,8 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	 * @param email represents the customer's email ID
 	 * @return Customers object if successful, else null
 	 */
-	public static Customers createCustomer(int customerId, String name, String DOB, String phone, String email) {
-		String sqlStatement = "INSERT INTO customers(customerId, name, DOB, phone, email) VALUES (?, ?, ?, ?, ?);";
+	public static Customers createCustomer(String name, String DOB, String phone, String email) {
+		String sqlStatement = "INSERT INTO customers(name, DOB, phone, email) VALUES (?, ?, ?, ?);";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		Customers customer = null; // default value
@@ -1016,17 +1016,18 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, customerId);
-			statement.setString(2, name);
-			statement.setString(3, DOB);
-			statement.setString(4, phone);
-			statement.setString(5, email);
+			statement.setString(1, name);
+			statement.setString(2, DOB);
+			statement.setString(3, phone);
+			statement.setString(4, email);
 			int rowsAffected = statement.executeUpdate();
 			
 			// A single row should have been inserted
 			if (rowsAffected == 1) {
 				customer = new Customers();
-                customer.setCustomerId(customerId);
+				generatedKeys = statement.getGeneratedKeys();
+				generatedKeys.next();
+				customer.setCustomerId(generatedKeys.getInt(1));
 				customer.setName(name);
 				customer.setDob(DOB);
 				customer.setPhone(phone);
@@ -1037,8 +1038,9 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			ex.printStackTrace();
 		} finally {
 			// Attempt to close all resources, ignore failures
-			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
+			if (generatedKeys != null) { try { generatedKeys.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 		return customer;
 	}
@@ -1081,7 +1083,52 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		
 		return customer;
 	}
-	
+
+    public static ArrayList<Customers> retrieveAllCustomers() {
+		
+		ArrayList<Customers> customerList = new ArrayList<Customers>();
+		String sqlStatement = "SELECT customerId, name, DOB, phone, email FROM customers;";
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			results = statement.executeQuery(sqlStatement);		
+
+			results.last();
+			int rowsAffected = results.getRow();
+			if (rowsAffected > 0) {
+				results.first();
+				while (results.next()) {
+					Customers c = new Customers();
+
+					c.setCustomerId(results.getInt("customerId"));
+					c.setName(results.getString("name"));
+					c.setDob(results.getString("DOB"));
+					c.setPhone(results.getString("phone"));
+					c.setEmail(results.getString("email"));
+					
+					customerList.add(c);
+				}
+				
+				return customerList;
+			} else {
+				return null;
+			}			
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
+	}
+
 	/**
 	 * Update a customer record in the database with new field values
 	 * @param customer: the Customers object with new field values that needs to be updated in the database
@@ -1509,215 +1556,6 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
-	
-	/*
-    /**
-     * Create a service staff record
-     *
-     * @param staffId the staff's ID
-     * @param hotelId the hotel's ID
-     * @return ServiceStaff object if successful, else null
-     
-    public static ServiceStaff createServiceStaff(int staffId,
-            int hotelId) {
-        String sqlStatement = "INSERT INTO service_staff(staffId, hotelId) VALUES (?, ?);";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            statement = connection.prepareStatement(sqlStatement);
-            statement.setInt(1, staffId);
-            statement.setInt(2, hotelId);
-            int rowsAffected = statement.executeUpdate();
-            // A single row should have been inserted
-            if (1 == rowsAffected) {
-                ServiceStaff serviceStaff = new ServiceStaff();
-                serviceStaff.setStaffId(staffId);
-                serviceStaff.setHotelId(hotelId);
-                System.out.println("A new service staff record was inserted successfully!");
-                return serviceStaff;
-            } else {
-                // Throw exception
-                throw new SQLException("Error seems to have occured. Check the logs.");
-            }
-        } catch (SQLException ex) {
-            // Log and return null
-            ex.printStackTrace();
-            return null;
-        } finally {
-            // Attempt to close all resources, ignore failures
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (Exception ex) {
-                };
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception ex) {
-                };
-            }
-        }
-    }
-
-    /**
-     * Retrieve a service staff by staff ID
-     *
-     * @param staffId the staff's ID
-     * @return ServiceStaff object if given service staff exists, else null
-     
-    public static ServiceStaff retrieveServiceStaff(int staffId) {
-        String sqlStatement = "SELECT staffId, hotelId FROM service_staff WHERE staffId=?;";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet results = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            statement = connection.prepareStatement(sqlStatement);
-            statement.setInt(1, staffId);
-            results = statement.executeQuery();
-            results.last();
-            int rowsAffected = results.getRow();
-            // A single row should have been retrieved
-            if (1 == rowsAffected) {
-                results.first();
-                ServiceStaff serviceStaff = new ServiceStaff();
-                serviceStaff.setStaffId(staffId);
-                serviceStaff.setHotelId(results.getInt("hotelId"));
-                System.out.println("An existing service staff record was retrieved successfully!");
-                return serviceStaff;
-            } else if (0 == rowsAffected) {
-                System.out.println("There is no existing service staff record with staffId = " + staffId + ".");
-                return null;
-            } else {
-                // Throw exception
-                throw new SQLException("Multiple rows returned when selecting service staff record with staffId = " + staffId + ".");
-            }
-        } catch (SQLException ex) {
-            // Log and return null
-            ex.printStackTrace();
-            return null;
-        } finally {
-            // Attempt to close all resources, ignore failures.
-            if (results != null) {
-                try {
-                    results.close();
-                } catch (Exception ex) {
-                };
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (Exception ex) {
-                };
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception ex) {
-                };
-            }
-        }
-    }
-
-    /**
-     * Update a service staff record in the database with new field values
-     *
-     * @param serviceStaff the ServiceStaff object with new field values that
-     * needs to be updated in the database
-     * @return true if successful, else false
-     
-    public static boolean updateServiceStaff(ServiceStaff serviceStaff) {
-        String sqlStatement = "UPDATE service_staff SET hotelId=? WHERE staffId=?;";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            statement = connection.prepareStatement(sqlStatement);
-            statement.setInt(1, serviceStaff.getHotelId());
-            statement.setInt(2, serviceStaff.getStaffId());
-            int rowsAffected = statement.executeUpdate();
-            // A single row should have been updated
-            if (1 == rowsAffected) {
-                System.out.println("An existing service staff record was updated successfully!");
-                return true;
-            } else if (0 == rowsAffected) {
-                System.out.println("There is no existing service staff record with staffId = " + serviceStaff.getStaffId() + ".");
-                return false;
-            } else {
-                // Throw exception
-                throw new SQLException("Error seems to have occured. Check the logs.");
-            }
-        } catch (SQLException ex) {
-            // Log and return false
-            ex.printStackTrace();
-            return false;
-        } finally {
-            // Attempt to close all resources, ignore failures.
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (Exception ex) {
-                };
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception ex) {
-                };
-            }
-        }
-    }
-
-    /**
-     * Delete a service staff record from the database
-     *
-     * @param serviceStaff the ServiceStaff object that needs to be deleted from
-     * the database
-     * @return true if successful, else false
-     
-    public static boolean deleteServiceStaff(ServiceStaff serviceStaff) {
-        String sqlStatement = "DELETE FROM service_staff WHERE staffId=?;";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            statement = connection.prepareStatement(sqlStatement);
-            statement.setInt(1, serviceStaff.getStaffId());
-            int rowsAffected = statement.executeUpdate();
-            // A single row should have been deleted
-            if (1 == rowsAffected) {
-                System.out.println("An existing service staff record was deleted successfully!");
-                return true;
-            } else if (0 == rowsAffected) {
-                System.out.println("There is no existing service staff record with staffId = " + serviceStaff.getStaffId() + ".");
-                return false;
-            } else {
-                // Throw exception
-                throw new SQLException("Error seems to have occured. Check the logs.");
-            }
-        } catch (SQLException ex) {
-            // Log and return false
-            ex.printStackTrace();
-            return false;
-        } finally {
-            // Attempt to close all resources, ignore failures.
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (Exception ex) {
-                };
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception ex) {
-                };
-            }
-        }
-    }
-    */
 
     /**
      * Creates a table of services ( schema)
