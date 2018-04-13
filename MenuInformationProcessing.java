@@ -374,17 +374,104 @@ public class MenuInformationProcessing {
 		}
     }
 
-    public static void menuOptionCreateCustomer() {
-        //Xiaohui
-    }
+	public static void menuOptionCreateCustomer() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| CREATE CUSTOMER RECORD                                              |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Scanner scanner = new Scanner(System.in);
+		String[] field = {"name", "DOB", "phone", "email"};
+		String[] response = new String[4];
+		for (int i = 0; i < 4; i++) {
+			System.out.println("Customer " + field[i]);
+			System.out.println("===> ");
+			while (!scanner.hasNextLine()) {
+				System.out.println("===> ");
+			}
+			response[i] = scanner.nextLine();
+		}
+		Customers c = InformationProcessing.createCustomer(response[0], response[1], response[2], response[3]);
+		if (null == c) {
+			System.out.println("Something unexpected happened while attempting to create the record.");
+		}
+		else {
+			System.out.println("Record created successfully.");
+		}
+	}
     
-    public static void menuOptionUpdateCustomer() {
-        //Xiaohui
-    }
+	public static void menuOptionUpdateCustomer() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| UPDATE CUSTOMER RECORD                                              |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Customers c = Customers.select();
+		if (null == c) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);
+			String[] field = {"name", "DOB", "phone", "email"};
+			String[] current = {c.getName(), c.getDob(), c.getPhone(), c.getEmail()};
+			String[] update = {c.getName(), c.getDob(), c.getPhone(), c.getEmail()};
+			System.out.println("Current customer id: " + c.getCustomerId());
+			for (int i = 0; i < 4; i++) {
+				System.out.println("Current customer " + field[i] + ": " + current[i]);
+				System.out.println("Do you want to update this field? (Y/N)");
+				String response = "";
+				do {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					response = scanner.nextLine();
+				} while (!response.equals("Y") && !response.equals("N"));
+				if (response.equals("Y")) {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					update[i] = scanner.nextLine();
+				}
+			}
+			c.setName(update[0]);
+			c.setDob(update[1]);
+			c.setPhone(update[2]);
+			c.setEmail(update[3]);
+			if (InformationProcessing.updateCustomer(c)) {
+				System.out.println("Record updated successfully.");
+			} else {
+				System.out.println("Something unexpected happened while attempting to update the record.");
+			}
+		}
+	}
     
-    public static void menuOptionDeleteCustomer() {
-        //Xiaohui
-    }
+	public static void menuOptionDeleteCustomer() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| DELETE CUSTOMER RECORD                                              |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Customers c = Customers.select();
+		if (null == c) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);			
+			System.out.println("Attempting to delete customer record with customer id: " + c.getCustomerId());
+			System.out.println("Are you sure you want to delete this record? (Y/N)");			
+			String response = "";
+			do {
+				System.out.print("===> ");
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
+			} while (!response.equals("Y") && !response.equals("N"));
+			if (response.equals("Y")) {
+				if (InformationProcessing.deleteCustomer(c)) {
+					System.out.println("Record deleted successfully.");
+				} else {
+					System.out.println("Something unexpected happened while attempting to delete the record.");
+				}
+			} else {
+				System.out.println("Deletion was cancelled.");
+			}
+		}
+	}
 
     public static void menuOtherMain() {
         try {	
