@@ -43,7 +43,7 @@ public class MenuInformationProcessing {
                     //menuServiceStaffMain();
                     break;
                     case 5:
-                    //menuCustomersMain();
+                    menuCustomersMain();
                     break;
                     case 6:
                     //menuStayMain();
@@ -90,13 +90,13 @@ public class MenuInformationProcessing {
                 
                 switch (choice) {
                     case 1:
-                    //menuOptionCreateHotel();
+                    menuOptionCreateHotel();
                     break;
                     case 2:
-                    //menuOptionUpdateHotel();
+                    menuOptionUpdateHotel();
                     break;
                     case 3:
-                    //menuOptionDeleteHotel();
+                    menuOptionDeleteHotel();
                     break;
                     case 4:
                     isExit = true;
@@ -111,6 +111,107 @@ public class MenuInformationProcessing {
 			ex.printStackTrace();
 		}
     }
+
+	public static void menuOptionCreateHotel() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| CREATE HOTEL RECORD                                                 |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Scanner scanner = new Scanner(System.in);
+		String[] field = {"name", "address", "city", "state", "phone", "managerId"};
+		String[] response = new String[6];
+		for (int i = 0; i < 6; i++) {
+			System.out.println("Hotel " + field[i]);
+			System.out.println("===> ");
+			while (!scanner.hasNextLine()) {
+				System.out.println("===> ");
+			}
+			response[i] = scanner.nextLine();
+		}
+		Hotels h = InformationProcessing.createHotel(response[0], response[1], response[2], response[3], response[4], Integer.parseInt(response[5]));
+		if (null == h) {
+			System.out.println("Something unexpected happened while attempting to create the record.");
+		}
+		else {
+			System.out.println("Record created successfully.");
+		}
+	}
+
+	public static void menuOptionUpdateHotel() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| UPDATE HOTEL RECORD                                                 |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Hotels h = Hotels.select();
+		if (null == h) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);
+			String[] field = {"name", "address", "city", "state", "phone", "managerId"};
+			String[] current = {h.getName(), h.getAddress(), h.getCity(), h.getState(), h.getPhone(), Integer.toString(h.getManagerId())};
+			String[] update = {h.getName(), h.getAddress(), h.getCity(), h.getState(), h.getPhone(), Integer.toString(h.getManagerId())};
+			System.out.println("Current hotel id: " + h.getHotelId());
+			for (int i = 0; i < 6; i++) {
+				System.out.println("Current hotel " + field[i] + ": " + current[i]);
+				System.out.println("Do you want to update this field? (Y/N)");
+				String response = "";
+				do {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					response = scanner.nextLine();
+				} while (!response.equals("Y") && !response.equals("N"));
+				if (response.equals("Y")) {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					update[i] = scanner.nextLine();
+				}
+			}
+			h.setName(update[0]);
+			h.setAddress(update[1]);
+			h.setCity(update[2]);
+			h.setState(update[3]);
+			h.setPhone(update[4]);
+			h.setManagerId(Integer.parseInt(update[5]));
+			if (InformationProcessing.updateHotel(h)) {
+				System.out.println("Record updated successfully.");
+			} else {
+				System.out.println("Something unexpected happened while attempting to update the record.");
+			}
+		}
+	}
+
+	public static void menuOptionDeleteHotel() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| DELETE HOTEL RECORD                                                 |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Hotels h = Hotels.select();
+		if (null == h) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);			
+			System.out.println("Attempting to delete hotel record with hotel id: " + h.getHotelId());
+			System.out.println("Are you sure you want to delete this record? (Y/N)");			
+			String response = "";
+			do {
+				System.out.print("===> ");
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
+			} while (!response.equals("Y") && !response.equals("N"));
+			if (response.equals("Y")) {
+				if (InformationProcessing.deleteHotel(h)) {
+					System.out.println("Record deleted successfully.");
+				} else {
+					System.out.println("Something unexpected happened while attempting to delete the record.");
+				}
+			} else {
+				System.out.println("Deletion was cancelled.");
+			}
+		}
+	}
     
     public static void menuRoomsMain() {
         try {	
@@ -167,7 +268,63 @@ public class MenuInformationProcessing {
     public static void menuOptionDeleteRoom() {
         //Abhijeet
     }
+
+    public static void menuCustomersMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| CUSTOMER                                                            |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Create a customer");
+                System.out.println("2. Update a customer");
+                System.out.println("3. Delete a customer");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    menuOptionCreateCustomer();
+                    break;
+                    case 2:
+                    menuOptionUpdateCustomer();
+                    break;
+                    case 3:
+                    menuOptionDeleteCustomer();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+
+    public static void menuOptionCreateCustomer() {
+        //Xiaohui
+    }
     
+    public static void menuOptionUpdateCustomer() {
+        //Xiaohui
+    }
+    
+    public static void menuOptionDeleteCustomer() {
+        //Xiaohui
+    }
+
     public static void menuOtherMain() {
         try {	
         
@@ -334,9 +491,10 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-			    while (!scanner.hasNext()) {
-			    }
-			    response = scanner.next();
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
 			} while (!response.equals("Y") && !response.equals("N"));
 			
 			if (response.equals("Y")) {
@@ -381,9 +539,10 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-			    while (!scanner.hasNext()) {
-			    }
-			    response = scanner.next();
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
 			} while (!response.equals("Y") && !response.equals("N"));
 			
 			if (response.equals("Y")) {
@@ -463,9 +622,10 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-			    while (!scanner.hasNext()) {
-			    }
-			    response = scanner.next();
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
 			} while (!response.equals("Y") && !response.equals("N"));
 			
 			if (response.equals("Y")) {
