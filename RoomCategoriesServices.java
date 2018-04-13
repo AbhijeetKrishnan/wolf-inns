@@ -1,4 +1,6 @@
-public class RoomCategoriesServices {
+import java.util.ArrayList;
+
+public class RoomCategoriesServices extends DatabaseObject {
 	private String categoryCode;
 	private String serviceCode;
 
@@ -22,5 +24,35 @@ public class RoomCategoriesServices {
 		RoomCategoriesServices r = (RoomCategoriesServices) o;
 		return (categoryCode.equals(r.categoryCode) &&
                         serviceCode.equals(r.serviceCode));
+	}
+	
+    public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(this.getCategoryCode());
+		fieldValues.add(this.getServiceCode());
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("Room Category Code");
+		fieldNames.add("Service Code");
+
+		return fieldNames;			
+	}
+	
+	public static RoomCategoriesServices select() {
+
+		ArrayList<RoomCategoriesServices> roomCategoriesServicesList = InformationProcessing.retrieveAllRoomCategoriesServices();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) roomCategoriesServicesList);
+		
+		RoomCategoriesServices selectedRecord = (RoomCategoriesServices)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 }

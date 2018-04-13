@@ -190,6 +190,50 @@ public class InformationProcessing {
 		}
 	}	
 	
+	
+    public static ArrayList<RoomCategoriesServices> retrieveAllRoomCategoriesServices() {
+		
+		ArrayList<RoomCategoriesServices> roomCategoriesServicesList = new ArrayList<RoomCategoriesServices>();
+		String sqlStatement = "SELECT categoryCode, serviceCode FROM room_categories_services;";
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			results = statement.executeQuery(sqlStatement);		
+
+			results.last();
+			int rowsAffected = results.getRow();
+			if (rowsAffected > 0) {
+				results.first();
+				while (results.next()) {
+					RoomCategoriesServices roomCategoriesServices = new RoomCategoriesServices();
+
+					roomCategoriesServices.setCategoryCode(results.getString("categoryCode"));
+					roomCategoriesServices.setServiceCode(results.getString("serviceCode"));
+
+					roomCategoriesServicesList.add(roomCategoriesServices);
+				}
+				
+				return roomCategoriesServicesList;
+			} else {
+				return null;
+		    }			
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
+	}
+
+	
 	public static Stays createStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int billingId, Connection connection) {
 		String sqlStatement = "INSERT INTO stays (hotelId, roomNumber, customerId, numOfGuests, checkinDate, checkinTime, checkoutDate, checkoutTime, billingId) VALUES(?, ?, ?, ?, ?, ?, NULL, NULL, ?);";
 		PreparedStatement statement = null;
@@ -2197,5 +2241,4 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
         return rowsDeleted > 0;
 
     }
-
 }
