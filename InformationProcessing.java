@@ -1565,9 +1565,9 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @return
      * @throws SQLException
      */
-    public static Services createServices(String sc,
+    public static Services createService(String sc,
             String sd,
-            double charge) throws SQLException {
+            double charge) {
 
         //ResultSet resultSet = null;
         Connection conn = null;
@@ -1637,7 +1637,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
             // process query results
             ResultSetMetaData metaData = resultSet.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
-            System.out.println("Services Table of WollfInns Database:");
+            System.out.println("Services Table of WolfInns Database:");
 
             for (int i = 1; i <= numberOfColumns; i++) {
                 System.out.printf("%-8s\t", metaData.getColumnName(i));
@@ -1682,7 +1682,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 
     }
 	
-	public static boolean updateServices(String targetServiceCode,
+	public static boolean updateService(String targetServiceCode,
             String sc,
             String sd,
             double charge) {
