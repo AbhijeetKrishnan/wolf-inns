@@ -1,2 +1,3 @@
 # Ignore compiled class files
 *.class
+.DS_Store
