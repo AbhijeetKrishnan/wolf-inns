@@ -3,6 +3,270 @@ import java.util.Scanner;
 
 
 public class MenuInformationProcessing {
+    
+    public static void menuInformationProcessingMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| INFORMATION PROCESSING                                              |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Hotels");
+                System.out.println("2. Rooms");
+                System.out.println("3. Staff");
+                System.out.println("4. Service Staff");
+                System.out.println("5. Customers");
+                System.out.println("6. Stay");
+                System.out.println("7. Search Available Rooms");
+                System.out.println("8. Other");
+                System.out.println("9. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    menuHotelsMain();
+                    break;
+                    case 2:
+                    menuRoomsMain();
+                    break;
+                    case 3:
+                    //menuStaffMain();
+                    break;
+                    case 4:
+                    //menuServiceStaffMain();
+                    break;
+                    case 5:
+                    //menuCustomersMain();
+                    break;
+                    case 6:
+                    //menuStayMain();
+                    break;
+                    case 7:
+                    //menuSearchAvailableRoomsMain();
+                    break;
+                    case 8:
+                    menuOtherMain();
+                    break;
+                    case 9:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+    
+    public static void menuHotelsMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| HOTELS                                                              |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Create a hotel");
+                System.out.println("2. Update a hotel");
+                System.out.println("3. Delete a hotel");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    //menuOptionCreateHotel();
+                    break;
+                    case 2:
+                    //menuOptionUpdateHotel();
+                    break;
+                    case 3:
+                    //menuOptionDeleteHotel();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+    
+    public static void menuRoomsMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| ROOMS                                                               |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Create a room");
+                System.out.println("2. Update a room");
+                System.out.println("3. Delete a room");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    menuOptionCreateRoom();
+                    break;
+                    case 2:
+                    menuOptionUpdateRoom();
+                    break;
+                    case 3:
+                    menuOptionDeleteRoom();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+    
+    public static void menuOptionCreateRoom() {
+        //Abhijeet
+    }
+    
+    public static void menuOptionUpdateRoom() {
+        //Abhijeet
+    }
+    
+    public static void menuOptionDeleteRoom() {
+        //Abhijeet
+    }
+    
+    public static void menuOtherMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| OTHER                                                               |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Job Titles");
+                System.out.println("2. Departments");
+                System.out.println("3. Room Categories");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    //menuJobTitlesMain();
+                    break;
+                    case 2:
+                    //menuDepartmentsMain();
+                    break;
+                    case 3:
+                    //menuRoomCategoriesMain();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+    
+    public static void menuJobTitlesMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| JOB TITLES                                                          |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Create a job title");
+                System.out.println("2. Update a job title");
+                System.out.println("3. Delete a job title");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    //menuOptionCreateJobTitle();
+                    break;
+                    case 2:
+                    //menuOptionUpdateJobTitle();
+                    break;
+                    case 3:
+                    //menuOptionDeleteJobTitle();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+    
+    public static void menuOptionCreateJobTitle() {
+        //Abhijeet
+    }
+    
+    public static void menuOptionUpdateJobTitle() {
+        //Abhijeet
+    }
+    
+    public static void menuOptionDeleteJobTitle() {
+        //Abhijeet
+    }
 	
 	// Accepts nothing and returns nothing. Fully encapsulated dialog for service staff entry!
 	public static void menuOptionCreateServiceStaff() {
