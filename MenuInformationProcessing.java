@@ -440,7 +440,7 @@ public class MenuInformationProcessing {
                     //menuDepartmentsMain();
                     break;
                     case 3:
-                    //menuRoomCategoriesMain();
+                    menuRoomCategoriesMain();
                     break;
                     case 4:
                     isExit = true;
@@ -511,6 +511,146 @@ public class MenuInformationProcessing {
     public static void menuOptionDeleteJobTitle() {
         //Abhijeet
     }
+
+    public static void menuRoomCategoriesMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| ROOM CATEGORIES                                                     |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Create a room category");
+                System.out.println("2. Update a room category");
+                System.out.println("3. Delete a room category");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    menuOptionCreateRoomCategory();
+                    break;
+                    case 2:
+                    menuOptionUpdateRoomCategory();
+                    break;
+                    case 3:
+                    menuOptionDeleteRoomCategory();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+    
+	public static void menuOptionCreateRoomCategory() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| CREATE ROOM CATEGORY RECORD                                         |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Scanner scanner = new Scanner(System.in);
+		String[] field = {"category code", "category description"};
+		String[] response = new String[2];
+		for (int i = 0; i < 2; i++) {
+			System.out.println("Room " + field[i]);
+			System.out.println("===> ");
+			while (!scanner.hasNextLine()) {
+				System.out.println("===> ");
+			}
+			response[i] = scanner.nextLine();
+		}
+		RoomCategories r = InformationProcessing.createRoomCategory(response[0], response[1]);
+		if (null == r) {
+			System.out.println("Something unexpected happened while attempting to create the record.");
+		}
+		else {
+			System.out.println("Record created successfully.");
+		}
+	}
+
+	public static void menuOptionUpdateRoomCategory() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| UPDATE ROOM CATEGORY RECORD                                         |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		RoomCategories r = RoomCategories.select();
+		if (null == r) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);
+			String[] field = {"category description"};
+			String[] current = {r.getCategoryDesc()};
+			String[] update = {r.getCategoryDesc()};
+			System.out.println("Current room category code: " + r.getCategoryCode());
+			for (int i = 0; i < 1; i++) {
+				System.out.println("Current room " + field[i] + ": " + current[i]);
+				System.out.println("Do you want to update this field? (Y/N)");
+				String response = "";
+				do {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					response = scanner.nextLine();
+				} while (!response.equals("Y") && !response.equals("N"));
+				if (response.equals("Y")) {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					update[i] = scanner.nextLine();
+				}
+			}
+			r.setCategoryDesc(update[0]);
+			if (InformationProcessing.updateRoomCategory(r)) {
+				System.out.println("Record updated successfully.");
+			} else {
+				System.out.println("Something unexpected happened while attempting to update the record.");
+			}
+		}
+	}
+
+	public static void menuOptionDeleteRoomCategory() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| DELETE ROOM CATEGORY RECORD                                         |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		RoomCategories r = RoomCategories.select();
+		if (null == r) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);			
+			System.out.println("Attempting to delete room category record with room category code: " + r.getCategoryCode());
+			System.out.println("Are you sure you want to delete this record? (Y/N)");			
+			String response = "";
+			do {
+				System.out.print("===> ");
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
+			} while (!response.equals("Y") && !response.equals("N"));
+			if (response.equals("Y")) {
+				if (InformationProcessing.deleteRoomCategory(r)) {
+					System.out.println("Record deleted successfully.");
+				} else {
+					System.out.println("Something unexpected happened while attempting to delete the record.");
+				}
+			} else {
+				System.out.println("Deletion was cancelled.");
+			}
+		}
+	}
 	
 	// Accepts nothing and returns nothing. Fully encapsulated dialog for service staff entry!
 	public static void menuOptionCreateServiceStaff() {
