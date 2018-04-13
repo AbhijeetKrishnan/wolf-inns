@@ -255,7 +255,6 @@ public class TestJunit {
   public void testCustomersCRUD() {
     //create a new record
     Customers expected = new Customers();
-    expected.setCustomerId(50000);
     expected.setName("Test");
     expected.setDob("2018-01-01");
     expected.setPhone("Test");
@@ -263,7 +262,8 @@ public class TestJunit {
     
     /* Create */
     System.out.println("Testing createCustomer...");
-    Customers actual = InformationProcessing.createCustomer(50000, "Test", "2018-01-01", "Test", "Test");
+    Customers actual = InformationProcessing.createCustomer("Test", "2018-01-01", "Test", "Test");
+    expected.setCustomerId(actual.getCustomerId());
     assertEquals("Create a Customers record", expected, actual);
     System.out.println("Test for createCustomer passed!");
     

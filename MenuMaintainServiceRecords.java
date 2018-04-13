@@ -88,14 +88,69 @@ public class MenuMaintainServiceRecords {
     }
     
     public static void menuOptionCreateService() {
-        //Abhijeet
+        Services result = null;
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Service code: ");
+            String sc = in.nextLine();
+            System.out.print("Service description: ");
+            String sd = in.nextLine();
+            System.out.print("Charge: ");
+            double charge = Double.parseDouble(in.nextLine());
+            
+            result = InformationProcessing.createService(sc, sd, charge);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        
+        if (result != null) {
+            System.out.println("Service created successfully");
+        } else {
+            System.out.println("There was an error");
+        }
     }
     
     public static void menuOptionUpdateService() {
-        //Abhijeet
+        boolean result = false;
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Old Service code: ");
+            String osc = in.nextLine();
+            System.out.print("New Service code: ");
+            String nsc = in.nextLine();
+            System.out.print("New Service description: ");
+            String sd = in.nextLine();
+            System.out.print("New Charge: ");
+            double charge = Double.parseDouble(in.nextLine());
+            
+            result = InformationProcessing.updateService(osc, nsc, sd, charge);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        
+        if (result) {
+            System.out.println("Service updated successfully");
+        } else {
+            System.out.println("There was an error");
+        }
     }
     
     public static void menuOptionDeleteService() {
-        //Abhijeet
+        boolean result = false;
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Service code: ");
+            String sc = in.nextLine();
+            
+            result = InformationProcessing.deleteService(sc);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        
+        if (result) {
+            System.out.println("Service deleted successfully");
+        } else {
+            System.out.println("There was an error");
+        }
     }
 }
