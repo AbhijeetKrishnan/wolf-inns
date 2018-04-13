@@ -1,4 +1,6 @@
-public class BillingInfo {
+import java.util.ArrayList;
+
+public class BillingInfo extends DatabaseObject {
 	private int billingId;
 	private String responsiblePartySSN;
 	private String address;
@@ -66,5 +68,46 @@ public class BillingInfo {
                         address.equals(b.address) && city.equals(b.city) &&
                         state.equals(b.state) && payMethodCode.equals(b.payMethodCode) &&
                         cardNumber.equals(b.cardNumber)); // don't use totalCharges since that is set by system ops
+	}
+
+	public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(Integer.toString(this.getBillingId()));
+		fieldValues.add(this.getResponsiblePartySSN());
+		fieldValues.add(this.getAddress());
+		fieldValues.add(this.getCity());
+		fieldValues.add(this.getState());
+		fieldValues.add(this.getPayMethodCode());
+		fieldValues.add(this.getCardNumber());
+		fieldValues.add(Double.toString(this.getTotalCharges()));
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("Billing Id");
+		fieldNames.add("Responsible Party SSN");
+		fieldNames.add("Address");
+		fieldNames.add("City");
+		fieldNames.add("State");
+		fieldNames.add("Payment Method Code");
+		fieldNames.add("Card Number");
+		fieldNames.add("Total Charges");
+
+		return fieldNames;			
+	}
+
+	public static BillingInfo select() {
+		ArrayList<BillingInfo> billingInfoList = MaintainBillingRecords.retrieveAllBillingInfos();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) billingInfoList);
+		
+		BillingInfo selectedRecord = (BillingInfo)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 }

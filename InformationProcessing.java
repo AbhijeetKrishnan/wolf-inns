@@ -1654,6 +1654,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
                 */
                 row.setServiceCode(resultSet.getString("serviceCode"));
                 row.setServiceDesc(resultSet.getString("serviceDesc"));
+                row.setCharge(resultSet.getDouble("charge"));
                 services.add(row);
                 //services.add(new Services(resultSet.getString("serviceCode"), resultSet.getString("serviceDesc")));
 

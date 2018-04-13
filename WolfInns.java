@@ -30,10 +30,10 @@ public class WolfInns {
                     MenuInformationProcessing.menuInformationProcessingMain();
                     break;
                     case 2:
-                    MenuMaintainBillingRecords.menuMaintainBillingRecordsMain();
+                    MenuMaintainServiceRecords.menuMaintainServiceRecordsMain();
                     break;
                     case 3:
-                    MenuMaintainServiceRecords.menuMaintainServiceRecordsMain();
+                    MenuMaintainBillingRecords.menuMaintainBillingRecordsMain();
                     break;
                     case 4:
                     MenuReporting.menuReportingMain();

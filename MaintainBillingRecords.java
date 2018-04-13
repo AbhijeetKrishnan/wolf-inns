@@ -282,6 +282,54 @@ public class MaintainBillingRecords {
 		return billingInfo;
 	}
 	
+	public static ArrayList<BillingInfo> retrieveAllBillingInfos() {
+
+		ArrayList<BillingInfo> billingInfoList = new ArrayList<BillingInfo>();
+		String sqlStatement = "SELECT * FROM billing_info;";
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			results = statement.executeQuery(sqlStatement);		
+
+			results.last();
+			int rowsAffected = results.getRow();
+			if (rowsAffected > 0) {
+				results.first();
+				while (results.next()) {
+					BillingInfo b = new BillingInfo();
+
+					b.setBillingId(results.getInt("billingId"));
+					b.setResponsiblePartySSN(results.getString("responsiblePartySSN"));
+					b.setAddress(results.getString("address"));
+					b.setCity(results.getString("city"));
+					b.setState(results.getString("state"));
+					b.setPayMethodCode(results.getString("payMethodCode"));
+					b.setCardNumber(results.getString("cardNumber"));
+					b.setTotalCharges(results.getDouble("totalCharges"));					
+
+					billingInfoList.add(b);
+				}
+				
+				return billingInfoList;
+			} else {
+				return null;
+		    }			
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
+	}
+
 	/**
 	 * Update a record of billing_info table in the database
 	 * @param BillingInfo billingInfo: the object which is to be updated in the table
@@ -289,7 +337,7 @@ public class MaintainBillingRecords {
 	 */
 	public static boolean updateBillingInfo(BillingInfo billingInfo) {
 		
-		String sqlStatement = "UPDATE billing_info SET responsiblePartySSN = ?, address = ?, city = ?, state = ?, payMethodCode = ?, cardNumber = ? WHERE billingId = ?";
+		String sqlStatement = "UPDATE billing_info SET responsiblePartySSN = ?, address = ?, city = ?, state = ?, payMethodCode = ?, cardNumber = ?, totalCharges = ? WHERE billingId = ?";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		boolean returnValue = false;
@@ -304,7 +352,8 @@ public class MaintainBillingRecords {
 			statement.setString(4, billingInfo.getState());
 			statement.setString(5, billingInfo.getPayMethodCode());
 			statement.setString(6, billingInfo.getCardNumber());
-			statement.setInt(7, billingInfo.getBillingId());
+			statement.setDouble(7, billingInfo.getTotalCharges());
+			statement.setInt(8, billingInfo.getBillingId());
 			
 			int rowsAffected = statement.executeUpdate();
 			

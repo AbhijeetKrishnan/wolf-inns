@@ -4,7 +4,170 @@ import java.util.Scanner;
 public class MenuMaintainBillingRecords {
     
     public static void menuMaintainBillingRecordsMain() {
-        // top level menu for all suboptions
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| MAINTAINING BILLING ACCOUNTS                                        |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Payment Methods");
+                System.out.println("2. Billing Info");
+                System.out.println("3. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    menuPaymentMethodsMain();
+                    break;
+                    case 2:
+                    menuBillingInfoMain();
+                    break;
+                    case 3:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
     }
+
+    public static void menuPaymentMethodsMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| PAYMENT METHODS                                                     |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Create a payment method");
+                System.out.println("2. Update a payment method");
+                System.out.println("3. Delete a payment method");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    //menuOptionCreatePaymentMethod();
+                    break;
+                    case 2:
+                    //menuOptionUpdatePaymentMethod();
+                    break;
+                    case 3:
+                    //menuOptionDeletePaymentMethod();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+
+    public static void menuBillingInfoMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| BILLING INFO                                                        |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Update a billing info");
+                System.out.println("2. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    menuOptionUpdateBillingInfo();
+                    break;
+                    case 2:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+
+	public static void menuOptionUpdateBillingInfo() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| UPDATE BILLING INFO RECORD                                                 |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		BillingInfo b = BillingInfo.select();
+		if (null == b) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);
+			String[] field = {"responsible party SSN", "address", "city", "state", "paymentn method code", "card number", "total charges"};
+			String[] current = {b.getResponsiblePartySSN(), b.getAddress(), b.getCity(), b.getState(), b.getPayMethodCode(), b.getCardNumber(), Double.toString(b.getTotalCharges())};
+			String[] update = {b.getResponsiblePartySSN(), b.getAddress(), b.getCity(), b.getState(), b.getPayMethodCode(), b.getCardNumber(), Double.toString(b.getTotalCharges())};
+			System.out.println("Current billing info id: " + b.getBillingId());
+			for (int i = 0; i < 7; i++) {
+				System.out.println("Current billing info " + field[i] + ": " + current[i]);
+				System.out.println("Do you want to update this field? (Y/N)");
+				String response = "";
+				do {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					response = scanner.nextLine();
+				} while (!response.equals("Y") && !response.equals("N"));
+				if (response.equals("Y")) {
+					System.out.print("===> ");
+					while (!scanner.hasNextLine()) {
+						System.out.println("===> ");
+					}
+					update[i] = scanner.nextLine();
+				}
+			}
+			b.setResponsiblePartySSN(update[0]);
+			b.setAddress(update[1]);
+			b.setCity(update[2]);
+			b.setState(update[3]);
+			b.setPayMethodCode(update[4]);
+			b.setCardNumber(update[5]);
+			b.setTotalCharges(Double.parseDouble(update[6]));
+			if (MaintainBillingRecords.updateBillingInfo(b)) {
+				System.out.println("Record updated successfully.");
+			} else {
+				System.out.println("Something unexpected happened while attempting to update the record.");
+			}
+		}
+	}
 
 }

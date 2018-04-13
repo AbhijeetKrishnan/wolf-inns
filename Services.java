@@ -39,6 +39,7 @@ public class Services extends DatabaseObject {
 		
 		fieldValues.add(this.getServiceCode());
 		fieldValues.add(this.getServiceDesc());
+		fieldValues.add(Double.toString(this.getCharge()));
 		
 		return fieldValues;		
 	}
@@ -49,6 +50,7 @@ public class Services extends DatabaseObject {
 		
 		fieldNames.add("Service Code");
 		fieldNames.add("Description");
+		fieldNames.add("Charge");
 
 		return fieldNames;			
 	}
