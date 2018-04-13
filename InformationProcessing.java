@@ -1769,7 +1769,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @param titleDesc
      * @return
      */
-    public boolean createJobTitle(String tc, String td) {
+    public static boolean createJobTitle(String tc, String td) {
         String sqlStatement = "INSERT INTO job_titles (titleCode,titleDesc) VALUES (?,?);";
         Connection connection = null;
         PreparedStatement pst = null;
@@ -1779,17 +1779,19 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
             connection = DatabaseConnection.getConnection();
             pst = connection.prepareStatement(sqlStatement);
             
-            pst.setString(1,td);
-            pst.setString(2,tc);
+            pst.setString(1,tc);
+            pst.setString(2,td);
 
             // process query results
-            System.out.println("Inserting into job_titles Table of WollfInns Database:");
+            //System.out.println("Inserting into job_titles Table of WollfInns Database:");
 
             
             rowsUpdated = pst.executeUpdate();
+            /*
             if (rowsUpdated > 0){
                 System.out.println("a job title inserted.");// non existing
             }
+            */
 
         } catch (SQLException ex) {
             // Log and return null
@@ -1838,13 +1840,15 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
             pst.setString(2,jtDesc);
             pst.setString(3, targetJT);
             // process query results
-            System.out.println("Updating into job_titles Table of WollfInns Database:");
+            //System.out.println("Updating into job_titles Table of WollfInns Database:");
 
             
             rowsUpdated = pst.executeUpdate();
+            /*
             if (rowsUpdated > 0){
-                System.out.println("a job title updated.");// non existing
+                //System.out.println("a job title updated.");// non existing
             }
+            */
 
         } catch (SQLException ex) {
             // Log and return null
@@ -1865,7 +1869,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @return removed the Job title
      */
     public static boolean deleteJobTitle(String tc) {
-        String sqlStatement = "DELETE job_titles WHERE titleCode = ?;";
+        String sqlStatement = "DELETE FROM job_titles WHERE titleCode = ?;";
         Connection connection = null;
         PreparedStatement pst = null;
         int rowsUpdated =-1;
@@ -1875,13 +1879,15 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
             pst.setString(1,tc);
 
             // process query results
-            System.out.println("Updating into job_titles Table of WollfInns Database:");
+            //System.out.println("Updating into job_titles Table of WollfInns Database:");
 
             
             rowsUpdated = pst.executeUpdate();
+            /*
             if (rowsUpdated > 0){
                 System.out.println("a job title updated.");// non existing
             }
+            */
 
         } catch (SQLException ex) {
             // Log and return null
