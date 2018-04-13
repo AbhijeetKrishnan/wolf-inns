@@ -258,15 +258,76 @@ public class MenuInformationProcessing {
     }
     
     public static void menuOptionCreateRoom() {
-        //Abhijeet
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Hotel ID: ");
+            int hotelId = Integer.parseInt(in.nextLine());
+            System.out.print("Room Number: ");
+            String roomNumber = in.nextLine();
+            System.out.print("Max. Allowed Occupancy: ");
+            int maxAllowedOcc = Integer.parseInt(in.nextLine());
+            System.out.print("Rate: ");
+            double rate = Double.parseDouble(in.nextLine());
+            System.out.print("Category Code: ");
+            String categoryCode = in.nextLine();
+            System.out.print("Available: ");
+            String available = in.nextLine();
+            Rooms r = InformationProcessing.createRoom(hotelId, roomNumber, maxAllowedOcc, rate, categoryCode, available);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        
+        System.out.println("Room created successfully");
     }
     
     public static void menuOptionUpdateRoom() {
-        //Abhijeet
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Hotel ID: ");
+            int hotelId = Integer.parseInt(in.nextLine());
+            System.out.print("Room Number: ");
+            String roomNumber = in.nextLine();
+            System.out.print("Max. Allowed Occupancy: ");
+            int maxAllowedOcc = Integer.parseInt(in.nextLine());
+            System.out.print("Rate: ");
+            double rate = Double.parseDouble(in.nextLine());
+            System.out.print("Category Code: ");
+            String categoryCode = in.nextLine();
+            System.out.print("Available: ");
+            String available = in.nextLine();
+            
+            Rooms r = new Rooms();
+            r.setHotelId(hotelId);
+            r.setRoomNumber(roomNumber);
+            r.setMaxAllowedOcc(maxAllowedOcc);
+            r.setRate(rate);
+            r.setCategoryCode(categoryCode);
+            r.setAvailable(available);
+            
+            boolean result = InformationProcessing.updateRoom(r);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        
+        System.out.println("Room updated successfully");
     }
     
     public static void menuOptionDeleteRoom() {
-        //Abhijeet
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Hotel ID: ");
+            int hotelId = Integer.parseInt(in.nextLine());
+            System.out.print("Room Number: ");
+            String roomNumber = in.nextLine();
+            
+            Rooms r = InformationProcessing.retrieveRoom(hotelId, roomNumber);
+            
+            boolean result = InformationProcessing.deleteRoom(r);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        
+        System.out.println("Room deleted successfully");
     }
 
     public static void menuCustomersMain() {
