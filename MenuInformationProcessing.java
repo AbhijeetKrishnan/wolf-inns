@@ -469,7 +469,7 @@ public class MenuInformationProcessing {
 			} while (!response.equals("Y") && !response.equals("N"));
 			
 			if (response.equals("Y")) {
-				if (InformationProcessing.deleteServiceStaff(serviceStaff)) {
+				if (InformationProcessing.deleteRoomCategoriesServices(roomCategoriesServices)) {
 					System.out.println("Record deleted successfully.");
 				} else {
 					System.out.println("Something unexpected happened while attempting to delete the record.");

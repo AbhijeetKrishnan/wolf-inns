@@ -232,6 +232,37 @@ public class InformationProcessing {
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
+    
+    
+    public static boolean deleteRoomCategoriesServices(RoomCategoriesServices roomCategoriesServices) {
+		
+		String sqlStatement = "DELETE FROM room_categories_services WHERE categoryCode=? AND serviceCode=?";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1,  roomCategoriesServices.getCategoryCode());
+			statement.setString(1,  roomCategoriesServices.getServiceCode());
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been deleted
+			if (1==rowsAffected) {
+				return true;
+			} else {
+				throw new SQLException("More than one row was deleted while updating room_categories_services with categoryCode = " + roomCategoriesServices.getCategoryCode() + " and sericeCode = " + roomCategoriesServices.getServiceCode() + ".");
+			} 
+			
+		} catch (SQLException ex) {
+			// Log and return false
+			return false;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+	}
 
 	
 	public static Stays createStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int billingId, Connection connection) {
