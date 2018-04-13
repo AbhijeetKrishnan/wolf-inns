@@ -26,7 +26,7 @@ public class MenuInformationProcessing {
 				System.out.println("Choose a hotel to assign " + staff.getName() + " to.");
 				
 				// Have the user select a hotel record to work with
-				Hotels hotel = Hotels.selectHotel();
+				Hotels hotel = Hotels.select();
 				
 				if (null == hotel) { 
 					System.out.println("No record was selected.");
@@ -47,7 +47,7 @@ public class MenuInformationProcessing {
 		
 		
 		// Select a service staff record, null if none selected
-		ServiceStaff serviceStaff = ServiceStaff.selectServiceStaff();
+		ServiceStaff serviceStaff = ServiceStaff.select();
 		
 		if (null == serviceStaff) {
 			System.out.println("No record was selected.");
@@ -70,7 +70,7 @@ public class MenuInformationProcessing {
 			} while (!response.equals("Y") && !response.equals("N"));
 			
 			if (response.equals("Y")) {
-				Hotels hotel = Hotels.selectHotel();
+				Hotels hotel = Hotels.select();
 				
 				if (null == hotel) { 
 					System.out.println("No record was selected.");
@@ -88,7 +88,43 @@ public class MenuInformationProcessing {
 	}
 	
 	public static void deleteServiceStaff() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| DELETE SERVICE STAFF RECORD                                         |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
 		
+		
+		// Select a service staff record, null if none selected
+		ServiceStaff serviceStaff = ServiceStaff.select();
+		
+		if (null == serviceStaff) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);
+			
+			// For every update eligible field, ask the user if they want to update it, if yes then accept new input and set value in object
+			// Only hotelId is eligible to be updated for service staff
+			
+			// Update hotelId field
+			System.out.println("Attempting to delete service staff assignment record with staff Id: " + serviceStaff.getStaffId());
+			System.out.println("Are you sure you want to delete this record? (Y/N)");
+			
+			String response = "";
+			do {
+				System.out.print("===> ");
+			    while (!scanner.hasNext()) {
+			    }
+			    response = scanner.next();
+			} while (!response.equals("Y") && !response.equals("N"));
+			
+			if (response.equals("Y")) {
+				if (InformationProcessing.deleteServiceStaff(serviceStaff)) {
+					System.out.println("Record deleted successfully.");
+				} else {
+					System.out.println("Something happened while attempting to delete the record.");
+				}
+			} else {
+				System.out.println("Deletion was cancelled.");
+			}			
+		}
 	}
-
 }

@@ -94,7 +94,7 @@ public class Hotels extends DatabaseObject {
 	}
 	
 	
-	public static Hotels selectHotel() {
+	public static Hotels select() {
 		ArrayList<Hotels> hotelList = InformationProcessing.retrieveAllHotels();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) hotelList);
 		
