@@ -15,6 +15,35 @@ public class Departments {
 		this.deptDesc = deptDesc;
 	}
 
+	public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(this.getDeptCode());
+		fieldValues.add(this.getDeptDesc());
+		
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("deptCode");
+		fieldNames.add("deptDesc");
+
+		return fieldNames;			
+	}
+	
+	public static Departments select() {
+		ArrayList<Departments> deptList = InformationProcessing.retrieveAllDepartments();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) deptList);
+		
+		Departments selectedRecord = (Departments) MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
+	}
 	@Override
 	public boolean equals(Object o) {
 		if (o==this) {return true;}
@@ -23,4 +52,5 @@ public class Departments {
 		return (deptCode.equals(d.deptCode) &&
                         deptDesc.equals(d.deptDesc));
 	}
+	
 }
