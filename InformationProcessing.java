@@ -2047,6 +2047,48 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}   
     }
+	
+	
+    /**
+     *
+     * @param targetJT
+     * @param jtCode
+     * @param jtDesc
+     * @return true if updates takes place, otherwise false;
+     */
+    public static boolean updateJobTitle(String targetJT,
+            String jtCode,
+            String jtDesc) {
+        String sqlStatement = "UPDATE job_titles SET titleCode = ?, titleDesc = ? WHERE titleCode = ?;";
+        Connection connection = null;
+        PreparedStatement pst = null;
+        int rowsUpdated = -1;
+        try {
+            connection = DatabaseConnection.getConnection();
+            pst = connection.prepareStatement(sqlStatement);
+            pst.setString(1, jtCode);
+            pst.setString(2, jtDesc);
+            pst.setString(3, targetJT);
+            // process query results
+            System.out.println("Updating into job_titles Table of WollfInns Database:");
+
+            rowsUpdated = pst.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("a job title updated.");// non existing
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            try {
+                connection.close();
+            } catch (Exception ex) {
+            };
+        }
+        return rowsUpdated > 0;
+    }	
 
     /**
      *
