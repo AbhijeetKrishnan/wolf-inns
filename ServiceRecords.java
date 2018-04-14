@@ -70,7 +70,7 @@ public class ServiceRecords extends DatabaseObject {
 	
 	
 	public static ServiceRecords select() {
-		ArrayList<ServiceRecords> deptList = HotelStayOperations.retrieveAllServiceRecords();
+		ArrayList<ServiceRecords> deptList = MaintainingServiceRecords.retrieveAllServiceRecords();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) deptList);
 		
 		ServiceRecords selectedRecord = (ServiceRecords) MenuUtilities.paginatedRecordSelection(databaseObjectList);
