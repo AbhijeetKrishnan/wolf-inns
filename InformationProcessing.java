@@ -1957,78 +1957,89 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      *
      * @return list of departments
      */
-    public void retrieveDepartments() {
+    public static Departments retrieveDepartment(String dc) {
         //public ArrayList<Departments> retrieveDepartments() {
 
+        String sqlStatement = "SELECT * FROM departments WHERE deptCode = ?;";
+        Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1, dc);
+			results = statement.executeQuery();
+			results.last();
+			int rowsAffected = results.getRow();
+			// A single row should have been retrieved
+			if (1==rowsAffected) {
+				results.first();
+				Departments dept = new Departments();
+				dept.setDeptCode(results.getString("deptCode"));
+				dept.setDeptDesc(results.getString("deptDesc"));
+				
+				System.out.println("An existing deptarment was retrieved successfully!");
+				return dept;
+			} else if (0==rowsAffected) {
+				System.out.println("There is no existing Dept with deptCode = " + dc + ".");
+				return null;
+			} else {
+				// Throw exception
+				throw new SQLException("Multiple rows returned when selecting hotel with deptCode = " + dc + ".");
+			}
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
+
+
+    }
+    
+    
+    public static ArrayList<Departments> retrieveAllDepartments() {
+        //public ArrayList<Departments> retrieveDepartments() {
+        ArrayList<Departments> deptList = new ArrayList();    
         String sqlStatement = "SELECT * FROM departments;";
         Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet results = null;
-        try {
-            ArrayList<Departments> depts = new ArrayList<>();
-            connection = DatabaseConnection.getConnection();
-            statement = connection.prepareStatement(sqlStatement);
+		Statement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			results = statement.executeQuery(sqlStatement);		
 
-            results = statement.executeQuery();
-            ResultSetMetaData rsMetaData = results.getMetaData();
-            int numberOfColumns = rsMetaData.getColumnCount();
-            StringBuilder sb = new StringBuilder();
-            System.out.println("A list of available Departments:\n ");
-            for (int i = 1; i <= numberOfColumns; i++) {
-                sb.append(String.format("| %-15s", rsMetaData.getColumnLabel(i)));
-            }
-            String str = "-";
-       
-            String divider = new String(new char[sb.length()+1]).replace("\0", str);
-            System.out.println(divider);
-            System.out.println(sb + "|");
-            System.out.println(divider);
-            while (results.next()) {
-                //System.out.print("|  ");
-                for (int i = 1; i <= numberOfColumns; i++) {
-                    if (i > 1) {
-                        //System.out.printf("|");
-                    }
-                    String columnValue = results.getString(i);
-                    System.out.printf("|%-15s ", columnValue);
-                }
-                System.out.println("|");
-                
-
-                /*Departments dept = new Departments();
-                dept.setDeptCode(results.getString("deptCode"));
-                dept.setDeptDesc(results.getString("deptDesc"));
-                depts.add(dept);*/
-            }
-            System.out.println(divider);
-
-            //return depts;
-        } catch (SQLException ex) {
-            // Log and return null
-            ex.printStackTrace();
-            //return null;
-        } finally {
-            // Attempt to close all resources, ignore failures.
-            if (results != null) {
-                try {
-                    results.close();
-                } catch (Exception ex) {
-                };
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException ex) {
-                }
-                ;
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception ex) {
-                }
-            }
-        }
+			results.last();
+			int rowsAffected = results.getRow();
+			if (rowsAffected > 0) {
+				results.first();
+				while (results.next()) {
+					Departments dept = new Departments();
+					dept.setDeptCode(results.getString("deptCode"));
+					dept.setDeptDesc(results.getString("deptDesc"));
+					deptList.add(dept);
+				}
+				
+				return deptList;
+			} else {
+				return null;
+		    }			
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}
 
     }
 
