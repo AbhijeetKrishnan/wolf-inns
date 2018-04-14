@@ -1,4 +1,5 @@
 
+
 import java.util.ArrayList;
 
 public class ServiceRecords extends DatabaseObject {
@@ -68,7 +69,7 @@ public class ServiceRecords extends DatabaseObject {
 		return fieldNames;			
 	}
 	
-/*	
+	
 	public static ServiceRecords select() {
 		ArrayList<ServiceRecords> deptList = MaintainingServiceRecords.retrieveAllServiceRecords();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) deptList);
@@ -77,7 +78,7 @@ public class ServiceRecords extends DatabaseObject {
 		
 		return selectedRecord;
 	}
-*/
+
 	@Override
 	public boolean equals(Object o) {
 		if (o==this) {return true;}
@@ -87,4 +88,10 @@ public class ServiceRecords extends DatabaseObject {
                         staffId==s.staffId && serviceDate.equals(s.serviceDate) &&
                         serviceTime.equals(s.serviceTime));
 	}
+
+    @Override
+    public String toString() {
+        return String.format("|%12d|%12s|%12d|%12s|%12s|",stayId, serviceCode , staffId ,serviceDate , serviceTime);
+    }
+        
 }
