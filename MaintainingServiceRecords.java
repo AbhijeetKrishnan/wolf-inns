@@ -179,5 +179,68 @@ public class MaintainingServiceRecords {
 			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
 		}
 	}
+	
+	/**
+     * 
+     * @return all service records for all hotels
+     */
+    static ArrayList<ServiceRecords> retrieveAllServiceRecords() {
+        ArrayList<ServiceRecords> srList = new ArrayList<ServiceRecords>();
+        String sqlStatement = "SELECT * FROM service_records;";
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet results = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+            results = statement.executeQuery(sqlStatement);
+
+            results.last();
+            int rowsAffected = results.getRow();
+            if (rowsAffected > 0) {
+                results.first();
+                while (results.next()) {
+                    ServiceRecords sr = new ServiceRecords();
+        
+                    sr.setStayId(results.getInt("stayId"));
+                    sr.setServiceCode(results.getString("serviceCode"));
+                    sr.setStaffId(results.getInt("staffId"));
+                    sr.setServiceDate(results.getString("serviceDate"));
+                    sr.setServiceTime(results.getString("serviceTime"));
+
+                    srList.add(sr);
+                }
+
+                return srList;
+            } else {
+                return null;
+            }
+
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            return null;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            if (results != null) {
+                try {
+                    results.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                };
+            }
+        }
+    }
 }
 
