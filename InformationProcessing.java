@@ -2144,7 +2144,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @return true iff success
      */
     public static boolean createDepartment(String dc,
-            String dd) throws SQLException {
+            String dd) {
 
         Connection connection = null;
         PreparedStatement statement = null;
