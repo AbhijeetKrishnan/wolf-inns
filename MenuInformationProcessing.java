@@ -1234,6 +1234,38 @@ public class MenuInformationProcessing {
         }
     }
 	
+	
+	private static void menuOptionDeleteStay() {
+        System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| DELETE STAY RECORD                                                 |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		Stays h = Stays.select();
+		if (null == h) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);			
+			System.out.println("Attempting to delete hotel record with Stay id: " + h.getHotelId());
+			System.out.println("Are you sure you want to delete this record? (Y/N)");			
+			String response = "";
+			do {
+				System.out.print("===> ");
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
+			} while (!response.equals("Y") && !response.equals("N"));
+			if (response.equals("Y")) {
+				if (InformationProcessing.deleteStay(h)) {
+					System.out.println("Record deleted successfully.");
+				} else {
+					System.out.println("Something unexpected happened while attempting to delete the record.");
+				}
+			} else {
+				System.out.println("Deletion was cancelled.");
+			}
+		}
+    }
+	
 	public static void menuOptionReprintItemizedReceipt() {
 		System.out.println("|---------------------------------------------------------------------|");
 		System.out.println("| REPRINT ITEMIZED RECEIPT FOR STAY                                   |");
