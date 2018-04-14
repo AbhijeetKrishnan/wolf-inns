@@ -1149,7 +1149,7 @@ public class MenuInformationProcessing {
                 
                 switch (choice) {
                      case 1:
-                        //menuOptionCheckin();
+                        menuOptionCheckin();
                         break;
                     case 2:
                         //menuOptionCheckout();
@@ -1291,5 +1291,107 @@ public class MenuInformationProcessing {
         } else {
             System.out.println("There was an error");
         }
+    }
+    
+    
+    public static void menuOptionCheckin() {
+    	System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| CHECKIN                                                             |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		
+        Scanner scanner = new Scanner(System.in);
+        
+        Customers customer = Customers.select();
+        
+        Hotels hotel = Hotels.select();
+        
+        RoomCategories roomCategory = RoomCategories.select();  
+                
+        ArrayList<Rooms> roomsList = HotelStayOperations.retrieveAvailableRooms(hotel.getHotelId(), roomCategory.getCategoryCode());
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) roomsList);		
+		Rooms room = (Rooms)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		
+		System.out.println("Enter number of guests. (" + room.getMaxAllowedOcc() + " max)");
+		
+		String response = "";
+		int occValue = -1;
+		do {
+			System.out.print("===> ");
+			while (!scanner.hasNextLine()) {
+				System.out.print("===> ");
+			}
+			response = scanner.nextLine();
+			
+			occValue = Integer.parseInt(response);
+		} while (occValue < 0 || occValue > room.getMaxAllowedOcc());		
+		int numOfGuests = occValue;
+		
+		
+		ServiceStaff servicingStaff = ServiceStaff.select();
+		
+		
+		System.out.println("Enter the SSN of the person responsible for payment (9 characters max).");
+		
+		response = "";
+		do {
+			System.out.print("===> ");
+			response = scanner.nextLine();
+		} while (response.length() < 1 || response.length() > 9);
+		
+		String responsiblePartySSN = response;
+		
+        System.out.println("Enter the street address of the person responsible for payment (75 characters max).");
+		
+		response = "";
+		do {
+			System.out.print("===> ");
+			response = scanner.nextLine();
+		} while (response.length() < 1 || response.length() > 75);
+		
+		String address = response;
+		
+        System.out.println("Enter the city of the person responsible for payment (50 characters max).");
+		
+		response = "";
+		do {
+			System.out.print("===> ");
+			response = scanner.nextLine();
+		} while (response.length() < 1 || response.length() > 50);
+		
+		String city = response;
+		
+        System.out.println("Enter the state of the person responsible for payment (2 character state).");
+		
+		response = "";
+		do {
+			System.out.print("===> ");
+			response = scanner.nextLine();
+		} while (response.length() != 2);
+		
+		String state = response;
+		
+				
+		PaymentMethods paymentMethod = PaymentMethods.select();
+		String cardNumber = "";
+		if (paymentMethod.getPayMethodCode().equals("CCWF") || paymentMethod.getPayMethodCode().equals("CCON")) {
+			
+			System.out.println("Enter the card number for payment (25 characters max).");
+			
+			response = "";
+			do {
+				System.out.print("===> ");
+				response = scanner.nextLine();
+			} while (response.length() < 1 || response.length() > 25);
+			cardNumber = response;
+		}		
+		
+		boolean checkinResult = HotelStayOperations.checkinStay(room.getHotelId(), room.getRoomNumber(), customer.getCustomerId(), numOfGuests, servicingStaff.getStaffId(), responsiblePartySSN, address, city, state, paymentMethod.getPayMethodCode(), cardNumber);
+		
+		if (!checkinResult) {
+			System.out.println("Something unexpected happened while attempting to checkin.");
+		} else {
+			System.out.println("Customer successfully checked in.");
+		}	
     }
 }

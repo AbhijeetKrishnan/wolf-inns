@@ -1376,6 +1376,46 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		return room;
 	}
 	
+    public static ArrayList<Rooms> retrieveAllRooms() {
+		
+		ArrayList<Rooms> rooms = new ArrayList<Rooms>();
+		String sqlStatement = "SELECT hotelId, roomNumber, maxAllowedOcc, rate, categoryCode, available FROM rooms";
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			results = statement.executeQuery(sqlStatement);
+			
+			while (results.next()) {
+				Rooms room = new Rooms();
+
+				room.setHotelId(results.getInt("hotelId"));
+				room.setRoomNumber(results.getString("roomNumber"));
+				room.setMaxAllowedOcc(results.getInt("maxAllowedOcc"));
+				room.setRate(results.getDouble("rate"));
+				room.setCategoryCode(results.getString("categoryCode"));
+                room.setAvailable(results.getString("available"));
+
+				rooms.add(room);
+			}
+			
+			return rooms;
+				
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+	}
+	
 	/**
 	 * Update a room record in the database with new field values
 	 * @param room: the Rooms object with new field values that needs to be updated in the database

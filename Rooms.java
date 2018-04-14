@@ -1,4 +1,6 @@
-public class Rooms {
+import java.util.ArrayList;
+
+public class Rooms extends DatabaseObject {
 	private int hotelId;
 	private String roomNumber;
 	private int maxAllowedOcc;
@@ -51,5 +53,44 @@ public class Rooms {
 		return (hotelId==r.hotelId && roomNumber.equals(r.roomNumber) &&
                         maxAllowedOcc==r.maxAllowedOcc && rate==r.rate &&
                         categoryCode.equals(r.categoryCode) && available.equals(r.available));
+	}
+	
+	public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(Integer.toString(this.getHotelId()));
+		fieldValues.add(this.getRoomNumber());
+		fieldValues.add(Integer.toString(this.getMaxAllowedOcc()));
+		fieldValues.add(Double.toString(this.getRate()));
+		fieldValues.add(this.getCategoryCode());
+		fieldValues.add(this.getAvailable());
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("Hotel Id");
+		fieldNames.add("Room Number");
+		fieldNames.add("Max Allowed Occupancy");
+		fieldNames.add("Rate");
+		fieldNames.add("Room Category Code");
+		fieldNames.add("Available");
+
+		return fieldNames;			
+	}
+	
+	public static Rooms select() {
+		// Get the list of service staff records to be selected from
+		ArrayList<Rooms> roomsList = InformationProcessing.retrieveAllRooms();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) roomsList);
+		
+		// Select a service staff record, null if none selected
+		Rooms selectedRecord = (Rooms)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 }
