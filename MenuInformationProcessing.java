@@ -122,7 +122,7 @@ public class MenuInformationProcessing {
 		for (int i = 0; i < 6; i++) {
 			System.out.println("Hotel " + field[i]);
 			System.out.println("===> ");
-			while (!scanner.hasNextLine()) {
+			while (!scanner.hasNext()) {
 				System.out.println("===> ");
 			}
 			response[i] = scanner.nextLine();
@@ -155,14 +155,14 @@ public class MenuInformationProcessing {
 				String response = "";
 				do {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
+					while (!scanner.hasNext()) {
 						System.out.println("===> ");
 					}
 					response = scanner.nextLine();
 				} while (!response.equals("Y") && !response.equals("N"));
 				if (response.equals("Y")) {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
+					while (!scanner.hasNext()) {
 						System.out.println("===> ");
 					}
 					update[i] = scanner.nextLine();
@@ -196,7 +196,7 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();
@@ -380,7 +380,7 @@ public class MenuInformationProcessing {
         for (int i = 0; i < field.length; i++) {
             System.out.println("Staff " + field[i]);
             System.out.println("===> ");
-            while (!scanner.hasNextLine()) {
+            while (!scanner.hasNext()) {
                 System.out.println("===> ");
             }
             response[i] = scanner.nextLine();
@@ -413,14 +413,14 @@ public class MenuInformationProcessing {
                 String response = "";
                 do {
                     System.out.print("===> ");
-                    while (!scanner.hasNextLine()) {
+                    while (!scanner.hasNext()) {
                         System.out.println("===> ");
                     }
                     response = scanner.nextLine();
                 } while (!response.equals("Y") && !response.equals("N"));
                 if (response.equals("Y")) {
                     System.out.print("===> ");
-                    while (!scanner.hasNextLine()) {
+                    while (!scanner.hasNext()) {
                         System.out.println("===> ");
                     }
                     update[i] = scanner.nextLine();
@@ -460,7 +460,7 @@ public class MenuInformationProcessing {
             String response = "";
             do {
                 System.out.print("===> ");
-                while (!scanner.hasNextLine()) {
+                while (!scanner.hasNext()) {
                     System.out.print("===> ");
                 }
                 response = scanner.nextLine();
@@ -531,7 +531,7 @@ public class MenuInformationProcessing {
 		for (int i = 0; i < 4; i++) {
 			System.out.println("Customer " + field[i]);
 			System.out.println("===> ");
-			while (!scanner.hasNextLine()) {
+			while (!scanner.hasNext()) {
 				System.out.println("===> ");
 			}
 			response[i] = scanner.nextLine();
@@ -564,14 +564,14 @@ public class MenuInformationProcessing {
 				String response = "";
 				do {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
+					while (!scanner.hasNext()) {
 						System.out.println("===> ");
 					}
 					response = scanner.nextLine();
 				} while (!response.equals("Y") && !response.equals("N"));
 				if (response.equals("Y")) {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
+					while (!scanner.hasNext()) {
 						System.out.println("===> ");
 					}
 					update[i] = scanner.nextLine();
@@ -603,7 +603,7 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();
@@ -825,7 +825,7 @@ public class MenuInformationProcessing {
 		for (int i = 0; i < 2; i++) {
 			System.out.println("Room " + field[i]);
 			System.out.println("===> ");
-			while (!scanner.hasNextLine()) {
+			while (!scanner.hasNext()) {
 				System.out.println("===> ");
 			}
 			response[i] = scanner.nextLine();
@@ -858,14 +858,14 @@ public class MenuInformationProcessing {
 				String response = "";
 				do {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
+					while (!scanner.hasNext()) {
 						System.out.println("===> ");
 					}
 					response = scanner.nextLine();
 				} while (!response.equals("Y") && !response.equals("N"));
 				if (response.equals("Y")) {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
+					while (!scanner.hasNext()) {
 						System.out.println("===> ");
 					}
 					update[i] = scanner.nextLine();
@@ -894,7 +894,7 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();
@@ -977,7 +977,7 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();
@@ -1025,7 +1025,7 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();
@@ -1108,7 +1108,7 @@ public class MenuInformationProcessing {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();
