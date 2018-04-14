@@ -1141,10 +1141,8 @@ public class MenuInformationProcessing {
                 
                 System.out.println("1. Checkin");
                 System.out.println("2. Checkout");
-                System.out.println("3. Update a stay");
-                System.out.println("4. Delete a stay");
-                System.out.println("5. Reprint Itemized Receipt");
-                System.out.println("6. Back\n");
+                System.out.println("3. Reprint Itemized Receipt");
+                System.out.println("4. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -1157,15 +1155,9 @@ public class MenuInformationProcessing {
                         //menuOptionCheckout();
                         break;
                     case 3:
-                        menuOptionUpdateStay();
-                        break;
-                    case 4:
-                        menuOptionDeleteStay();
-                        break;
-                    case 5:
                         menuOptionReprintItemizedReceipt();
                         break;
-                    case 6:
+                    case 4:
                         isExit = true;
                         break;
                     default:
@@ -1179,92 +1171,8 @@ public class MenuInformationProcessing {
 		}
     }
 	
-	private static void menuOptionUpdateStay() {
-        System.out.println("|---------------------------------------------------------------------|");
-        System.out.println("| UPDATE STAY RECORD                                                 |");
-        System.out.println("|---------------------------------------------------------------------|\n\n");
-        Stays h = Stays.select();
-        if (null == h) {
-            System.out.println("No record was selected.");
-        } else {
-            Scanner scanner = new Scanner(System.in);
-            String[] field = {"hotelId", "roomNumber", "customerId", "numOfGuests", "checkinDate", "checkinTime",
-            "checkoutDate","checkoutTime","billingId"};
-            String[] current = {Integer.toString(h.getHotelId()), h.getRoomNumber(), Integer.toString(h.getCustomerId()), 
-                Integer.toString(h.getNumOfGuests()), h.getCheckinDate(),
-                h.getCheckinTime(), h.getCheckoutDate(), h.getCheckoutTime(),Integer.toString( h.getBillingId())};
-            String[] update = {Integer.toString(h.getHotelId()), h.getRoomNumber(), Integer.toString(h.getCustomerId()), 
-                Integer.toString(h.getNumOfGuests()), h.getCheckinDate(),
-                h.getCheckinTime(), h.getCheckoutDate(), h.getCheckoutTime(),Integer.toString( h.getBillingId())};
-            System.out.println("Current stay id: " + h.getStayId());
-            for (int i = 0; i < field.length; i++) {
-                System.out.println("Current hotel " + field[i] + ": " + current[i]);
-                System.out.println("Do you want to update this field? (Y/N)");
-                String response = "";
-                do {
-                    System.out.print("===> ");
-                    while (!scanner.hasNextLine()) {
-                        System.out.println("===> ");
-                    }
-                    response = scanner.nextLine();
-                } while (!response.equals("Y") && !response.equals("N"));
-                if (response.equals("Y")) {
-                    System.out.print("===> ");
-                    while (!scanner.hasNextLine()) {
-                        System.out.println("===> ");
-                    }
-                    update[i] = scanner.nextLine();
-                }
-            }
-            h.setHotelId(Integer.parseInt(update[0]));
-            h.setRoomNumber(update[1]);
-            h.setCustomerId(Integer.parseInt(update[2]));
-            h.setNumOfGuests(Integer.parseInt(update[3]));
-            h.setCheckinDate(update[4]);
-            h.setCheckinTime(update[5]);
-            h.setCheckoutDate(update[6]);
-            h.setCheckoutTime(update[7]);
-            h.setBillingId(Integer.parseInt(update[8]));
-            
-            if (InformationProcessing.updateStay(h)) {
-                System.out.println("Record updated successfully.");
-            } else {
-                System.out.println("Something unexpected happened while attempting to update the record.");
-            }
-        }
-    }
 	
 	
-	private static void menuOptionDeleteStay() {
-        System.out.println("|---------------------------------------------------------------------|");
-		System.out.println("| DELETE STAY RECORD                                                 |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
-		Stays h = Stays.select();
-		if (null == h) {
-			System.out.println("No record was selected.");
-		} else {
-			Scanner scanner = new Scanner(System.in);			
-			System.out.println("Attempting to delete hotel record with Stay id: " + h.getStayId());
-			System.out.println("Are you sure you want to delete this record? (Y/N)");			
-			String response = "";
-			do {
-				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
-					System.out.print("===> ");
-				}
-				response = scanner.nextLine();
-			} while (!response.equals("Y") && !response.equals("N"));
-			if (response.equals("Y")) {
-				if (InformationProcessing.deleteStay(h)) {
-					System.out.println("Record deleted successfully.");
-				} else {
-					System.out.println("Something unexpected happened while attempting to delete the record.");
-				}
-			} else {
-				System.out.println("Deletion was cancelled.");
-			}
-		}
-    }
 	
 	public static void menuOptionReprintItemizedReceipt() {
 		System.out.println("|---------------------------------------------------------------------|");
