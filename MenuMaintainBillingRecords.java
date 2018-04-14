@@ -126,7 +126,7 @@ public class MenuMaintainBillingRecords {
 
 	public static void menuOptionUpdateBillingInfo() {
 		System.out.println("|---------------------------------------------------------------------|");
-		System.out.println("| UPDATE BILLING INFO RECORD                                                 |");
+		System.out.println("| UPDATE BILLING INFO RECORD                                          |");
 		System.out.println("|---------------------------------------------------------------------|\n\n");
 		BillingInfo b = BillingInfo.select();
 		if (null == b) {

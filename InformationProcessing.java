@@ -418,7 +418,7 @@ public class InformationProcessing {
 public static ArrayList<Stays> retrieveAllStays() {
 		
 		ArrayList<Stays> stays = new ArrayList<Stays>();
-		String sqlStatement = "SELECT categoryCode, categoryDesc FROM room_categories";
+		String sqlStatement = "SELECT * FROM stays";
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet results = null;

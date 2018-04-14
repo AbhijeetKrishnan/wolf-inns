@@ -14,10 +14,10 @@ public class Reporting {
 	 * database and then uses other methods to print the results in an ASCII-based tabular format.
 	 */
 	public static void occupancyByHotel() {
-		String sqlStatement = "SELECT name AS Name, COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS \"Percentage Occupied\" " + 
-            "FROM (SELECT hotelId, COUNT(*) AS occupied_rooms FROM stays WHERE checkoutDate IS NULL GROUP BY hotelId) AS occ " +
-            "RIGHT JOIN (SELECT rooms.hotelId, name, COUNT(roomNumber) AS total_rooms FROM rooms RIGHT JOIN hotels ON rooms.hotelId=hotels.hotelId GROUP BY hotelId) AS avail ON occ.hotelId=avail.hotelId;";
-		
+		String sqlStatement = "SELECT name, COALESCE(occupied_rooms, 0) AS total_occupancy, (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS percentage_occupied " + 
+		"FROM (SELECT hotelId, COUNT(*) AS occupied_rooms FROM stays WHERE checkoutDate IS NULL GROUP BY hotelId) AS occ " + 
+		"RIGHT JOIN (SELECT rooms.hotelId, name, COUNT(roomNumber) AS total_rooms FROM rooms RIGHT JOIN hotels ON rooms.hotelId=hotels.hotelId GROUP BY hotelId) AS avail ON occ.hotelId=avail.hotelId;";
+
 		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
 		
 		easyReport(queryResults);
@@ -53,7 +53,7 @@ public class Reporting {
 				data[row][col] = reportData.get(row).get(headers[col]);
 			}
 		}
-		
+	
 		printTable(headers, data);
 	}
 	
@@ -236,7 +236,7 @@ public class Reporting {
                 + " FROM staff INNER JOIN job_titles ON staff.titleCode=job_titles.titleCode"
                 + " NATURAL JOIN departments NATURAL JOIN service_records WHERE service_records.stayId = \""
                 + stID + "\";";
-        System.out.println(sqlStatement);
+        // System.out.println(sqlStatement);
         System.out.print("report Stay Staff =" + stayId + "\n\n");
         ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
         easyReport(queryResults);
