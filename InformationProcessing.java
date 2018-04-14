@@ -1810,58 +1810,44 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 
     }
 
-    /**
-     *
-     * @return list of jobs titles in WolfInns.
-     */
-    public static ArrayList<LinkedHashMap<String, String>> retrieveJobTitles() {
+   static ArrayList<JobTitles> retrieveAllJobTitles() {
+        
+     ArrayList<JobTitles> jtList = new ArrayList();    
         String sqlStatement = "SELECT * FROM job_titles;";
-        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
-
-        Reporting.easyReport(queryResults);
-        return queryResults;
-    }
-
-    /**
-     *
-     * @param targetJT
-     * @param jtCode
-     * @param jtDesc
-     * @return true if updates takes place, otherwise false;
-     */
-    public static boolean updateJobTitle(String targetJT, String jtCode, String jtDesc) {
-        String sqlStatement = "UPDATE job_titles SET titleCode = ?, titleDesc = ? WHERE titleCode = ?;";
         Connection connection = null;
-        PreparedStatement pst = null;
-        int rowsUpdated =-1;
-        try {
-            connection = DatabaseConnection.getConnection();
-            pst = connection.prepareStatement(sqlStatement);
-            pst.setString(1,jtCode );
-            pst.setString(2,jtDesc);
-            pst.setString(3, targetJT);
-            // process query results
-            //System.out.println("Updating into job_titles Table of WollfInns Database:");
+		Statement statement = null;
+		ResultSet results = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			results = statement.executeQuery(sqlStatement);		
 
-            
-            rowsUpdated = pst.executeUpdate();
-            /*
-            if (rowsUpdated > 0){
-                //System.out.println("a job title updated.");// non existing
-            }
-            */
-
-        } catch (SQLException ex) {
-            // Log and return null
-            ex.printStackTrace();
-        } finally {
-            // Attempt to close all resources, ignore failures.
-            try {
-                connection.close();
-            } catch (Exception ex) {
-            };
-        }
-        return rowsUpdated>0;
+			results.last();
+			int rowsAffected = results.getRow();
+			if (rowsAffected > 0) {
+				results.first();
+				while (results.next()) {
+					JobTitles jtitle = new JobTitles();
+					jtitle.setTitleCode(results.getString("titleCode"));
+					jtitle.setTitleDesc(results.getString("titleDesc"));
+					jtList.add(jtitle);
+				}
+				
+				return jtList;
+			} else {
+				return null;
+		    }			
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			if (results != null) { try { results.close(); } catch (Exception ex) {}; }
+			if (statement != null) { try { statement.close(); } catch (Exception ex) {}; }
+			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
+		}   
     }
 
     /**
