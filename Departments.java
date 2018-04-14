@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Departments {
 	private String deptCode;
 	private String deptDesc;
