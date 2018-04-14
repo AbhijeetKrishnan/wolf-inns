@@ -1,4 +1,7 @@
-public class JobTitles{
+
+import java.util.ArrayList;
+
+public class JobTitles extends DatabaseObject{
 	private String titleCode;
 	private String titleDesc;
 
@@ -13,6 +16,37 @@ public class JobTitles{
 	}
 	public void setTitleDesc(String titleDesc){
 		this.titleDesc=titleDesc;
+	}
+        
+        public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(this.getTitleCode());
+		fieldValues.add(this.getTitleDesc());
+		
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("titleCode");
+		fieldNames.add("titleDesc");
+
+		return fieldNames;			
+	}
+	
+	
+	public static JobTitles select() {
+		ArrayList<JobTitles> deptList = InformationProcessing.retrieveAllJobTitles();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) deptList);
+		
+		JobTitles selectedRecord = (JobTitles) MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 
 	@Override
