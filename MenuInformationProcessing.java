@@ -329,6 +329,153 @@ public class MenuInformationProcessing {
         
         System.out.println("Room deleted successfully");
     }
+	
+	
+	private static void menuStaffMain() {
+
+        boolean isExit = false;
+        Scanner in = new Scanner(System.in);
+        int choice;
+        do {
+
+            System.out.println("|---------------------------------------------------------------------|");
+            System.out.println("| Staff                                                               |");
+            System.out.println("|---------------------------------------------------------------------|\n\n");
+
+            System.out.println("1. Create a staff");
+            System.out.println("2. Update a staff");
+            System.out.println("3. Delete a staff");
+            System.out.println("4. Back\n");
+
+            System.out.print(">> ");
+            choice = in.nextInt();
+
+            switch (choice) {
+                case 1:
+                    menuOptionCreateStaff();
+                    break;
+                case 2:
+                    menuOptionUpdateStaff();
+                    break;
+                case 3:
+                    menuOptionDeleteStaff();
+                    break;
+                case 4:
+                    isExit = true;
+                    break;
+                default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+            }
+        } while (!isExit);
+    }
+
+    private static void menuOptionCreateStaff() {
+        System.out.println("|---------------------------------------------------------------------|");
+        System.out.println("| CREATE STAFF RECORD                                                 |");
+        System.out.println("|---------------------------------------------------------------------|\n\n");
+        Scanner scanner = new Scanner(System.in);
+        String[] field = {"name", "titleCode", "deptCode", "address", "city", "state", "phone", "dob"};
+        String[] response = new String[field.length];
+        for (int i = 0; i < field.length; i++) {
+            System.out.println("Staff " + field[i]);
+            System.out.println("===> ");
+            while (!scanner.hasNextLine()) {
+                System.out.println("===> ");
+            }
+            response[i] = scanner.nextLine();
+        }
+        Staff h = InformationProcessing.createStaff(response[0], response[1], response[2], response[3], response[4], response[5], response[6], response[7]);
+        if (null == h) {
+            System.out.println("Something unexpected happened while attempting to create the record.");
+        } else {
+            System.out.println("Record created successfully.");
+        }
+    }
+
+    private static void menuOptionUpdateStaff() {
+        System.out.println("|---------------------------------------------------------------------|");
+        System.out.println("| UPDATE Staff RECORD                                              |");
+        System.out.println("|---------------------------------------------------------------------|\n\n");
+        Staff c = Staff.select();
+        if (null == c) {
+            System.out.println("No record was selected.");
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            String[] field = {"name", "titleCode", "deptCode", "address", "city", "state", "phone", "dob"};
+            String[] current = {c.getName(), c.getTitleCode(), c.getDeptCode(), c.getAddress(),
+                c.getCity(), c.getState(), c.getPhone(), c.getDob()};
+            String[] update = {c.getName(), c.getTitleCode(), c.getDeptCode(), c.getAddress(),
+                c.getCity(), c.getState(), c.getPhone(), c.getDob()};
+            for (int i = 0; i < field.length; i++) {
+                System.out.println("Current staff " + field[i] + ": " + current[i]);
+                System.out.println("Do you want to update this field? (Y/N)");
+                String response = "";
+                do {
+                    System.out.print("===> ");
+                    while (!scanner.hasNextLine()) {
+                        System.out.println("===> ");
+                    }
+                    response = scanner.nextLine();
+                } while (!response.equals("Y") && !response.equals("N"));
+                if (response.equals("Y")) {
+                    System.out.print("===> ");
+                    while (!scanner.hasNextLine()) {
+                        System.out.println("===> ");
+                    }
+                    update[i] = scanner.nextLine();
+                }
+            }
+
+            c.setName(update[0]);
+            c.setTitleCode(update[1]);
+            c.setDeptCode(update[2]);
+            c.setAddress(update[3]);
+
+            c.setCity(update[1]);
+            c.setState(update[2]);
+            c.setPhone(update[3]);
+            c.setDob(update[3]);
+
+            if (InformationProcessing.updateStaff(c)) {
+                System.out.println("Record updated successfully.");
+            } else {
+                System.out.println("Something unexpected happened while attempting to update the record.");
+            }
+        }
+
+    }
+
+    private static void menuOptionDeleteStaff() {
+        System.out.println("|---------------------------------------------------------------------|");
+        System.out.println("| DELETE STAFF RECORD                                              |");
+        System.out.println("|---------------------------------------------------------------------|\n\n");
+        Staff c = Staff.select();
+        if (null == c) {
+            System.out.println("No record was selected.");
+        } else {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Attempting to delete customer record with Staff id: " + c.getStaffId());
+            System.out.println("Are you sure you want to delete this record? (Y/N)");
+            String response = "";
+            do {
+                System.out.print("===> ");
+                while (!scanner.hasNextLine()) {
+                    System.out.print("===> ");
+                }
+                response = scanner.nextLine();
+            } while (!response.equals("Y") && !response.equals("N"));
+            if (response.equals("Y")) {
+                if (InformationProcessing.deleteStaff(c)) {
+                    System.out.println("Record deleted successfully.");
+                } else {
+                    System.out.println("Something unexpected happened while attempting to delete the record.");
+                }
+            } else {
+                System.out.println("Deletion was cancelled.");
+            }
+        }
+    }
 
     public static void menuCustomersMain() {
         try {	
