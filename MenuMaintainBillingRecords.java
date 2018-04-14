@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -65,13 +66,13 @@ public class MenuMaintainBillingRecords {
                 
                 switch (choice) {
                     case 1:
-                    //menuOptionCreatePaymentMethod();
+                    menuOptionCreatePaymentMethod();
                     break;
                     case 2:
-                    //menuOptionUpdatePaymentMethod();
+                    menuOptionUpdatePaymentMethod();
                     break;
                     case 3:
-                    //menuOptionDeletePaymentMethod();
+                    menuOptionDeletePaymentMethod();
                     break;
                     case 4:
                     isExit = true;
@@ -167,6 +168,126 @@ public class MenuMaintainBillingRecords {
 			} else {
 				System.out.println("Something unexpected happened while attempting to update the record.");
 			}
+		}
+	}
+	
+	
+	public static void menuOptionCreatePaymentMethod() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| CREATE PAYMENT METHOD RECORD                                        |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Enter a payment method code (4 characters max).");
+		
+		String response = "";
+		do {
+			System.out.print("===> ");
+			while (!scanner.hasNextLine()) {
+				System.out.print("===> ");
+			}
+			response = scanner.nextLine();
+		} while (response.length() < 1 || response.length() > 4);
+		
+		String payMethodCode = response;
+		
+		System.out.println("Enter a payment method description (50 characters max).");
+		
+		response = "";
+		do {
+			System.out.print("===> ");
+			response = scanner.nextLine();
+		} while (response.length() > 50);
+		
+		String payMethodDesc = response;
+		
+		PaymentMethods paymentMethod = MaintainBillingRecords.createPaymentMethod(payMethodCode, payMethodDesc);
+		
+		if (null == paymentMethod) {
+			System.out.println("Something unexpected happened while attempting to create the record.");
+		} else {
+			System.out.println("Record created successfully.");
+		}				
+		
+	}
+	
+	public static void menuOptionUpdatePaymentMethod() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| UPDATE PAYMENT METHOD RECORD                                        |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		
+		PaymentMethods paymentMethod = PaymentMethods.select();
+		
+		if (null == paymentMethod) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);
+			
+			System.out.println("Current payment method description: " + paymentMethod.getPayMethodDesc());
+			System.out.println("Do you want to update this field? (Y/N)");
+			
+			String response = "";
+			do {
+				System.out.print("===> ");
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
+			} while (!response.equals("Y") && !response.equals("N"));
+			
+			if (response.equals("Y")) {
+				
+				response = "";
+				do {
+					System.out.print("===> ");
+					response = scanner.nextLine();
+				} while (response.length() > 50);
+				
+				paymentMethod.setPayMethodDesc(response);
+			}
+			
+			if (MaintainBillingRecords.updatePaymentMethod(paymentMethod)) {
+				System.out.println("Record updated successfully.");
+			} else {
+				System.out.println("Something unexpected happened while attempting to update the record.");
+			}
+		}
+	}
+	
+	public static void menuOptionDeletePaymentMethod() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| DELETE PAYMENT METHOD RECORD                                        |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		
+        PaymentMethods paymentMethod = PaymentMethods.select();
+		
+		if (null == paymentMethod) {
+			System.out.println("No record was selected.");
+		} else {
+			Scanner scanner = new Scanner(System.in);
+
+			System.out.println("Attempting to delete payment method record with code: " + paymentMethod.getPayMethodCode());
+			System.out.println("Are you sure you want to delete this record? (Y/N)");
+			
+			String response = "";
+			do {
+				System.out.print("===> ");
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
+			} while (!response.equals("Y") && !response.equals("N"));
+			
+			if (response.equals("Y")) {
+				if (MaintainBillingRecords.deletePaymentMethod(paymentMethod)) {
+					System.out.println("Record deleted successfully.");
+				} else {
+					System.out.println("Something unexpected happened while attempting to delete the record.");
+				}
+			} else {
+				System.out.println("Deletion was cancelled.");
+			}			
 		}
 	}
 
