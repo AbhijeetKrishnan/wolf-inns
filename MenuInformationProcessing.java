@@ -1148,21 +1148,27 @@ public class MenuInformationProcessing {
                 choice = in.nextInt();
                 
                 switch (choice) {
-                    case 1:
-                    //menuOptionCheckin();
-                    break;
+                     case 1:
+                        //menuOptionCheckin();
+                        break;
                     case 2:
-                    //menuOptionCheckout();
-                    break;
+                        //menuOptionCheckout();
+                        break;
                     case 3:
-                    menuOptionReprintItemizedReceipt();
-                    break;
+                        menuOptionUpdateStay();
+                        break;
                     case 4:
-                    isExit = true;
-                    break;
+                        menuOptionReprintItemizedReceipt();
+                        break;     
+                    case 5:
+                        menuOptionReprintItemizedReceipt();
+                        break;
+                    case 6:
+                        isExit = true;
+                        break;
                     default:
-                    System.out.println("Incorrect option. Please try again");
-                    break;
+                        System.out.println("Incorrect option. Please try again");
+                        break;
                 }
             } while (!isExit);    
 		} catch (RuntimeException ex) {
