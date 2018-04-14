@@ -1279,4 +1279,110 @@ public class MenuInformationProcessing {
 			HotelStayOperations.generateItemizedReceipt(stay);
 		}
 	}
+	
+	private static void menuDepartmentsMain() {
+        try {
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+
+                System.out.println("|-------------------------------------------------------------------------|");
+                System.out.println("| Department                                                              |");
+                System.out.println("|-------------------------------------------------------------------------|\n\n");
+
+                System.out.println("1. Create a department");
+                System.out.println("2. Update a department");
+                System.out.println("3. Delete a department");
+                System.out.println("4. Back\n");
+
+                System.out.print(">> ");
+                choice = in.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        menuOptionCreateDepartment();
+                        break;
+                    case 2:
+                        menuOptionUpdateDepartment();
+                        break;
+                    case 3:
+                        menuOptionDeleteDepartment();
+                        break;
+                    case 4:
+                        isExit = true;
+                        break;
+                    default:
+                        System.out.println("Incorrect option. Please try again");
+                        break;
+                }
+            } while (!isExit);
+        } catch (RuntimeException ex) {
+            System.err.println(ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private static void menuOptionCreateDepartment() throws SQLException {
+        boolean result = false;
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Department code: ");
+            String dc = in.nextLine();
+            System.out.print("Department description: ");
+            String dd = in.nextLine();
+
+            result = InformationProcessing.createDepartment(dc, dd);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+
+        if (result) {
+            System.out.println("Job title created successfully");
+        } else {
+            System.out.println("There was an error");
+        }
+    }
+
+    private static void menuOptionUpdateDepartment() {
+        boolean result = false;
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("Old department code: ");
+            String otc = in.nextLine();
+            System.out.print("New department code: ");
+            String ntc = in.nextLine();
+            System.out.print("New department description: ");
+            String td = in.nextLine();
+
+            result = InformationProcessing.updateDepartment(otc, ntc, td); // Method was removed in previous commit. This now fails build. Commented until corrected.
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+
+        if (result) {
+            System.out.println("The department updated successfully");
+        } else {
+            System.out.println("There was an error");
+        }
+    }
+
+    private static void menuOptionDeleteDepartment() {
+        boolean result = false;
+        try {
+            Scanner in = new Scanner(System.in);
+            System.out.print("department code: ");
+            String tc = in.nextLine();
+            
+            result = InformationProcessing.deleteDepartment(tc);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
+        
+        if (result) {
+            System.out.println("Job title deleted successfully");
+        } else {
+            System.out.println("There was an error");
+        }
+    }
 }
