@@ -1,4 +1,7 @@
-public class ServiceRecords {
+
+import java.util.ArrayList;
+
+public class ServiceRecords extends DatabaseObject {
 	private int stayId;
 	private String serviceCode;
 	private int staffId;
@@ -34,6 +37,45 @@ public class ServiceRecords {
 	}
 	public void setServiceTime(String serviceTime) {
 		this.serviceTime = serviceTime;
+	}
+        
+       
+        
+         public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(Integer.toString(this.getStayId()));
+		fieldValues.add(this.getServiceCode());
+                fieldValues.add(Integer.toString(this.getStaffId()));
+                fieldValues.add(this.getServiceDate());
+                fieldValues.add(this.getServiceTime());
+		
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("stayId");
+		fieldNames.add("serviceCode");
+                fieldNames.add("staffId");
+                fieldNames.add("serviceDate");
+                fieldNames.add("serviceTime");
+
+		return fieldNames;			
+	}
+	
+	
+	public static ServiceRecords select() {
+		ArrayList<ServiceRecords> deptList = HotelStayOperations.retrieveAllServiceRecords();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) deptList);
+		
+		ServiceRecords selectedRecord = (ServiceRecords) MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 
 	@Override
