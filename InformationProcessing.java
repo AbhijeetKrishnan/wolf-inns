@@ -1917,40 +1917,40 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @param dd department description
      * @return true iff success
      */
-    public void createDepartment(String dc,
-            String dd) throws SQLException {
+    public static Departments createDepartment(String dc, String dd) throws SQLException {
 
         Connection connection = null;
-        Statement stmt = null;
+        PreparedStatement statement = null;
 
-        String sql = "CREATE TABLE IF NOT EXISTS " + "departments"
+        String sqlStatement = "CREATE TABLE IF NOT EXISTS " + "departments"
                 + "deptCode CHAR(4) NOT NULL, "
                 + "deptDesc VARCHAR(50),"
                 + "PRIMARY KEY (deptCode));";
         try {
-            connection = DatabaseConnection.getConnection();
-            stmt = connection.createStatement();
-            stmt.executeUpdate(sql);
-            System.out.println("Created table in given database...");
-        } catch (SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-            //finally block used to close resources
-            try {
-                if (stmt != null) {
-                    connection.close();
-                }
-            } catch (SQLException se) {
-            }// do nothing
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }//end finally try
-        }//end try
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1,  dc);
+			statement.setString(2, dd);
+			int rowsAffected = statement.executeUpdate();
+			
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				Departments dept = new Departments();
+				dept.setDeptCode(dc);
+				dept.setDeptDesc(dd);
+				return dept;
+			}  else {
+				throw new SQLException("More than one row was affected while inserting into room_categories with categoryCode = " + dc + ".");
+			} 
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
     }
 
     /**
