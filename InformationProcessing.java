@@ -1810,6 +1810,70 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 
     }
 
+	/**
+     *
+     * @return job title record given the title in WolfInns.
+     */
+    public static JobTitles retrieveJobTitle(String jtc) {
+        String sqlStatement = "SELECT * FROM job_titles;";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet results = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareStatement(sqlStatement);
+            statement.setString(1, jtc);
+            results = statement.executeQuery();
+            results.last();
+            int rowsAffected = results.getRow();
+            // A single row should have been retrieved
+            if (1 == rowsAffected) {
+                results.first();
+                JobTitles jTitle = new JobTitles();
+                jTitle.setTitleCode(results.getString("titleCode"));
+                jTitle.setTitleDesc(results.getString("titleDesc"));
+
+                System.out.println("An existing deptarment was retrieved successfully!");
+                return jTitle;
+            } else if (0 == rowsAffected) {
+                System.out.println("There is no existing Dept with deptCode = " + jtc + ".");
+                return null;
+            } else {
+                // Throw exception
+                throw new SQLException("Multiple rows returned when selecting hotel with titleCode = " + jtc + ".");
+            }
+        } catch (SQLException ex) {
+            // Log and return null
+            ex.printStackTrace();
+            return null;
+        } finally {
+            // Attempt to close all resources, ignore failures.
+            if (results != null) {
+                try {
+                    results.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (Exception ex) {
+                };
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception ex) {
+                };
+            }
+        }
+    }
+	
+	
+	/**
+     *
+     * @return list of jobs titles in WolfInns.
+     */
    static ArrayList<JobTitles> retrieveAllJobTitles() {
         
      ArrayList<JobTitles> jtList = new ArrayList();    
