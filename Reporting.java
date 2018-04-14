@@ -275,5 +275,7 @@ public class Reporting {
 				data[row][col] = receiptData.get(row).get(col);
 			}
 		}
+		
+		printTable(headers, data);
     }
 }

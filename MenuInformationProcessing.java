@@ -46,7 +46,7 @@ public class MenuInformationProcessing {
                     menuCustomersMain();
                     break;
                     case 6:
-                    //menuStayMain();
+                    menuStaysMain();
                     break;
                     case 7:
                     //menuSearchAvailableRoomsMain();

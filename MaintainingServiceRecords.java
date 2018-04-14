@@ -76,7 +76,7 @@ public class MaintainingServiceRecords {
 				serviceRecord.setServiceTime(results.getString("serviceTime"));
 				serviceRecords.add(serviceRecord);
 			}
-			System.out.println("A list of existing service records for stayId = " + stayId + " was retrieved successfully!");
+			//System.out.println("A list of existing service records for stayId = " + stayId + " was retrieved successfully!");
 			return serviceRecords;
 		} catch (SQLException ex) {
 			// Log and return null

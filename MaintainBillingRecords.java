@@ -261,13 +261,14 @@ public class MaintainBillingRecords {
 			
 			while (results.next()) { // expect only 0/1 row
 				billingInfo = new BillingInfo();
-        billingInfo.setBillingId(billingId);
+                billingInfo.setBillingId(billingId);
 				billingInfo.setResponsiblePartySSN(results.getString("responsiblePartySSN"));
 				billingInfo.setAddress(results.getString("address"));
 				billingInfo.setCity(results.getString("city"));
 				billingInfo.setState(results.getString("state"));
 				billingInfo.setPayMethodCode(results.getString("payMethodCode"));
 				billingInfo.setCardNumber(results.getString("cardNumber"));
+				billingInfo.setTotalCharges(results.getDouble("totalCharges"));
 			}
 		} catch (SQLException ex) {
 			ex.printStackTrace();

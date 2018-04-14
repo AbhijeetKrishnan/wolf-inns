@@ -513,16 +513,16 @@ public class HotelStayOperations {
 			if (null == billingInfo) {throw new SQLException("Error seems to have occured. Check the logs.");}
 			
 			// Determine if a discount was applied
-			receiptRow = new ArrayList<String>();
-			receiptRow.add("");
-			receiptRow.add("Discount");
 			if (billingInfo.getPayMethodCode().equals("CCWF"))
 			{
-				receiptRow.add((int)MaintainBillingRecords.CCWF_DISCOUNT*100 + "%");
-			} else {
-				receiptRow.add("0%");
-			}			
-			itemizedCharges.add(receiptRow);
+				receiptRow = new ArrayList<String>();
+				receiptRow.add("");
+				receiptRow.add("Discount");
+				receiptRow.add(MaintainBillingRecords.CCWF_DISCOUNT*100 + "%");
+				itemizedCharges.add(receiptRow);
+			}				
+			
+			System.out.println(billingInfo.getBillingId() + " | " + billingInfo.getPayMethodCode() + " | " + billingInfo.getTotalCharges());
 			
 			// Add total line
 			receiptRow = new ArrayList<String>();
@@ -530,6 +530,8 @@ public class HotelStayOperations {
 			receiptRow.add("Total $");
 			receiptRow.add(Double.toString(billingInfo.getTotalCharges()));
 			itemizedCharges.add(receiptRow);
+			
+			System.out.println(itemizedCharges.toString());
 			
 			String[] headers = {"Date",  "Service", "Charge $"};
 			Reporting.printItemizedReceipt(headers, itemizedCharges);
