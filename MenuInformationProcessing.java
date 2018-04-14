@@ -1244,7 +1244,7 @@ public class MenuInformationProcessing {
 			System.out.println("No record was selected.");
 		} else {
 			Scanner scanner = new Scanner(System.in);			
-			System.out.println("Attempting to delete hotel record with Stay id: " + h.getHotelId());
+			System.out.println("Attempting to delete hotel record with Stay id: " + h.getStayId());
 			System.out.println("Are you sure you want to delete this record? (Y/N)");			
 			String response = "";
 			do {
