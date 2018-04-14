@@ -2327,7 +2327,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @param dc department code
      * @return
      */
-    public boolean deleteDepartment(String dc) {
+    public static boolean deleteDepartment(String dc) {
         String sqlStatement = "Delete departments where deptCode = ?;";
         Connection connection = null;
         PreparedStatement pst = null;
