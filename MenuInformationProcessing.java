@@ -593,7 +593,7 @@ public class MenuInformationProcessing {
             System.out.print("New Title description: ");
             String td = in.nextLine();
             
-            result = InformationProcessing.updateJobTitle(otc, ntc, td);
+            // result = InformationProcessing.updateJobTitle(otc, ntc, td); // Method was removed in previous commit. This now fails build. Commented until corrected.
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
@@ -976,6 +976,65 @@ public class MenuInformationProcessing {
 			} else {
 				System.out.println("Deletion was cancelled.");
 			}			
+		}
+	}
+	
+	
+	public static void menuStaysMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("| STAYS                                                               |");
+                System.out.println("|---------------------------------------------------------------------|\n\n");
+                
+                System.out.println("1. Checkin");
+                System.out.println("2. Checkout");
+                System.out.println("3. Reprint Itemized Receipt");
+                System.out.println("4. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    //menuOptionCheckin();
+                    break;
+                    case 2:
+                    //menuOptionCheckout();
+                    break;
+                    case 3:
+                    menuOptionReprintItemizedReceipt();
+                    break;
+                    case 4:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+	
+	public static void menuOptionReprintItemizedReceipt() {
+		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| REPRINT ITEMIZED RECEIPT FOR STAY                                   |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		
+		Stays stay = Stays.select();
+		
+		if (null == stay) {
+			System.out.println("No record was selected.");
+		} else {
+			HotelStayOperations.generateItemizedReceipt(stay);
 		}
 	}
 }

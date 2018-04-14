@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class MaintainBillingRecords {
 	public static final double CCWF_DISCOUNT = .05;
 	public static double calculateRoomCharge(int stayId) {
-		double roomCharge = 0.0;
+		double roomCharge = -1.0;
 		String sqlStatement = "SELECT ((DATEDIFF(checkoutDate, checkinDate)+1)*rate) AS \"Room Charge\" FROM stays NATURAL JOIN rooms WHERE stayId = ?";
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -198,16 +198,14 @@ public class MaintainBillingRecords {
 	 * @param String cardNumber
 	 * @return BillingInfo object which contains the newly inserted fields
 	 */
-	public static BillingInfo createBillingInfo(String responsiblePartySSN, String address, String city, String state, String payMethodCode, String cardNumber) {
+	public static BillingInfo createBillingInfo(String responsiblePartySSN, String address, String city, String state, String payMethodCode, String cardNumber, Connection connection) {
 		
 		String sqlStatement = "INSERT INTO billing_info (responsiblePartySSN, address, city, state, payMethodCode, cardNumber) VALUES (?, ?, ?, ?, ?, ?)";
-		Connection connection = null;
 		PreparedStatement statement = null;
 		BillingInfo billingInfo = null;
 		ResultSet generatedKeys = null;
 		
 		try {
-			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sqlStatement, PreparedStatement.RETURN_GENERATED_KEYS);
 			
 			statement.setString(1, responsiblePartySSN);
@@ -231,15 +229,15 @@ public class MaintainBillingRecords {
 				billingInfo.setPayMethodCode(payMethodCode);
 				billingInfo.setCardNumber(cardNumber);
 			}
+			
+			return billingInfo;
 		} catch (SQLException ex) {
 			ex.printStackTrace();
+			return null;
 		} finally {
 			try { generatedKeys.close(); } catch (Exception ex) {};
 			try { statement.close(); } catch (Exception ex) {};
-			try { connection.close(); } catch (Exception ex) {};
 		}
-		
-		return billingInfo;
 	}
 	
 	/**

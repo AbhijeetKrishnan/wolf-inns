@@ -84,6 +84,50 @@ public class InformationProcessing {
 		return roomCategories;
 	}
 	
+	
+	
+	public static RoomCategories retrieveRoomCategory(String categoryCode) {
+		RoomCategories roomCategory = new RoomCategories();
+		String sqlStatement = "SELECT categoryCode, categoryDesc FROM room_categories WHERE categoryCode = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1,  categoryCode);
+			results = statement.executeQuery();
+			
+			results.last();
+			int rowsAffected = results.getRow();
+			
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				results.first();
+				
+				roomCategory.setCategoryCode(categoryCode);
+				roomCategory.setCategoryDesc(results.getString("categoryDesc"));
+			} else {
+				// Throw exception
+				throw new SQLException("Multiple rows returned when selecting room category with categoryCode = " + categoryCode + ".");
+			}
+			
+			return roomCategory;
+			
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+	}
+	
+	
 	/**
 	 * Update a single room category in the database.
 	 * @param roomCategory A RoomCategories object representing the existing record to be updated.
@@ -368,6 +412,51 @@ public class InformationProcessing {
 		}
 
 		return stay;
+	}
+	
+	
+public static ArrayList<Stays> retrieveAllStays() {
+		
+		ArrayList<Stays> stays = new ArrayList<Stays>();
+		String sqlStatement = "SELECT categoryCode, categoryDesc FROM room_categories";
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			results = statement.executeQuery(sqlStatement);
+			
+			while (results.next()) {
+				Stays stay = new Stays();
+
+				stay.setStayId(results.getInt("stayId"));
+				stay.setHotelId(results.getInt("hotelId"));
+				stay.setRoomNumber(results.getString("roomNumber"));
+				stay.setCustomerId(results.getInt("customerId"));
+				stay.setNumOfGuests(results.getInt("numOfGuests"));
+				stay.setCheckinDate(results.getString("checkinDate"));
+				stay.setCheckinTime(results.getString("checkinTime"));
+				stay.setCheckoutDate(results.getString("checkoutDate"));
+				stay.setCheckoutTime(results.getString("checkoutTime"));
+				stay.setBillingId(results.getInt("billingId"));
+
+				stays.add(stay);
+			}
+			
+			return stays;
+				
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
 	}
 	
 	
@@ -1682,6 +1771,51 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
         }
 
     }
+    
+    
+    public static Services retrieveService(String serviceCode) {
+    	Services service = new Services();
+		String sqlStatement = "SELECT serviceCode, serviceDesc, charge FROM services WHERE serviceCode = ?;";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet results = null;
+
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.prepareStatement(sqlStatement);
+			statement.setString(1,  serviceCode);
+			results = statement.executeQuery();
+			
+			results.last();
+			int rowsAffected = results.getRow();
+			
+			// A single row should have been inserted
+			if (1==rowsAffected) {
+				results.first();
+				
+				service.setServiceCode(serviceCode);
+				service.setServiceDesc(results.getString("serviceDesc"));
+				service.setCharge(results.getDouble("charge"));
+			} else {
+				// Throw exception
+				throw new SQLException("Multiple rows returned when selecting service with serviceCode = " + serviceCode + ".");
+			}
+			
+			return service;
+			
+				
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}		
+	}
+    
 	
 	public static boolean updateService(String targetServiceCode,
             String sc,
@@ -1836,11 +1970,11 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
                 System.out.println("An existing deptarment was retrieved successfully!");
                 return jTitle;
             } else if (0 == rowsAffected) {
-                System.out.println("There is no existing Dept with deptCode = " + jtc + ".");
+                System.out.println("There is no existing job with titleCode = " + jtc + ".");
                 return null;
             } else {
                 // Throw exception
-                throw new SQLException("Multiple rows returned when selecting hotel with titleCode = " + jtc + ".");
+                throw new SQLException("Multiple rows returned when selecting job with titleCode = " + jtc + ".");
             }
         } catch (SQLException ex) {
             // Log and return null

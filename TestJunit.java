@@ -227,8 +227,9 @@ public class TestJunit {
     expected.setCardNumber("Test");
     
     /* Create */
+    Connection connection = DatabaseConnection.getConnection(); 
     System.out.println("Testing createBillingInfo...");
-    BillingInfo actual = MaintainBillingRecords.createBillingInfo("--Test---", "Test", "Test", "TT", "CCWF", "Test");
+    BillingInfo actual = MaintainBillingRecords.createBillingInfo("--Test---", "Test", "Test", "TT", "CCWF", "Test", connection);
     expected.setBillingId(actual.getBillingId()); //necessary since billingId is autoincrement
     assertEquals("Create a BillingInfo record", expected, actual);
     System.out.println("Test for createBillingInfo passed!");

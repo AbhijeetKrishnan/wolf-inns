@@ -1,5 +1,6 @@
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.time.format.DateTimeFormatter;  
 import java.time.LocalDateTime;  
 
@@ -335,7 +336,7 @@ public class HotelStayOperations {
 		}
 	}
     
-    public static boolean checkinStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int billingId, int servicingStaffId) {
+    public static boolean checkinStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int servicingStaffId, String responsiblePartySSN, String address, String city, String state, String payMethodCode, String cardNumber) {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -346,8 +347,11 @@ public class HotelStayOperations {
 			connection.setAutoCommit(false);			
 			Savepoint save1 = connection.setSavepoint();
 			
+			// Create the billing record
+			BillingInfo billingInfo = MaintainBillingRecords.createBillingInfo(responsiblePartySSN, address, city, state, payMethodCode, cardNumber, connection);
+			
 			// Create the stays record
-			Stays stay = InformationProcessing.createStay(hotelId, roomNumber, customerId, numOfGuests, billingId, connection);
+			Stays stay = InformationProcessing.createStay(hotelId, roomNumber, customerId, numOfGuests, billingInfo.getBillingId(), connection);
 			if (null == stay) {throw new SQLException("Error seems to have occured. Check the logs.");}
 			
 			// Retrieve room information to determine if it is a presidential suite
@@ -428,6 +432,9 @@ public class HotelStayOperations {
 			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, false, connection);	
 			if (null == serviceRecord) {throw new SQLException("Error seems to have occured. Check the logs.");}
 			
+			// Generate and print the itemized receipt
+			if(!generateItemizedReceipt(stay)) {throw new SQLException("Error seems to have occured. Check the logs.");}			
+			
 			connection.commit();			
 			
 			return true;
@@ -441,4 +448,96 @@ public class HotelStayOperations {
 			try { connection.close(); } catch (Exception ex) {};
 		}
 	}
+    
+    public static boolean generateItemizedReceipt(Stays stay) {
+ 
+    	try {			
+    		// Get room information
+    		Rooms room = InformationProcessing.retrieveRoom(stay.getHotelId(), stay.getRoomNumber());			
+			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Get room charge
+			double roomCharge = MaintainBillingRecords.calculateRoomCharge(stay.getStayId());
+			if (roomCharge < 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Get service charges
+			ArrayList<ServiceRecords> serviceRecords = MaintainingServiceRecords.retrieveServiceRecordsForStay(stay.getStayId());
+			if (null == serviceRecords) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Get charges for services
+			ArrayList<ArrayList<String>> itemizedCharges = new ArrayList<ArrayList<String>>();			
+			double sumOfCharges = roomCharge;
+			ArrayList<String> receiptRow = null;
+			
+			for (ServiceRecords record : serviceRecords) {
+				Services service = InformationProcessing.retrieveService(record.getServiceCode());
+				if (null == service) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				
+				sumOfCharges += service.getCharge();
+				
+				receiptRow = new ArrayList<String>();
+				receiptRow.add(record.getServiceDate());
+				receiptRow.add(service.getServiceDesc());
+				receiptRow.add(Double.toString(service.getCharge()));
+				itemizedCharges.add(receiptRow);
+			}
+			
+			// Get room category information
+			RoomCategories roomCategory = InformationProcessing.retrieveRoomCategory(room.getCategoryCode());
+			if (null == roomCategory) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Add room charge row
+			receiptRow = new ArrayList<String>();
+			receiptRow.add(stay.getCheckoutDate());
+			String roomChargeDescription = roomCategory.getCategoryDesc() + " from " + stay.getCheckinDate() + " @ $" + room.getRate() + "/day";
+			receiptRow.add(roomChargeDescription);
+			receiptRow.add(Double.toString(roomCharge));
+			itemizedCharges.add(receiptRow);
+			
+			// Add blank line
+			receiptRow = new ArrayList<String>();
+			receiptRow.add("");
+			receiptRow.add("");
+			receiptRow.add("");
+			itemizedCharges.add(receiptRow);
+			
+			// Add subtotal line
+			receiptRow = new ArrayList<String>();
+			receiptRow.add("");
+			receiptRow.add("Subtotal $");
+			receiptRow.add(Double.toString(sumOfCharges));
+			itemizedCharges.add(receiptRow);
+			
+			// Get billing info
+			BillingInfo billingInfo = MaintainBillingRecords.retrieveBillingInfo(stay.getBillingId());
+			if (null == billingInfo) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			
+			// Determine if a discount was applied
+			receiptRow = new ArrayList<String>();
+			receiptRow.add("");
+			receiptRow.add("Discount");
+			if (billingInfo.getPayMethodCode().equals("CCWF"))
+			{
+				receiptRow.add((int)MaintainBillingRecords.CCWF_DISCOUNT*100 + "%");
+			} else {
+				receiptRow.add("0%");
+			}			
+			itemizedCharges.add(receiptRow);
+			
+			// Add total line
+			receiptRow = new ArrayList<String>();
+			receiptRow.add("");
+			receiptRow.add("Total $");
+			receiptRow.add(Double.toString(billingInfo.getTotalCharges()));
+			itemizedCharges.add(receiptRow);
+			
+			String[] headers = {"Date",  "Service", "Charge $"};
+			Reporting.printItemizedReceipt(headers, itemizedCharges);
+			
+			return true;
+    	} catch (SQLException ex) {
+    		ex.printStackTrace();
+			return false;
+		} 
+    }
 }

@@ -1,4 +1,6 @@
-public class Stays {
+import java.util.ArrayList;
+
+public class Stays extends DatabaseObject {
 	private int stayId;
 	private int hotelId;
 	private String roomNumber;
@@ -81,5 +83,52 @@ public class Stays {
                         numOfGuests==s.numOfGuests && checkinDate.equals(s.checkinDate) &&
                         checkinTime.equals(s.checkinTime) && checkoutDate.equals(s.checkoutDate) &&
                         checkoutTime.equals(s.checkoutTime) && billingId==s.billingId);
+	}
+	
+	
+public ArrayList<String> toStringArrayList() {
+		
+		ArrayList<String> fieldValues = new ArrayList<String>();
+		
+		fieldValues.add(Integer.toString(this.getStayId()));
+		fieldValues.add(Integer.toString(this.getHotelId()));
+		fieldValues.add(this.getRoomNumber());
+		fieldValues.add(Integer.toString(this.getCustomerId()));
+		fieldValues.add(Integer.toString(this.getNumOfGuests()));
+		fieldValues.add(this.getCheckinDate());
+		fieldValues.add(this.getCheckinTime());
+		fieldValues.add(this.getCheckoutDate());
+		fieldValues.add(this.getCheckoutTime());
+		fieldValues.add(Integer.toString(this.getBillingId()));	
+		
+		return fieldValues;		
+	}
+	
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("Stay Id");
+		fieldNames.add("Hotel Id");
+		fieldNames.add("Room Number");
+		fieldNames.add("Customer Id");
+		fieldNames.add("Number of Guests");
+		fieldNames.add("Checkin Date");
+		fieldNames.add("Checkin Time");
+		fieldNames.add("Checkout Date");
+		fieldNames.add("Checkout Time");
+		fieldNames.add("Billing Id");
+
+		return fieldNames;			
+	}
+	
+	
+	public static Stays select() {
+		ArrayList<Stays> staffList = InformationProcessing.retrieveAllStays();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staffList);
+		
+		Stays selectedRecord = (Stays)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
 	}
 }
