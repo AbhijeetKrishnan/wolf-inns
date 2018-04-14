@@ -1141,8 +1141,10 @@ public class MenuInformationProcessing {
                 
                 System.out.println("1. Checkin");
                 System.out.println("2. Checkout");
-                System.out.println("3. Reprint Itemized Receipt");
-                System.out.println("4. Back\n");
+                System.out.println("3. Update a stay");
+                System.out.println("4. Delete a stay");
+                System.out.println("5. Reprint Itemized Receipt");
+                System.out.println("6. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -1158,8 +1160,8 @@ public class MenuInformationProcessing {
                         menuOptionUpdateStay();
                         break;
                     case 4:
-                        menuOptionReprintItemizedReceipt();
-                        break;     
+                        menuOptionDeleteStay();
+                        break;
                     case 5:
                         menuOptionReprintItemizedReceipt();
                         break;
