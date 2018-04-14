@@ -1188,7 +1188,7 @@ public class MenuInformationProcessing {
 		}
 	}
 	
-	private static void menuDepartmentsMain() {
+	private static void menuDepartmentsMain(){
         try {
             boolean isExit = false;
             Scanner in = new Scanner(System.in);
@@ -1231,7 +1231,7 @@ public class MenuInformationProcessing {
         }
     }
 
-    private static void menuOptionCreateDepartment() throws SQLException {
+    private static void menuOptionCreateDepartment() {
         boolean result = false;
         try {
             Scanner in = new Scanner(System.in);
@@ -1267,7 +1267,6 @@ public class MenuInformationProcessing {
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
-
         if (result) {
             System.out.println("The department updated successfully");
         } else {
