@@ -2284,7 +2284,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
      * @param dd department description
      * @return
      */
-    public boolean updateDepartment(String dcTarget,
+    public static boolean updateDepartment(String dcTarget,
             String dc,
             String dd) {
         String sqlStatement = "UPDATE departments SET deptCode =?, deptDesc = ? WHERE deptCode = ?;";
