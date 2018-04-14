@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Departments {
+public class Departments extends DatabaseObject {
 	private String deptCode;
 	private String deptDesc;
 
