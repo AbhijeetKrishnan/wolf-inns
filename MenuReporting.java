@@ -10,9 +10,9 @@ public class MenuReporting {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| REPORTING                                                           |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 System.out.println("1. Occupancy grouped by hotel");
                 System.out.println("2. Occupancy grouped by room type");
                 System.out.println("3. Occupancy given date range");
@@ -62,23 +62,23 @@ public class MenuReporting {
     }
 
 	public static void menuOccupancyByHotelMain() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| OCCUPANCY GROUPED BY HOTEL                                          |");
-		System.out.println("|---------------------------------------------------------------------|\n");
+		System.out.println("+---------------------------------------------------------------------+\n");
 		Reporting.occupancyByHotel();
 	}
 
 	public static void menuOccupancyByRoomTypeMain() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| OCCUPANCY GROUPED BY ROOM TYPE                                      |");
-		System.out.println("|---------------------------------------------------------------------|\n");
+		System.out.println("+---------------------------------------------------------------------+\n");
 		Reporting.occupancyByRoomType();
 	}
 
 	public static void menuOccupancyByDateRangeMain() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| OCCUPANCY GIVEN DATE RANGE                                          |");
-		System.out.println("|---------------------------------------------------------------------|\n");
+		System.out.println("+---------------------------------------------------------------------+\n");
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter date range for occupancy report.");
 		System.out.println("Begin date (format: YYYY-MM-DD)");
@@ -97,23 +97,23 @@ public class MenuReporting {
 	}
 
 	public static void menuOccupancyByCityMain() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| OCCUPANCY GROUPED BY CITY                                           |");
-		System.out.println("|---------------------------------------------------------------------|\n");
+		System.out.println("+---------------------------------------------------------------------+\n");
 		Reporting.occupancyByCity();
 	}
 
 	public static void menuReportStaffInformationByTitleMain() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| STAFF INFORMATION ORDERED BY ROLE                                   |");
-		System.out.println("|---------------------------------------------------------------------|\n");
+		System.out.println("+---------------------------------------------------------------------+\n");
 		Reporting.reportStaffInformationByTitle();
 	}
 
 	public static void menuReportStayStaffMain() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| STAFF INFORMATION GIVEN STAY                                        |");
-		System.out.println("|---------------------------------------------------------------------|\n");
+		System.out.println("+---------------------------------------------------------------------+\n");
 		Stays stay = Stays.select();
 		if (null == stay) {
 			System.out.println("No record was selected.");
@@ -123,9 +123,9 @@ public class MenuReporting {
 	}
 
 	public static void menuReportRevenueMain() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| REVENUE FOR GIVEN HOTEL DURING GIVEN DATE RANGE                     |");
-		System.out.println("|---------------------------------------------------------------------|\n");
+		System.out.println("+---------------------------------------------------------------------+\n");
 		Hotels hotel = Hotels.select();
 		if (null == hotel) {
 			System.out.println("No record was selected.");

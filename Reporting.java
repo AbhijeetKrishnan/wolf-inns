@@ -138,7 +138,7 @@ public class Reporting {
 	 */
 	public static void occupancyByCity() {
 		
-		String sqlStatement = "SELECT avail.city AS \"Hotel City\", avail.state AS \"Hotel State\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms/total_rooms, 0)*100) AS \"Percentage Occupied\" "
+		String sqlStatement = "SELECT avail.city AS City, avail.state AS State, COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms/total_rooms, 0)*100) AS \"Percentage Occupied\" "
 			+ "FROM (SELECT  city, state, COUNT(stayId) AS occupied_rooms FROM hotels NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY city, state) AS occ "
 			+ "RIGHT JOIN (SELECT city, state, COUNT(roomNumber) AS total_rooms FROM hotels NATURAL JOIN rooms GROUP BY city, state) AS avail "
 			+ "ON occ.city=avail.city AND occ.state=avail.state ORDER BY avail.state, avail.city";

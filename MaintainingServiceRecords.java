@@ -198,7 +198,7 @@ public class MaintainingServiceRecords {
             results.last();
             int rowsAffected = results.getRow();
             if (rowsAffected > 0) {
-                results.first();
+            	results.beforeFirst();
                 while (results.next()) {
                     ServiceRecords sr = new ServiceRecords();
         

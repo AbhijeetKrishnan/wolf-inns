@@ -12,9 +12,9 @@ public class MenuMaintainBillingRecords {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| MAINTAINING BILLING ACCOUNTS                                        |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Payment Methods");
                 System.out.println("2. Billing Info");
@@ -52,9 +52,9 @@ public class MenuMaintainBillingRecords {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| PAYMENT METHODS                                                     |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Create a payment method");
                 System.out.println("2. Update a payment method");
@@ -96,9 +96,9 @@ public class MenuMaintainBillingRecords {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| BILLING INFO                                                        |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Update a billing info");
                 System.out.println("9. Back\n");
@@ -125,15 +125,15 @@ public class MenuMaintainBillingRecords {
     }
 
 	public static void menuOptionUpdateBillingInfo() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| UPDATE BILLING INFO RECORD                                          |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		BillingInfo b = BillingInfo.select();
 		if (null == b) {
 			System.out.println("No record was selected.");
 		} else {
 			Scanner scanner = new Scanner(System.in);
-			String[] field = {"responsible party SSN", "address", "city", "state", "paymentn method code", "card number", "total charges"};
+			String[] field = {"Responsible Party SSN", "Address", "City", "State", "Payment Method Code", "Card Number", "Total Charges"};
 			String[] current = {b.getResponsiblePartySSN(), b.getAddress(), b.getCity(), b.getState(), b.getPayMethodCode(), b.getCardNumber(), Double.toString(b.getTotalCharges())};
 			String[] update = {b.getResponsiblePartySSN(), b.getAddress(), b.getCity(), b.getState(), b.getPayMethodCode(), b.getCardNumber(), Double.toString(b.getTotalCharges())};
 			System.out.println("Current billing info id: " + b.getBillingId());
@@ -173,9 +173,9 @@ public class MenuMaintainBillingRecords {
 	
 	
 	public static void menuOptionCreatePaymentMethod() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| CREATE PAYMENT METHOD RECORD                                        |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		Scanner scanner = new Scanner(System.in);
 		
@@ -213,9 +213,9 @@ public class MenuMaintainBillingRecords {
 	}
 	
 	public static void menuOptionUpdatePaymentMethod() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| UPDATE PAYMENT METHOD RECORD                                        |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		PaymentMethods paymentMethod = PaymentMethods.select();
 		
@@ -256,9 +256,9 @@ public class MenuMaintainBillingRecords {
 	}
 	
 	public static void menuOptionDeletePaymentMethod() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| DELETE PAYMENT METHOD RECORD                                        |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
         PaymentMethods paymentMethod = PaymentMethods.select();
 		

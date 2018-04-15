@@ -12,9 +12,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| INFORMATION PROCESSING                                              |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Hotels");
                 System.out.println("2. Rooms");
@@ -76,9 +76,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| HOTELS                                                              |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Create a hotel");
                 System.out.println("2. Update a hotel");
@@ -113,17 +113,17 @@ public class MenuInformationProcessing {
     }
 
 	public static void menuOptionCreateHotel() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| CREATE HOTEL RECORD                                                 |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		Scanner scanner = new Scanner(System.in);
-		String[] field = {"name", "address", "city", "state", "phone", "managerId"};
+		String[] field = {"Name", "Address", "City", "State", "Phone", "Manager Id"};
 		String[] response = new String[6];
 		for (int i = 0; i < 6; i++) {
 			System.out.println("Hotel " + field[i]);
-			System.out.println("===> ");
+			System.out.print("===> ");
 			while (!scanner.hasNext()) {
-				System.out.println("===> ");
+				System.out.print("===> ");
 			}
 			response[i] = scanner.nextLine();
 		}
@@ -137,15 +137,15 @@ public class MenuInformationProcessing {
 	}
 
 	public static void menuOptionUpdateHotel() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| UPDATE HOTEL RECORD                                                 |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		Hotels h = Hotels.select();
 		if (null == h) {
 			System.out.println("No record was selected.");
 		} else {
 			Scanner scanner = new Scanner(System.in);
-			String[] field = {"name", "address", "city", "state", "phone", "managerId"};
+			String[] field = {"Name", "Address", "City", "State", "Phone", "Manager Id"};
 			String[] current = {h.getName(), h.getAddress(), h.getCity(), h.getState(), h.getPhone(), Integer.toString(h.getManagerId())};
 			String[] update = {h.getName(), h.getAddress(), h.getCity(), h.getState(), h.getPhone(), Integer.toString(h.getManagerId())};
 			System.out.println("Current hotel id: " + h.getHotelId());
@@ -156,14 +156,14 @@ public class MenuInformationProcessing {
 				do {
 					System.out.print("===> ");
 					while (!scanner.hasNext()) {
-						System.out.println("===> ");
+						System.out.print("===> ");
 					}
 					response = scanner.nextLine();
 				} while (!response.equals("Y") && !response.equals("N"));
 				if (response.equals("Y")) {
 					System.out.print("===> ");
 					while (!scanner.hasNext()) {
-						System.out.println("===> ");
+						System.out.print("===> ");
 					}
 					update[i] = scanner.nextLine();
 				}
@@ -183,9 +183,9 @@ public class MenuInformationProcessing {
 	}
 
 	public static void menuOptionDeleteHotel() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| DELETE HOTEL RECORD                                                 |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		Hotels h = Hotels.select();
 		if (null == h) {
 			System.out.println("No record was selected.");
@@ -221,9 +221,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| ROOMS                                                               |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Create a room");
                 System.out.println("2. Update a room");
@@ -338,9 +338,9 @@ public class MenuInformationProcessing {
         int choice;
         do {
 
-            System.out.println("|---------------------------------------------------------------------|");
-            System.out.println("| Staff                                                               |");
-            System.out.println("|---------------------------------------------------------------------|\n\n");
+            System.out.println("+---------------------------------------------------------------------+");
+            System.out.println("| STAFF                                                               |");
+            System.out.println("+---------------------------------------------------------------------+\n\n");
 
             System.out.println("1. Create a staff");
             System.out.println("2. Update a staff");
@@ -371,17 +371,17 @@ public class MenuInformationProcessing {
     }
 
     private static void menuOptionCreateStaff() {
-        System.out.println("|---------------------------------------------------------------------|");
+        System.out.println("+---------------------------------------------------------------------+");
         System.out.println("| CREATE STAFF RECORD                                                 |");
-        System.out.println("|---------------------------------------------------------------------|\n\n");
+        System.out.println("+---------------------------------------------------------------------+\n\n");
         Scanner scanner = new Scanner(System.in);
-        String[] field = {"name", "titleCode", "deptCode", "address", "city", "state", "phone", "dob"};
+        String[] field = {"Name", "Title", "Department", "Address", "City", "State", "Phone", "DOB"};
         String[] response = new String[field.length];
         for (int i = 0; i < field.length; i++) {
             System.out.println("Staff " + field[i]);
-            System.out.println("===> ");
+            System.out.print("===> ");
             while (!scanner.hasNext()) {
-                System.out.println("===> ");
+                System.out.print("===> ");
             }
             response[i] = scanner.nextLine();
         }
@@ -394,15 +394,15 @@ public class MenuInformationProcessing {
     }
 
     private static void menuOptionUpdateStaff() {
-        System.out.println("|---------------------------------------------------------------------|");
-        System.out.println("| UPDATE Staff RECORD                                              |");
-        System.out.println("|---------------------------------------------------------------------|\n\n");
+        System.out.println("+---------------------------------------------------------------------+");
+        System.out.println("| UPDATE STAFF RECORD                                                 |");
+        System.out.println("+---------------------------------------------------------------------+\n\n");
         Staff c = Staff.select();
         if (null == c) {
             System.out.println("No record was selected.");
         } else {
             Scanner scanner = new Scanner(System.in);
-            String[] field = {"name", "titleCode", "deptCode", "address", "city", "state", "phone", "dob"};
+            String[] field = {"Name", "Title", "Department", "Address", "City", "State", "Phone", "DOB"};
             String[] current = {c.getName(), c.getTitleCode(), c.getDeptCode(), c.getAddress(),
                 c.getCity(), c.getState(), c.getPhone(), c.getDob()};
             String[] update = {c.getName(), c.getTitleCode(), c.getDeptCode(), c.getAddress(),
@@ -414,14 +414,14 @@ public class MenuInformationProcessing {
                 do {
                     System.out.print("===> ");
                     while (!scanner.hasNext()) {
-                        System.out.println("===> ");
+                        System.out.print("===> ");
                     }
                     response = scanner.nextLine();
                 } while (!response.equals("Y") && !response.equals("N"));
                 if (response.equals("Y")) {
                     System.out.print("===> ");
                     while (!scanner.hasNext()) {
-                        System.out.println("===> ");
+                        System.out.print("===> ");
                     }
                     update[i] = scanner.nextLine();
                 }
@@ -447,9 +447,9 @@ public class MenuInformationProcessing {
     }
 
     private static void menuOptionDeleteStaff() {
-        System.out.println("|---------------------------------------------------------------------|");
+        System.out.println("+---------------------------------------------------------------------+");
         System.out.println("| DELETE STAFF RECORD                                              |");
-        System.out.println("|---------------------------------------------------------------------|\n\n");
+        System.out.println("+---------------------------------------------------------------------+\n\n");
         Staff c = Staff.select();
         if (null == c) {
             System.out.println("No record was selected.");
@@ -485,9 +485,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| CUSTOMER                                                            |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Create a customer");
                 System.out.println("2. Update a customer");
@@ -522,17 +522,17 @@ public class MenuInformationProcessing {
     }
 
 	public static void menuOptionCreateCustomer() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| CREATE CUSTOMER RECORD                                              |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		Scanner scanner = new Scanner(System.in);
-		String[] field = {"name", "DOB", "phone", "email"};
+		String[] field = {"Name", "DOB", "Phone", "E-Mail"};
 		String[] response = new String[4];
 		for (int i = 0; i < 4; i++) {
 			System.out.println("Customer " + field[i]);
-			System.out.println("===> ");
+			System.out.print("===> ");
 			while (!scanner.hasNext()) {
-				System.out.println("===> ");
+				System.out.print("===> ");
 			}
 			response[i] = scanner.nextLine();
 		}
@@ -546,15 +546,15 @@ public class MenuInformationProcessing {
 	}
     
 	public static void menuOptionUpdateCustomer() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| UPDATE CUSTOMER RECORD                                              |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		Customers c = Customers.select();
 		if (null == c) {
 			System.out.println("No record was selected.");
 		} else {
 			Scanner scanner = new Scanner(System.in);
-			String[] field = {"name", "DOB", "phone", "email"};
+			String[] field = {"Name", "DOB", "Phone", "E-Mail"};
 			String[] current = {c.getName(), c.getDob(), c.getPhone(), c.getEmail()};
 			String[] update = {c.getName(), c.getDob(), c.getPhone(), c.getEmail()};
 			System.out.println("Current customer id: " + c.getCustomerId());
@@ -565,14 +565,14 @@ public class MenuInformationProcessing {
 				do {
 					System.out.print("===> ");
 					while (!scanner.hasNext()) {
-						System.out.println("===> ");
+						System.out.print("===> ");
 					}
 					response = scanner.nextLine();
 				} while (!response.equals("Y") && !response.equals("N"));
 				if (response.equals("Y")) {
 					System.out.print("===> ");
 					while (!scanner.hasNext()) {
-						System.out.println("===> ");
+						System.out.print("===> ");
 					}
 					update[i] = scanner.nextLine();
 				}
@@ -590,9 +590,9 @@ public class MenuInformationProcessing {
 	}    
 
 	public static void menuOptionDeleteCustomer() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| DELETE CUSTOMER RECORD                                              |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		Customers c = Customers.select();
 		if (null == c) {
 			System.out.println("No record was selected.");
@@ -628,9 +628,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| OTHER                                                               |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Job Titles");
                 System.out.println("2. Departments");
@@ -672,9 +672,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| JOB TITLES                                                          |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Create a job title");
                 System.out.println("2. Update a job title");
@@ -779,9 +779,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| ROOM CATEGORIES                                                     |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Create a room category");
                 System.out.println("2. Update a room category");
@@ -816,17 +816,17 @@ public class MenuInformationProcessing {
     }
     
 	public static void menuOptionCreateRoomCategory() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| CREATE ROOM CATEGORY RECORD                                         |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		Scanner scanner = new Scanner(System.in);
-		String[] field = {"category code", "category description"};
+		String[] field = {"Category Code", "Category Description"};
 		String[] response = new String[2];
 		for (int i = 0; i < 2; i++) {
 			System.out.println("Room " + field[i]);
-			System.out.println("===> ");
+			System.out.print("===> ");
 			while (!scanner.hasNext()) {
-				System.out.println("===> ");
+				System.out.print("===> ");
 			}
 			response[i] = scanner.nextLine();
 		}
@@ -840,15 +840,15 @@ public class MenuInformationProcessing {
 	}
 
 	public static void menuOptionUpdateRoomCategory() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| UPDATE ROOM CATEGORY RECORD                                         |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		RoomCategories r = RoomCategories.select();
 		if (null == r) {
 			System.out.println("No record was selected.");
 		} else {
 			Scanner scanner = new Scanner(System.in);
-			String[] field = {"category description"};
+			String[] field = {"Category Description"};
 			String[] current = {r.getCategoryDesc()};
 			String[] update = {r.getCategoryDesc()};
 			System.out.println("Current room category code: " + r.getCategoryCode());
@@ -859,14 +859,14 @@ public class MenuInformationProcessing {
 				do {
 					System.out.print("===> ");
 					while (!scanner.hasNext()) {
-						System.out.println("===> ");
+						System.out.print("===> ");
 					}
 					response = scanner.nextLine();
 				} while (!response.equals("Y") && !response.equals("N"));
 				if (response.equals("Y")) {
 					System.out.print("===> ");
 					while (!scanner.hasNext()) {
-						System.out.println("===> ");
+						System.out.print("===> ");
 					}
 					update[i] = scanner.nextLine();
 				}
@@ -881,9 +881,9 @@ public class MenuInformationProcessing {
 	}
 
 	public static void menuOptionDeleteRoomCategory() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| DELETE ROOM CATEGORY RECORD                                         |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		RoomCategories r = RoomCategories.select();
 		if (null == r) {
 			System.out.println("No record was selected.");
@@ -913,9 +913,9 @@ public class MenuInformationProcessing {
 	
 	// Accepts nothing and returns nothing. Fully encapsulated dialog for service staff entry!
 	public static void menuOptionCreateServiceStaff() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| CREATE SERVICE STAFF RECORD                                         |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		// Get list of service staff who are yet to be assigned to a hotel
 		ArrayList<Staff> serviceStaffList = InformationProcessing.retrieveAllStaffNotAssignedToHotel();
@@ -954,9 +954,9 @@ public class MenuInformationProcessing {
 	}
 	
 	public static void menuOptionUpdateServiceStaff() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| UPDATE SERVICE STAFF RECORD                                         |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		
 		// Select a service staff record, null if none selected
@@ -1002,9 +1002,9 @@ public class MenuInformationProcessing {
 	}
 	
 	public static void menuOptionDeleteServiceStaff() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| DELETE SERVICE STAFF RECORD                                         |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		
 		// Select a service staff record, null if none selected
@@ -1045,9 +1045,9 @@ public class MenuInformationProcessing {
 	
 	
 	public static void menuOptionCreateRoomCategoriesServices() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| ASSIGN SERVICE TO ROOM CATEGORY                                     |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		// Get list of room categories
 		ArrayList<RoomCategories> roomCategoriesList = InformationProcessing.retrieveAllRoomCategories();
@@ -1085,9 +1085,9 @@ public class MenuInformationProcessing {
 	
 	
 	public static void menuOptionDeleteRoomCateogoriesServices() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| REMOVE SERVICE FROM ROOM CATEGORY                                   |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		
 		// Select a room categories services record, null if none selected
@@ -1135,9 +1135,9 @@ public class MenuInformationProcessing {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| STAYS                                                               |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Checkin");
                 System.out.println("2. Checkout");
@@ -1175,9 +1175,9 @@ public class MenuInformationProcessing {
 	
 	
 	public static void menuOptionReprintItemizedReceipt() {
-		System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| REPRINT ITEMIZED RECEIPT FOR STAY                                   |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		Stays stay = Stays.select();
 		
@@ -1295,9 +1295,9 @@ public class MenuInformationProcessing {
     
     
     public static void menuOptionCheckin() {
-    	System.out.println("|---------------------------------------------------------------------|");
+    	System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| CHECKIN                                                             |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
         Scanner scanner = new Scanner(System.in);
         
@@ -1396,9 +1396,9 @@ public class MenuInformationProcessing {
     }
     
     public static void menuOptionCheckout() {
-    	System.out.println("|---------------------------------------------------------------------|");
+    	System.out.println("+---------------------------------------------------------------------+");
 		System.out.println("| CHECKOUT                                                            |");
-		System.out.println("|---------------------------------------------------------------------|\n\n");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
 		
 		ArrayList<Stays> staysList = InformationProcessing.retrieveAllCheckedInStays();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staysList);		

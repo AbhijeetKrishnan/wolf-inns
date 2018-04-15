@@ -12,9 +12,9 @@ public class MenuMaintainServiceRecords {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| MAINTAINING SERVICE RECORDS                                         |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Services");
                 System.out.println("2. Service Records");
@@ -52,9 +52,9 @@ public class MenuMaintainServiceRecords {
             int choice;
             do {
                 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| SERVICES                                                            |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
                 
                 System.out.println("1. Create a service");
                 System.out.println("2. Update a service");
@@ -162,9 +162,9 @@ private static void menuServiceRecordsMain() {
             int choice;
             do {
 
-                System.out.println("|---------------------------------------------------------------------|");
+                System.out.println("+---------------------------------------------------------------------+");
                 System.out.println("| SERVICE RECORDS                                                     |");
-                System.out.println("|---------------------------------------------------------------------|\n\n");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
 
                 System.out.println("1. Create a service record");
                 System.out.println("2. Update a service record");
@@ -199,18 +199,18 @@ private static void menuServiceRecordsMain() {
     }
 
     private static void menuOptionCreateServiceRecord() {
-        System.out.println("|---------------------------------------------------------------------|");
+        System.out.println("+---------------------------------------------------------------------+");
         System.out.println("| CREATE SERVICE RECORD                                               |");
-        System.out.println("|---------------------------------------------------------------------|\n\n");
+        System.out.println("+---------------------------------------------------------------------+\n\n");
         Scanner scanner = new Scanner(System.in);
         //int stayId, String serviceCode, int staffId, String serviceDate, String serviceTime
-        String[] field = {"stayId", "serviceCode", "staffId", "serviceDate", "serviceTime"};
+        String[] field = {"Stay Id", "Service Code", "Staff Id", "Service Date", "Service Time"};
         String[] response = new String[field.length];
         for (int i = 0; i < field.length; i++) {
             System.out.println("Hotel " + field[i]);
-            System.out.println("===> ");
+            System.out.print("===> ");
             while (!scanner.hasNextLine()) {
-                System.out.println("===> ");
+                System.out.print("===> ");
             }
             response[i] = scanner.nextLine();
         }
@@ -224,16 +224,16 @@ private static void menuServiceRecordsMain() {
     }
 
     private static void menuOptionUpdateServiceRecord() {
-        System.out.println("|---------------------------------------------------------------------|");
-        System.out.println("| UPDATE ServiceRecords RECORD                                        |");
-        System.out.println("|---------------------------------------------------------------------|\n\n");
+        System.out.println("+---------------------------------------------------------------------+");
+        System.out.println("| UPDATE SERVICE RECORD                                               |");
+        System.out.println("+---------------------------------------------------------------------+\n\n");
         ServiceRecords h = ServiceRecords.select();
         if (null == h) {
             System.out.println("No record was selected.");
         } else {
             Scanner scanner = new Scanner(System.in);
 
-            String[] field = {"stayId", "serviceCode", "staffId", "serviceDate", "serviceTime"};
+            String[] field = {"Stay Id", "Service Code", "Staff Id", "Service Date", "Service Time"};
             String[] current = {Integer.toString(h.getStayId()),
                 h.getServiceCode(), Integer.toString(h.getStaffId()), h.getServiceDate(),
                 h.getServiceTime()};
@@ -248,14 +248,14 @@ private static void menuServiceRecordsMain() {
                 do {
                     System.out.print("===> ");
                     while (!scanner.hasNextLine()) {
-                        System.out.println("===> ");
+                        System.out.print("===> ");
                     }
                     response = scanner.nextLine();
                 } while (!response.equals("Y") && !response.equals("N"));
                 if (response.equals("Y")) {
                     System.out.print("===> ");
                     while (!scanner.hasNextLine()) {
-                        System.out.println("===> ");
+                        System.out.print("===> ");
                     }
                     update[i] = scanner.nextLine();
                 }
@@ -276,36 +276,33 @@ private static void menuServiceRecordsMain() {
 
     private static void menuOptionListServicesDuringAStay() {
 
-        System.out.println("|---------------------------------------------------------------------|");
-        System.out.println("| LIST ServiceRecords DURING A STAY                                 |");
-        System.out.println("|---------------------------------------------------------------------|\n\n");
+        System.out.println("+---------------------------------------------------------------------+");
+        System.out.println("| LIST SERVICE RECORDS DURING A STAY                                  |");
+        System.out.println("+---------------------------------------------------------------------+\n\n");
         //String s = "|stayId   " + "| serviceCode " + "| staffId " + "|serviceDate " + "| serviceTime";
         String s = String.format("|%-12s|%-12s|%-12s|%-12s|%-12s|","stayId", "serviceCode" , "staffId" ,"serviceDate" , "serviceTime");
         String div = new String(new char[s.length()]).replace("\0", "-");
-        int stayId;
-        System.out.println("Enter 1 after ===> if you want to continue "); // this is for the bug!
-        ServiceRecords h = ServiceRecords.select();
-        System.out.println("Enter the stayId? ");
         
-        ArrayList<ServiceRecords> result = new ArrayList<ServiceRecords>();
-
-        Scanner scanner = new Scanner(System.in);
-        stayId = scanner.nextInt();
-
-        result = MaintainingServiceRecords.retrieveServiceRecordsForStay(stayId);
-        if (result == null) {
-            System.out.println("No record was selected.");
-        } else {
-            System.out.println(div);
-            System.out.println(s);
-            System.out.println(div);
-            
-            for (ServiceRecords sr : result) {
-                System.out.println(sr);
-            }
-            System.out.println(div);
-            System.out.println("Records printed successfully.\n\n");
-        }
+        System.out.println("Select a stay to view service records for.");
+        Stays stay = Stays.select();
+        if (null == stay) {
+			System.out.println("No record was selected.");
+		} else {
+	        ArrayList<ServiceRecords> result = MaintainingServiceRecords.retrieveServiceRecordsForStay(stay.getStayId());
+	        if (result == null) {
+	            System.out.println("No record was selected.");
+	        } else {
+	            System.out.println(div);
+	            System.out.println(s);
+	            System.out.println(div);
+	            
+	            for (ServiceRecords sr : result) {
+	                System.out.println(sr);
+	            }
+	            System.out.println(div);
+	            System.out.println("Records printed successfully.\n\n");
+	        }
+		}
     }	
 	
 	
