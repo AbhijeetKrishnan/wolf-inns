@@ -250,7 +250,7 @@ public class InformationProcessing {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					RoomCategoriesServices roomCategoriesServices = new RoomCategoriesServices();
 
@@ -727,7 +727,7 @@ public static ArrayList<Stays> retrieveAllCheckedInStays() {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					Hotels hotel = new Hotels();
 
@@ -965,7 +965,7 @@ public static ArrayList<Stays> retrieveAllCheckedInStays() {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					Staff staff = new Staff();
 
@@ -1015,7 +1015,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					Staff staff = new Staff();
 
@@ -1234,7 +1234,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					Customers c = new Customers();
 
@@ -1632,7 +1632,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					ServiceStaff serviceStaff = new ServiceStaff();
 
@@ -2109,7 +2109,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					JobTitles jtitle = new JobTitles();
 					jtitle.setTitleCode(results.getString("titleCode"));
@@ -2337,7 +2337,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			results.last();
 			int rowsAffected = results.getRow();
 			if (rowsAffected > 0) {
-				results.first();
+				results.beforeFirst();
 				while (results.next()) {
 					Departments dept = new Departments();
 					dept.setDeptCode(results.getString("deptCode"));
