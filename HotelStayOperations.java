@@ -385,7 +385,7 @@ public class HotelStayOperations {
 			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
 			
 			// Check for presidential suite
-			if (room.getCategoryCode() == "PRES") {
+			if (room.getCategoryCode().equals("PRES")) {
 				// Retrieve available catering staff
 				ArrayList<ServiceStaff> cateringStaff = retrieveAvailableCateringStaff(hotelId);
 				if (null == cateringStaff && cateringStaff.size() > 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
@@ -446,7 +446,7 @@ public class HotelStayOperations {
 			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
 			
 			// Check for presidential suite
-			if (room.getCategoryCode() == "PRES") {
+			if (room.getCategoryCode().equals("PRES")) {
 				// Unassign dedicated staff for presidential suite
 				if (!unassignDedicatedPresidentialSuiteStaff(stay.getHotelId(), stay.getRoomNumber(), connection)) {
 					throw new SQLException("Error seems to have occured. Check the logs.");
