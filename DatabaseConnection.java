@@ -47,7 +47,7 @@ public class DatabaseConnection {
 			// Create a list of all columns to be used as the keys in the HashMap rows
 			ArrayList<String> columns = new ArrayList<String>();
 			for (int i = 1; i <= metaData.getColumnCount(); i++) {
-				columns.add(metaData.getColumnName(i));
+				columns.add(metaData.getColumnLabel(i));
 			}
 			
 			while (results.next()) {
