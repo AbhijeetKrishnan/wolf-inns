@@ -26,69 +26,55 @@ public class DatabaseConnection {
 	}
 	
 	/**
-     * This method executes a select query and populates each row into a
-     * LinkedHashMap which is added to ArrayList to be processed by the calling
-     * method.
-     *
-     * @param sqlStatement String A fully formed SQL SELECT query
-     * @return ArrayList<LinkedHashMap<String, String>> A data structure to
-     * contain variably sized results of the SQL SELECT
-     */
-    public static ArrayList<LinkedHashMap<String, String>> resultsToHashMap(
-            String sqlStatement) {
-        ArrayList<LinkedHashMap<String, String>> queryResults = new ArrayList<LinkedHashMap<String, String>>();
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet results = null;
-        ResultSetMetaData metaData = null;
+	 * This method executes a select query and populates each row into a LinkedHashMap which is added to ArrayList
+	 * to be processed by the calling method.
+	 * @param sqlStatement String A fully formed SQL SELECT query
+	 * @return ArrayList<LinkedHashMap<String, String>> A data structure to contain variably sized results of the SQL SELECT
+	 */
+	public static ArrayList<LinkedHashMap<String, String>> resultsToHashMap(String sqlStatement) {
+		ArrayList<LinkedHashMap<String, String>> queryResults = new ArrayList<LinkedHashMap<String, String>>();
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+		ResultSetMetaData metaData = null;
 
-        try {
-            connection = DatabaseConnection.getConnection();
-            statement = connection.createStatement();
-            results = statement.executeQuery(sqlStatement);
-
-            metaData = results.getMetaData();
-
-            // Create a list of all columns to be used as the keys in the HashMap rows
-            ArrayList<String> columns = new ArrayList<String>();
-            for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                columns.add(metaData.getColumnName(i));
-            }
-
-            if (!results.next()) {
-                System.out.println("|---------------------------------|");
-                System.out.println("| Sorry, No records Found!        |");
-                System.out.println("|---------------------------------|\n\n");
-            } else {
-
-                while (results.next()) {
-                    LinkedHashMap<String, String> row = new LinkedHashMap<String, String>(metaData.getColumnCount());
-                    for (String column : columns) {
-                        row.put(column, results.getString(column));
-                    }
-                    queryResults.add(row);
-                }
-            }
-
-        } catch (SQLException ex) {
-            // Log and return null
-            ex.printStackTrace();
-        } finally {
-            // Attempt to close all resources, ignore failures.
-            try {
-                results.close();
-            } catch (Exception ex) {
-            };
-            try {
-                statement.close();
-            } catch (Exception ex) {
-            };
-            try {
-                connection.close();
-            } catch (Exception ex) {
-            };
-        }
-
-        return queryResults;
-    }
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			results = statement.executeQuery(sqlStatement);
+			metaData = results.getMetaData();
+			
+			// Create a list of all columns to be used as the keys in the HashMap rows
+			ArrayList<String> columns = new ArrayList<String>();
+			for (int i = 1; i <= metaData.getColumnCount(); i++) {
+				columns.add(metaData.getColumnName(i));
+			}
+			
+			while (results.next()) {
+				LinkedHashMap<String, String> row = new LinkedHashMap<String, String>(metaData.getColumnCount());
+				for (String column : columns) {
+					row.put(column,  results.getString(column));
+				}
+				
+				queryResults.add(row);
+			}
+			
+			if (queryResults.size() == 0) {
+				System.out.println("No records were found.");
+			    return null;
+			} else {
+				return queryResults;
+			}			
+				
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+	}
 }

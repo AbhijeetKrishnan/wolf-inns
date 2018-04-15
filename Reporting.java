@@ -14,24 +14,28 @@ public class Reporting {
 	 * database and then uses other methods to print the results in an ASCII-based tabular format.
 	 */
 	public static void occupancyByHotel() {
-		String sqlStatement = "SELECT name, COALESCE(occupied_rooms, 0) AS total_occupancy, (COALESCE(occupied_rooms/total_rooms, 0)*100) AS percentage_occupied " + 
+		String sqlStatement = "SELECT name AS Name, COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms/total_rooms, 0)*100) AS \"Percentage Occupied\" " + 
 		"FROM (SELECT hotelId, COUNT(*) AS occupied_rooms FROM stays WHERE checkoutDate IS NULL GROUP BY hotelId) AS occ " + 
 		"RIGHT JOIN (SELECT rooms.hotelId, name, COUNT(roomNumber) AS total_rooms FROM rooms RIGHT JOIN hotels ON rooms.hotelId=hotels.hotelId GROUP BY hotelId) AS avail ON occ.hotelId=avail.hotelId;";
 
 		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
 		
-		easyReport(queryResults);
+		if (null != queryResults) {
+			easyReport(queryResults);
+		}
 	}
 	
 	public static void occupancyByRoomType() {
-		String sqlStatement = "SELECT categoryDesc AS \"Room Category\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS \"Percentage Occupied\" " +
+		String sqlStatement = "SELECT categoryDesc AS \"Room Type\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS \"Percentage Occupied\" " +
             "FROM (SELECT  categoryCode, COUNT(stayId) AS occupied_rooms FROM rooms NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY categoryCode) AS occ " +
             "RIGHT JOIN (SELECT rooms.categoryCode, COUNT(roomNumber) AS total_rooms, room_categories.categoryDesc FROM rooms RIGHT JOIN room_categories " +
             "ON rooms.categoryCode=room_categories.categoryCode GROUP BY categoryCode) AS avail ON occ.categoryCode=avail.categoryCode;";
 		
 		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
 		
-		easyReport(queryResults);
+		if (null != queryResults) {
+			easyReport(queryResults);
+		}
 	}
 	
 	/**
@@ -82,7 +86,7 @@ public class Reporting {
 	public static void occupancyByDateRange(String beginDate, String endDate) {
 		
 		String sqlStatement = 
-              "SELECT total_occupancy, (total_occupancy/total_rooms) AS percentage_occupied\n"
+              "SELECT total_occupancy AS \"Total Occupancy\", (total_occupancy/total_rooms) AS \"Percentage Occupied\"\n"
             + "FROM\n"
             + "(\n"
 			+   "SELECT (COUNT(roomNumber)*(DATEDIFF('" + endDate + "', '" + beginDate + "')+1)) AS total_rooms FROM rooms\n"
@@ -123,7 +127,10 @@ public class Reporting {
 			+ ") AS occ";
             		
 		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
-		easyReport(queryResults);
+		
+		if (null != queryResults) {
+			easyReport(queryResults);
+		}
 	}
 	
 	/**
@@ -131,26 +138,30 @@ public class Reporting {
 	 */
 	public static void occupancyByCity() {
 		
-		String sqlStatement = "SELECT avail.city, avail.state, COALESCE(occupied_rooms, 0) AS total_occupancy, (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS percentage_occupied "
+		String sqlStatement = "SELECT avail.city AS \"Hotel City\", avail.state AS \"Hotel State\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms/total_rooms, 0)*100) AS \"Percentage Occupied\" "
 			+ "FROM (SELECT  city, state, COUNT(stayId) AS occupied_rooms FROM hotels NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY city, state) AS occ "
 			+ "RIGHT JOIN (SELECT city, state, COUNT(roomNumber) AS total_rooms FROM hotels NATURAL JOIN rooms GROUP BY city, state) AS avail "
 			+ "ON occ.city=avail.city AND occ.state=avail.state ORDER BY avail.state, avail.city";
 		
 		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
 		
-		easyReport(queryResults);
+		if (null != queryResults) {
+			easyReport(queryResults);
+		}
 	}
 	
 	
 	
 	public static void reportStaffInformationByTitle() {
 		
-		String sqlStatement = "SELECT staffId, name, titleDesc, deptDesc, address, city, state, phone, DOB " +
+		String sqlStatement = "SELECT staffId AS \"Staff Id\", name AS Name, titleDesc AS \"Job Title\", deptDesc AS Department, address AS Address, city AS City, state AS State, phone AS Phone, DOB " +
 				" FROM (staff NATURAL JOIN job_titles) NATURAL JOIN departments ORDER BY titleCode, staffId;";
 		
 		ArrayList<LinkedHashMap<String,String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
 		
-		easyReport(queryResults);
+		if (null != queryResults) {
+			easyReport(queryResults);
+		}		
 	}
 	
 
@@ -164,102 +175,43 @@ public class Reporting {
      */
     public static void reportStayStaff(int stayId) {
         String stID = Integer.toString(stayId);
-        System.out.println("list of all staff personals who served a customer on Stay with ID =" + stayId + "\n\n");
-        String sqlStatement = String.format("SELECT staffId, name, titleDesc, deptDesc, address, city, state, phone, DOB\n"
-                + "FROM staff INNER JOIN job_titles ON staff.titleCode=job_titles.titleCode\n"
-                + "NATURAL JOIN departments NATURAL JOIN service_records WHERE service_records.stayId = \"%s\";", stID);
+        
+        String sqlStatement = "SELECT staffId AS \"Staff Id\", name AS Name, titleDesc AS \"Job Title\", deptDesc AS Department, address AS Address, city AS City, state AS State, phone AS Phone, DOB "
+                + " FROM staff INNER JOIN job_titles ON staff.titleCode=job_titles.titleCode"
+                + " NATURAL JOIN departments NATURAL JOIN service_records WHERE service_records.stayId = \""
+                + stID + "\";";
+ 
+        ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
 
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet results = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            statement = connection.prepareStatement(sqlStatement);
-
-            results = statement.executeQuery();
-            ResultSetMetaData rsMetaData = results.getMetaData();
-            int numberOfColumns = rsMetaData.getColumnCount();
-            StringBuilder sb = new StringBuilder();
-            //System.out.println("A list of Staff ordered by their role:\n ");
-            int width = 13;
-            for (int i = 1; i <= numberOfColumns; i++) {
-
-                sb.append(String.format("| %" + width + "s", rsMetaData.getColumnLabel(i)));
-            }
-            String str = "-";
-
-            String divider = new String(new char[sb.length() + 1]).replace("\0", str);
-            System.out.println(divider);
-            System.out.println(sb + "|");
-            System.out.println(divider);
-            if (!results.next()) {                            
-                System.out.println("------------------------------------");
-                System.out.println("| Sorry, No records Found!         |");
-                System.out.println("------------------------------------\n\n");
-
-            } else {
-                while (results.next()) {
-                    for (int i = 1; i <= numberOfColumns; i++) {
-                        //width = rsMetaData.getColumnDisplaySize(i);
-                        String columnValue = results.getString(i);
-                        System.out.printf("|%" + width + "s ", columnValue);
-                    }
-                    System.out.println("|");
-                }
-                System.out.println(divider);
-            }
-
-            //return depts;
-        } catch (SQLException ex) {
-            // Log and return null
-            ex.printStackTrace();
-            //return null;
-        } finally {
-            // Attempt to close all resources, ignore failures.
-            if (results != null) {
-                try {
-                    results.close();
-                } catch (Exception ex) {
-                };
-            }
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException ex) {
-                }
-                ;
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (Exception ex) {
-                }
-            }
-        }
-
+        if (null != queryResults) {
+			easyReport(queryResults);
+		}
     }
+    
     
 
     /**
      * Return total revenue earned in the period between startDate and endDate
      * for a given hotel
      *
-     * @param hotelId
+     * @param hotelId2
      * @param startDate
      * @param endDate
      */
     public static void reportRevenue(int hotelId, String startDate, String endDate) {
-        System.out.print("total revenue earned in the period between startDate and endDate" + "\n\n");
-        String sqlStatement = "SELECT SUM(totalCharges) AS rev FROM stays NATURAL JOIN billing_info "
+        System.out.print("Total revenue earned in the period between" + startDate + " and " + endDate + "\n");
+        String sqlStatement = "SELECT SUM(totalCharges) AS \"Revenue $\" FROM stays NATURAL JOIN billing_info "
                 + "WHERE (checkoutDate BETWEEN \""
                 + startDate
                 + "\" AND \""
                 + endDate
                 + "\") AND hotelId=\"" + hotelId + "\";";
-        System.out.println(sqlStatement);
+        
         ArrayList<LinkedHashMap<String, String>> queryResults = DatabaseConnection.resultsToHashMap(sqlStatement);
-        easyReport(queryResults);
 
+        if (null != queryResults) {
+			easyReport(queryResults);
+		}
     }
 	
     public static void printItemizedReceipt(String[] headers, ArrayList<ArrayList<String>> receiptData) {
