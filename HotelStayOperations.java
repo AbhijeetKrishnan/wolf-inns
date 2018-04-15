@@ -432,10 +432,10 @@ public class HotelStayOperations {
 			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, false, connection);	
 			if (null == serviceRecord) {throw new SQLException("Error seems to have occured. Check the logs.");}
 			
-			// Generate and print the itemized receipt
-			if(!generateItemizedReceipt(stay)) {throw new SQLException("Error seems to have occured. Check the logs.");}			
+			connection.commit();	
 			
-			connection.commit();			
+			// Generate and print the itemized receipt
+			if(!generateItemizedReceipt(stay)) {throw new SQLException("Error seems to have occured. Check the logs.");}					
 			
 			return true;
 			
@@ -473,13 +473,17 @@ public class HotelStayOperations {
 				Services service = InformationProcessing.retrieveService(record.getServiceCode());
 				if (null == service) {throw new SQLException("Error seems to have occured. Check the logs.");}
 				
-				sumOfCharges += service.getCharge();
-				
-				receiptRow = new ArrayList<String>();
-				receiptRow.add(record.getServiceDate());
-				receiptRow.add(service.getServiceDesc());
-				receiptRow.add(Double.toString(service.getCharge()));
-				itemizedCharges.add(receiptRow);
+				// Only add the service to the receipt if it was a legitimate charge (excludes checkin and checkout)
+			    if (!service.getServiceCode().equals("CKIN") && !service.getServiceCode().equals("CKOT")) {
+			    	
+					sumOfCharges += service.getCharge();
+					
+					receiptRow = new ArrayList<String>();
+					receiptRow.add(record.getServiceDate());
+					receiptRow.add(service.getServiceDesc());
+					receiptRow.add(Double.toString(service.getCharge()));
+					itemizedCharges.add(receiptRow);
+				}
 			}
 			
 			// Get room category information

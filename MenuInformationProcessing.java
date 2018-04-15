@@ -1152,7 +1152,7 @@ public class MenuInformationProcessing {
                         menuOptionCheckin();
                         break;
                     case 2:
-                        //menuOptionCheckout();
+                        menuOptionCheckout();
                         break;
                     case 3:
                         menuOptionReprintItemizedReceipt();
@@ -1393,5 +1393,25 @@ public class MenuInformationProcessing {
 		} else {
 			System.out.println("Customer successfully checked in.");
 		}	
+    }
+    
+    public static void menuOptionCheckout() {
+    	System.out.println("|---------------------------------------------------------------------|");
+		System.out.println("| CHECKOUT                                                            |");
+		System.out.println("|---------------------------------------------------------------------|\n\n");
+		
+		ArrayList<Stays> staysList = InformationProcessing.retrieveAllCheckedInStays();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staysList);		
+		Stays stay = (Stays)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		ServiceStaff servicingStaff = ServiceStaff.select();
+		
+		boolean checkoutResult = HotelStayOperations.checkoutStay(stay, servicingStaff.getStaffId());
+		
+		if (!checkoutResult) {
+			System.out.println("Something unexpected happened while attempting to checkout.");
+		} else {
+			System.out.println("Customer successfully checked in.");
+		}
     }
 }

@@ -415,10 +415,56 @@ public class InformationProcessing {
 	}
 	
 	
-public static ArrayList<Stays> retrieveAllStays() {
+    public static ArrayList<Stays> retrieveAllStays() {
 		
 		ArrayList<Stays> stays = new ArrayList<Stays>();
 		String sqlStatement = "SELECT * FROM stays";
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet results = null;
+
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			results = statement.executeQuery(sqlStatement);
+			
+			while (results.next()) {
+				Stays stay = new Stays();
+
+				stay.setStayId(results.getInt("stayId"));
+				stay.setHotelId(results.getInt("hotelId"));
+				stay.setRoomNumber(results.getString("roomNumber"));
+				stay.setCustomerId(results.getInt("customerId"));
+				stay.setNumOfGuests(results.getInt("numOfGuests"));
+				stay.setCheckinDate(results.getString("checkinDate"));
+				stay.setCheckinTime(results.getString("checkinTime"));
+				stay.setCheckoutDate(results.getString("checkoutDate"));
+				stay.setCheckoutTime(results.getString("checkoutTime"));
+				stay.setBillingId(results.getInt("billingId"));
+
+				stays.add(stay);
+			}
+			
+			return stays;
+				
+		} catch (SQLException ex) {
+			// Log and return null
+			ex.printStackTrace();
+			return null;
+		} finally {
+			// Attempt to close all resources, ignore failures.
+			try { results.close(); } catch (Exception ex) {};
+			try { statement.close(); } catch (Exception ex) {};
+			try { connection.close(); } catch (Exception ex) {};
+		}
+	}
+    
+    
+    
+public static ArrayList<Stays> retrieveAllCheckedInStays() {
+		
+		ArrayList<Stays> stays = new ArrayList<Stays>();
+		String sqlStatement = "SELECT * FROM stays WHERE checkoutDate IS NULL";
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet results = null;
