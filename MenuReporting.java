@@ -107,7 +107,8 @@ public class MenuReporting {
 		System.out.println("|---------------------------------------------------------------------|");
 		System.out.println("| STAFF INFORMATION ORDERED BY ROLE                                   |");
 		System.out.println("|---------------------------------------------------------------------|\n\n");
-		Reporting.reportStaffInformationByTitle();
+		//Reporting.reportStaffInformationByTitle();
+		Reporting.reportStaffInfoByTitle();
 	}
 
 	public static void menuReportStayStaffMain() {
