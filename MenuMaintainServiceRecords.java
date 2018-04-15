@@ -117,14 +117,12 @@ public class MenuMaintainServiceRecords {
             Scanner in = new Scanner(System.in);
             System.out.print("Old Service code: ");
             String osc = in.nextLine();
-            System.out.print("New Service code: ");
-            String nsc = in.nextLine();
             System.out.print("New Service description: ");
             String sd = in.nextLine();
             System.out.print("New Charge: ");
             double charge = Double.parseDouble(in.nextLine());
             
-            result = InformationProcessing.updateService(osc, nsc, sd, charge);
+            result = InformationProcessing.updateService(osc, sd, charge);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }

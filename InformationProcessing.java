@@ -1957,12 +1957,9 @@ public class InformationProcessing {
      * @param sd: the new serviceDescription
      * @return true on success, false on failure
      */
-	public static boolean updateService(String targetServiceCode,
-            String sc,
-            String sd,
-            double charge) {
+	public static boolean updateService(String targetServiceCode, String sd, double charge) {
 
-        String sqlStatement = "UPDATE services SET serviceCode =?, serviceDesc = ?, charge = ? WHERE serviceCode = ?;";
+        String sqlStatement = "UPDATE services SET serviceDesc = ?, charge = ? WHERE serviceCode = ?;";
         Connection connection = null;
         PreparedStatement pst = null;
         int rowsUpdated = -1;
@@ -1971,10 +1968,9 @@ public class InformationProcessing {
             connection = DatabaseConnection.getConnection();
             pst = connection.prepareStatement(sqlStatement);
 
-            pst.setString(1, sc);
-            pst.setString(2, sd);
-            pst.setDouble(3, charge);
-            pst.setString(4, targetServiceCode);
+            pst.setString(1, sd);
+            pst.setDouble(2, charge);
+            pst.setString(3, targetServiceCode);
             // process query results
             System.out.println("UPDATING Services Table of WollfInns Database:");
 
@@ -2201,19 +2197,16 @@ public class InformationProcessing {
      * @param jtDesc
      * @return true if updates takes place, otherwise false;
      */
-    public static boolean updateJobTitle(String targetJT,
-            String jtCode,
-            String jtDesc) {
-        String sqlStatement = "UPDATE job_titles SET titleCode = ?, titleDesc = ? WHERE titleCode = ?;";
+    public static boolean updateJobTitle(String targetJT, String jtDesc) {
+        String sqlStatement = "UPDATE job_titles SET titleDesc = ? WHERE titleCode = ?;";
         Connection connection = null;
         PreparedStatement pst = null;
         int rowsUpdated = -1;
         try {
             connection = DatabaseConnection.getConnection();
             pst = connection.prepareStatement(sqlStatement);
-            pst.setString(1, jtCode);
-            pst.setString(2, jtDesc);
-            pst.setString(3, targetJT);
+            pst.setString(1, jtDesc);
+            pst.setString(2, targetJT);
             // process query results
             System.out.println("Updating into job_titles Table of WollfInns Database:");
 
@@ -2422,10 +2415,8 @@ public class InformationProcessing {
      * @param dd department description
      * @return true on success, false on failure
      */
-    public static boolean updateDepartment(String dcTarget,
-            String dc,
-            String dd) {
-        String sqlStatement = "UPDATE departments SET deptCode =?, deptDesc = ? WHERE deptCode = ?;";
+    public static boolean updateDepartment(String dcTarget, String dd) {
+        String sqlStatement = "UPDATE departments SET deptDesc = ? WHERE deptCode = ?;";
         Connection connection = null;
         PreparedStatement pst = null;
         int rowsUpdated = -1;
@@ -2434,9 +2425,8 @@ public class InformationProcessing {
             connection = DatabaseConnection.getConnection();
             pst = connection.prepareStatement(sqlStatement);
 
-            pst.setString(1, dc);
-            pst.setString(2, dd);
-            pst.setString(3, dcTarget);
+            pst.setString(1, dd);
+            pst.setString(2, dcTarget);
             // process query results
             System.out.println("UPDATING department Table of WollfInns Database:");
 

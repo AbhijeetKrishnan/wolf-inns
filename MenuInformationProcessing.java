@@ -736,12 +736,10 @@ public class MenuInformationProcessing {
             Scanner in = new Scanner(System.in);
             System.out.print("Old Title code: ");
             String otc = in.nextLine();
-            System.out.print("New Title code: ");
-            String ntc = in.nextLine();
             System.out.print("New Title description: ");
             String td = in.nextLine();
             
-            result = InformationProcessing.updateJobTitle(otc, ntc, td);
+            result = InformationProcessing.updateJobTitle(otc, td);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
@@ -1303,12 +1301,10 @@ public class MenuInformationProcessing {
             Scanner in = new Scanner(System.in);
             System.out.print("Old department code: ");
             String otc = in.nextLine();
-            System.out.print("New department code: ");
-            String ntc = in.nextLine();
             System.out.print("New department description: ");
             String td = in.nextLine();
 
-            result = InformationProcessing.updateDepartment(otc, ntc, td);
+            result = InformationProcessing.updateDepartment(otc, td);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
