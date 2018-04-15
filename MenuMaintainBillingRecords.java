@@ -143,15 +143,15 @@ public class MenuMaintainBillingRecords {
 				String response = "";
 				do {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
-						System.out.println("===> ");
+					while (!scanner.hasNext()) {
+						System.out.print("===> ");
 					}
 					response = scanner.nextLine();
 				} while (!response.equals("Y") && !response.equals("N"));
 				if (response.equals("Y")) {
 					System.out.print("===> ");
-					while (!scanner.hasNextLine()) {
-						System.out.println("===> ");
+					while (!scanner.hasNext()) {
+						System.out.print("===> ");
 					}
 					update[i] = scanner.nextLine();
 				}
@@ -184,7 +184,7 @@ public class MenuMaintainBillingRecords {
 		String response = "";
 		do {
 			System.out.print("===> ");
-			while (!scanner.hasNextLine()) {
+			while (!scanner.hasNext()) {
 				System.out.print("===> ");
 			}
 			response = scanner.nextLine();
@@ -230,7 +230,7 @@ public class MenuMaintainBillingRecords {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();
@@ -273,7 +273,7 @@ public class MenuMaintainBillingRecords {
 			String response = "";
 			do {
 				System.out.print("===> ");
-				while (!scanner.hasNextLine()) {
+				while (!scanner.hasNext()) {
 					System.out.print("===> ");
 				}
 				response = scanner.nextLine();

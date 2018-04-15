@@ -209,7 +209,7 @@ private static void menuServiceRecordsMain() {
         for (int i = 0; i < field.length; i++) {
             System.out.println("Hotel " + field[i]);
             System.out.print("===> ");
-            while (!scanner.hasNextLine()) {
+            while (!scanner.hasNext()) {
                 System.out.print("===> ");
             }
             response[i] = scanner.nextLine();
@@ -247,14 +247,14 @@ private static void menuServiceRecordsMain() {
                 String response = "";
                 do {
                     System.out.print("===> ");
-                    while (!scanner.hasNextLine()) {
+                    while (!scanner.hasNext()) {
                         System.out.print("===> ");
                     }
                     response = scanner.nextLine();
                 } while (!response.equals("Y") && !response.equals("N"));
                 if (response.equals("Y")) {
                     System.out.print("===> ");
-                    while (!scanner.hasNextLine()) {
+                    while (!scanner.hasNext()) {
                         System.out.print("===> ");
                     }
                     update[i] = scanner.nextLine();
