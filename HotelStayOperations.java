@@ -349,6 +349,7 @@ public class HotelStayOperations {
 			
 			// Create the billing record
 			BillingInfo billingInfo = MaintainBillingRecords.createBillingInfo(responsiblePartySSN, address, city, state, payMethodCode, cardNumber, connection);
+			if (null == billingInfo) {throw new SQLException("Error seems to have occured. Check the logs.");}
 			
 			// Create the stays record
 			Stays stay = InformationProcessing.createStay(hotelId, roomNumber, customerId, numOfGuests, billingInfo.getBillingId(), connection);
