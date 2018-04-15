@@ -63,6 +63,9 @@ public class Hotels extends DatabaseObject {
                         managerId==h.managerId);
 	}	
 	
+    /**
+     * Return array list of field values of object
+     */
 	public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
@@ -78,6 +81,9 @@ public class Hotels extends DatabaseObject {
 		return fieldValues;		
 	}
 	
+    /**
+     * Return array list of field names of class
+     */
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
@@ -93,7 +99,9 @@ public class Hotels extends DatabaseObject {
 		return fieldNames;			
 	}
 	
-	
+	/**
+     * Return an object
+     */
 	public static Hotels select() {
 		ArrayList<Hotels> hotelList = InformationProcessing.retrieveAllHotels();
 		System.out.println(hotelList.get(0).toStringArrayList().toString());

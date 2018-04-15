@@ -221,6 +221,11 @@ public class HotelStayOperations {
 		}
 	}
 
+    /**
+     * Return a list of room service staff which can be assigned to a Presidential Suite
+     * @param hotelId: the hotel ID which the staff are assigned to
+     * @return an ArrayList of available ServiceStaff
+     */
 	public static ArrayList<ServiceStaff> retrieveAvailableRoomServiceStaff(int hotelId) {
 		String sqlStatement = "SELECT staffId, hotelId FROM service_staff WHERE hotelId=? AND staffId IN (SELECT staffId FROM staff WHERE titleCode=?) AND staffId NOT IN (SELECT roomServiceStaffId FROM occupied_presidential_suite WHERE hotelId=?)";
 		Connection connection = null;
@@ -298,7 +303,12 @@ public class HotelStayOperations {
 		}
     }
   
-  
+    /**
+     * Update the checkout date and time of a stay record
+     * @param stayId
+     * @param connection: represents a DB connection object to implement transaction
+     * @return true on success, false on failure
+     */
     public static boolean updateStayCheckoutDateTime(int stayId, Connection connection) {
 		
 		String sqlStatement = "UPDATE stays SET checkoutDate=?, checkoutTime=? WHERE stayId=?";
@@ -336,6 +346,21 @@ public class HotelStayOperations {
 		}
 	}
     
+    /**
+     * Check-in a guest by creating a new stay record
+     * @param hotelId
+     * @param roomNumber
+     * @param customerId
+     * @param numOfGuests
+     * @param servicingStaffId
+     * @param responsiblePartySSN
+     * @param address
+     * @param city
+     * @param state
+     * @param payMethodCode
+     * @param cardNumber
+     * @return true on success, false on failure
+     */
     public static boolean checkinStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int servicingStaffId, String responsiblePartySSN, String address, String city, String state, String payMethodCode, String cardNumber) {
 		
 		Connection connection = null;
@@ -396,6 +421,12 @@ public class HotelStayOperations {
 		}
 	}
     
+    /**
+     * Checkout a stay by updating a stay record's checkout date and time
+     * @param stay
+     * @param servicingStaffId
+     * @return true on success, false on failure
+     */
     public static boolean checkoutStay(Stays stay, int servicingStaffId) {
 		
 		Connection connection = null;
@@ -450,6 +481,11 @@ public class HotelStayOperations {
 		}
 	}
     
+    /**
+     * Generate receipt for stay
+     * @param stay
+     * @return true on success, false on failure
+     */
     public static boolean generateItemizedReceipt(Stays stay) {
  
     	try {			

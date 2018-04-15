@@ -84,8 +84,11 @@ public class InformationProcessing {
 		return roomCategories;
 	}
 	
-	
-	
+	/**
+     * Retrieve room category by category code
+     * @param categoryCode
+     * @return the required RoomCategories object representing the record
+     */
 	public static RoomCategories retrieveRoomCategory(String categoryCode) {
 		RoomCategories roomCategory = new RoomCategories();
 		String sqlStatement = "SELECT categoryCode, categoryDesc FROM room_categories WHERE categoryCode = ?;";
@@ -234,7 +237,10 @@ public class InformationProcessing {
 		}
 	}	
 	
-	
+	/**
+     * Retrieve all roomCategoriesServices records from the database
+     * @return an ArrayList containing the required RoomCategoriesServices objects
+     */
     public static ArrayList<RoomCategoriesServices> retrieveAllRoomCategoriesServices() {
 		
 		ArrayList<RoomCategoriesServices> roomCategoriesServicesList = new ArrayList<RoomCategoriesServices>();
@@ -277,7 +283,11 @@ public class InformationProcessing {
 		}
 	}
     
-    
+    /**
+     * Delete a roomCategoriesServices records from the database
+     * @param roomCategoriesServices object representing the record to be deleted
+     * @return true on success, false on failure
+     */
     public static boolean deleteRoomCategoriesServices(RoomCategoriesServices roomCategoriesServices) {
 		
 		String sqlStatement = "DELETE FROM room_categories_services WHERE categoryCode=? AND serviceCode=?";
@@ -308,7 +318,16 @@ public class InformationProcessing {
 		}
 	}
 
-	
+	/**
+     * Create a stay record
+     * @param hotelId
+     * @param roomNumber
+     * @param customerId
+     * @param numOfGuests
+     * @param billingId
+     * @param connection representing a DB connection object to implement transactions
+     * @return Stay object representing the newly created record
+     */
 	public static Stays createStay(int hotelId, String roomNumber, int customerId, int numOfGuests, int billingId, Connection connection) {
 		String sqlStatement = "INSERT INTO stays (hotelId, roomNumber, customerId, numOfGuests, checkinDate, checkinTime, checkoutDate, checkoutTime, billingId) VALUES(?, ?, ?, ?, ?, ?, NULL, NULL, ?);";
 		PreparedStatement statement = null;
@@ -332,8 +351,6 @@ public class InformationProcessing {
 			statement.setString(6, checkinTime);
 			statement.setInt(7, billingId);			
 			int rowsAffected = statement.executeUpdate();
-			
-			
 			
 			// A single row should have been inserted
 			if (1==rowsAffected) {
@@ -367,6 +384,11 @@ public class InformationProcessing {
 		}
 	}
 	
+    /**
+     * Retrieve a stays record
+     * @param stayId
+     * @return the required Stays object
+     */
 	public static Stays retrieveStay(int stayId) {
 		Stays stay = new Stays();
 		String sqlStatement = "SELECT hotelId, roomNumber, customerId, numOfGuests, checkinDate, checkinTime, checkoutDate, checkoutTime, billingId FROM stays WHERE stayId = ?;";
@@ -414,7 +436,10 @@ public class InformationProcessing {
 		return stay;
 	}
 	
-	
+	/**
+     * Retrieve all stays records in the database
+     * @return ArrayList of Stays objects representing all the records in the DB
+     */
     public static ArrayList<Stays> retrieveAllStays() {
 		
 		ArrayList<Stays> stays = new ArrayList<Stays>();
@@ -460,8 +485,11 @@ public class InformationProcessing {
 	}
     
     
-    
-public static ArrayList<Stays> retrieveAllCheckedInStays() {
+    /**
+     * Retrieve a list of all checked-in stays
+     * @return an ArrayList of Stays in which each object represents a checked-in stay in the DB
+     */
+    public static ArrayList<Stays> retrieveAllCheckedInStays() {
 		
 		ArrayList<Stays> stays = new ArrayList<Stays>();
 		String sqlStatement = "SELECT * FROM stays WHERE checkoutDate IS NULL";
@@ -712,6 +740,10 @@ public static ArrayList<Stays> retrieveAllCheckedInStays() {
 		}
 	}
 	
+    /**
+     * Retrieve a list of all hotels records in the database
+     * @return an ArrayList of Hotels objects
+     */
     public static ArrayList<Hotels> retrieveAllHotels() {
 		
 		ArrayList<Hotels> hotelList = new ArrayList<Hotels>();
@@ -949,7 +981,10 @@ public static ArrayList<Stays> retrieveAllCheckedInStays() {
 		}
 	}
 	
-	
+	/**
+     * Retrieve all staff records
+     * @return ArrayList of Staff objects
+     */
     public static ArrayList<Staff> retrieveAllStaff() {
 		
 		ArrayList<Staff> staffList = new ArrayList<Staff>();
@@ -999,8 +1034,11 @@ public static ArrayList<Stays> retrieveAllCheckedInStays() {
 		}
 	}
     
-    
-public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
+    /**
+     * Retrieve a list of all staff not assigned to any hotel
+     * @return ArrayList of Staff objects
+     */
+    public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		
 		ArrayList<Staff> staffList = new ArrayList<Staff>();
 		String sqlStatement = "SELECT staffId, name, titleCode, deptCode, address, city, state, phone, dob FROM staff WHERE titleCode NOT IN ('CEO', 'MNGR') AND staffId NOT IN (SELECT staffId FROM service_staff);";
@@ -1048,8 +1086,6 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 			if (connection != null) { try { connection.close(); } catch (Exception ex) {}; }
 		}
 	}
-
-    
 
 	/**
 	 * Update a staff member record in the database with new field values
@@ -1219,6 +1255,10 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		return customer;
 	}
 
+    /**
+     * Retrieve a list of all customers records
+     * @return ArrayList of Customers objects
+     */
     public static ArrayList<Customers> retrieveAllCustomers() {
 		
 		ArrayList<Customers> customerList = new ArrayList<Customers>();
@@ -1422,6 +1462,10 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		return room;
 	}
 	
+    /**
+     * Retrieve a list of all rooms
+     * @return ArrayList of Rooms objects
+     */
     public static ArrayList<Rooms> retrieveAllRooms() {
 		
 		ArrayList<Rooms> rooms = new ArrayList<Rooms>();
@@ -1733,7 +1777,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	}
 
     /**
-     * Creates a table of services ( schema)
+     * Creates a table of services
      *
      * @param sc
      * @param sd
@@ -1793,8 +1837,8 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
     }
 
     /**
-     *
-     * @return
+     * Retrieve a list of all services records
+     * @return ArrayList of Services objects
      */
     public static ArrayList<Services> retrieveServices() {
 
@@ -1858,7 +1902,11 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 
     }
     
-    
+    /**
+     * Retrieve a single service by serviceCode
+     * @param serviceCode
+     * @return Services object
+     */
     public static Services retrieveService(String serviceCode) {
     	Services service = new Services();
 		String sqlStatement = "SELECT serviceCode, serviceDesc, charge FROM services WHERE serviceCode = ?;";
@@ -1902,7 +1950,13 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 		}		
 	}
     
-	
+	/**
+     * Update a services record
+     * @param targetServiceCode: the original serviceCode of the record to be updated
+     * @param sc: the new serviceCode
+     * @param sd: the new serviceDescription
+     * @return true on success, false on failure
+     */
 	public static boolean updateService(String targetServiceCode,
             String sc,
             String sd,
@@ -1944,7 +1998,11 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
         return rowsUpdated > 0;
     }
 	
-    
+    /**
+     * Delete a service record
+     * @param sc: serviceCode of the record to be deleted
+     * @return true on success, false on failure
+     */
     public static boolean deleteService(String sc) {
 
         String sqlStatement = "Delete FROM services where serviceCode = ?;";
@@ -1985,10 +2043,10 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
     
 
     /**
-     *
-     * @param titleCode
-     * @param titleDesc
-     * @return
+     * Create a new job_title record
+     * @param tc: the titleCode of the record to be inserted
+     * @param td: the titleDescription 
+     * @return true on success, false on failure
      */
     public static boolean createJobTitle(String tc, String td) {
         String sqlStatement = "INSERT INTO job_titles (titleCode,titleDesc) VALUES (?,?);";
@@ -2031,11 +2089,12 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
     }
 
 	/**
-     *
+     * Retrieve a single job_titles record
+     * @param jtc: jobTitleCode
      * @return job title record given the title in WolfInns.
      */
     public static JobTitles retrieveJobTitle(String jtc) {
-        String sqlStatement = "SELECT * FROM job_titles;";
+        String sqlStatement = "SELECT * FROM job_titles WHERE titleCode = ?;";
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet results = null;
@@ -2053,7 +2112,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
                 jTitle.setTitleCode(results.getString("titleCode"));
                 jTitle.setTitleDesc(results.getString("titleDesc"));
 
-                System.out.println("An existing deptarment was retrieved successfully!");
+                System.out.println("An existing job title was retrieved successfully!");
                 return jTitle;
             } else if (0 == rowsAffected) {
                 System.out.println("There is no existing job with titleCode = " + jtc + ".");
@@ -2091,7 +2150,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	
 	
 	/**
-     *
+     * Retrieve a list of all job_titles records in the database
      * @return list of jobs titles in WolfInns.
      */
    static ArrayList<JobTitles> retrieveAllJobTitles() {
@@ -2136,7 +2195,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 	
 	
     /**
-     *
+     * Update a job_titles record
      * @param targetJT
      * @param jtCode
      * @param jtDesc
@@ -2177,7 +2236,7 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
     }	
 
     /**
-     *
+     * Delete a job_titles record from the database
      * @param titleCode
      * @return removed the Job title
      */
@@ -2215,16 +2274,9 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
         return rowsUpdated>0;
 
     }
-    
-    /*public void close() {
-        try {
-            connection.close();
-        } catch (SQLException sqlException) {
-        }
-    }/*
 
    /**
-     *
+     * Create a Departments record in the database
      * @param dc department code
      * @param dd department description
      * @return true iff success
@@ -2274,8 +2326,9 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
     }
 
     /**
-     *
-     * @return list of departments
+     * Retrieve a single Departments record from the database
+     * @param dc: deptCode
+     * @return Departments object  
      */
     public static Departments retrieveDepartment(String dc) {
         //public ArrayList<Departments> retrieveDepartments() {
@@ -2321,7 +2374,10 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
 
     }
     
-    
+    /**
+     * Retrieve a list of all departments records in the database
+     * @return ArrayList of Departments objects
+     */
     public static ArrayList<Departments> retrieveAllDepartments() {
         //public ArrayList<Departments> retrieveDepartments() {
         ArrayList<Departments> deptList = new ArrayList();    
@@ -2364,11 +2420,11 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
     }
 
     /**
-     *
+     * Update a single departments record
      * @param dcTarget
      * @param dc department code
      * @param dd department description
-     * @return
+     * @return true on success, false on failure
      */
     public static boolean updateDepartment(String dcTarget,
             String dc,
@@ -2409,9 +2465,9 @@ public static ArrayList<Staff> retrieveAllStaffNotAssignedToHotel() {
     }
 
     /**
-     *
+     * Delete a departments record
      * @param dc department code
-     * @return
+     * @return true on success, false on failure
      */
     public static boolean deleteDepartment(String dc) {
         String sqlStatement = "Delete departments where deptCode = ?;";

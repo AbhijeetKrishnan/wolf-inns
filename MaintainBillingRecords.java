@@ -3,6 +3,12 @@ import java.util.ArrayList;
 
 public class MaintainBillingRecords {
 	public static final double CCWF_DISCOUNT = .05;
+    
+    /**
+     * Calculate room charges for a stay
+     * @param stayId
+     * @return room charges for that stay
+     */
 	public static double calculateRoomCharge(int stayId) {
 		double roomCharge = -1.0;
 		String sqlStatement = "SELECT ((DATEDIFF(checkoutDate, checkinDate)+1)*rate) AS \"Room Charge\" FROM stays NATURAL JOIN rooms WHERE stayId = ?";
@@ -281,6 +287,10 @@ public class MaintainBillingRecords {
 		return billingInfo;
 	}
 	
+    /**
+     * Retrieve a list of all billing_info records in the database
+     * @return ArrayList of BillingInfo objects
+     */
 	public static ArrayList<BillingInfo> retrieveAllBillingInfos() {
 
 		ArrayList<BillingInfo> billingInfoList = new ArrayList<BillingInfo>();
@@ -472,6 +482,12 @@ public class MaintainBillingRecords {
         }
     }
     
+    /**
+     * Update total charges for a billing_info record
+     * @param billingId
+     * @param totalCharges
+     * @param connection: a DB connection object to implement transactions
+     */
     public static boolean updateBillingInfoTotalCharges(int billingId, double totalCharges, Connection connection) {
 		
 		String sqlStatement = "UPDATE billing_info SET totalCharges = ? WHERE billingId = ?";

@@ -25,6 +25,9 @@ public class Reporting {
 		}
 	}
 	
+    /**
+     * Report occupancy by room type
+     */
 	public static void occupancyByRoomType() {
 		String sqlStatement = "SELECT categoryDesc AS \"Room Type\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS \"Percentage Occupied\" " +
             "FROM (SELECT  categoryCode, COUNT(stayId) AS occupied_rooms FROM rooms NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY categoryCode) AS occ " +
@@ -150,8 +153,9 @@ public class Reporting {
 		}
 	}
 	
-	
-	
+    /**
+     * Report staff information by title
+     */
 	public static void reportStaffInformationByTitle() {
 		
 		String sqlStatement = "SELECT staffId AS \"Staff Id\", name AS Name, titleDesc AS \"Job Title\", deptDesc AS Department, address AS Address, city AS City, state AS State, phone AS Phone, DOB " +
@@ -163,9 +167,6 @@ public class Reporting {
 			easyReport(queryResults);
 		}		
 	}
-	
-
-     
 
     /**
      * Return list of all staff IDs of staff which served a customer on a
@@ -187,8 +188,6 @@ public class Reporting {
 			easyReport(queryResults);
 		}
     }
-    
-    
 
     /**
      * Return total revenue earned in the period between startDate and endDate
@@ -214,6 +213,11 @@ public class Reporting {
 		}
     }
 	
+    /**
+     * Print itemized receipt for a stay
+     * @param headers
+     * @param receiptData
+     */
     public static void printItemizedReceipt(String[] headers, ArrayList<ArrayList<String>> receiptData) {
     	
     	System.out.println("Itemized Receipt For Your Stay");

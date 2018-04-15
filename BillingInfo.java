@@ -69,7 +69,10 @@ public class BillingInfo extends DatabaseObject {
                         state.equals(b.state) && payMethodCode.equals(b.payMethodCode) &&
                         cardNumber.equals(b.cardNumber)); // don't use totalCharges since that is set by system ops
 	}
-
+    
+    /**
+     * Return array list of field values of object
+     */
 	public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
@@ -86,6 +89,9 @@ public class BillingInfo extends DatabaseObject {
 		return fieldValues;		
 	}
 	
+    /**
+     * Return array list of field names of class
+     */
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
@@ -101,7 +107,10 @@ public class BillingInfo extends DatabaseObject {
 
 		return fieldNames;			
 	}
-
+    
+    /**
+     * Return an object
+     */
 	public static BillingInfo select() {
 		ArrayList<BillingInfo> billingInfoList = MaintainBillingRecords.retrieveAllBillingInfos();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) billingInfoList);

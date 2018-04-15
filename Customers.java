@@ -48,6 +48,9 @@ public class Customers extends DatabaseObject {
                         email.equals(c.email));
 	}
 
+    /**
+     * Return array list of field values of object
+     */
 	public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
@@ -61,6 +64,10 @@ public class Customers extends DatabaseObject {
 		return fieldValues;		
 	}
 	
+    /**
+     * Return array list of field names of class
+     */
+	publ
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
@@ -73,7 +80,10 @@ public class Customers extends DatabaseObject {
 
 		return fieldNames;			
 	}
-
+    
+    /**
+     * Return an object
+     */
 	public static Customers select() {
 		ArrayList<Customers> customerList = InformationProcessing.retrieveAllCustomers();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) customerList);

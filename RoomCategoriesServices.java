@@ -26,6 +26,9 @@ public class RoomCategoriesServices extends DatabaseObject {
                         serviceCode.equals(r.serviceCode));
 	}
 	
+    /**
+     * Return array list of field values of object
+     */
     public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
@@ -36,6 +39,9 @@ public class RoomCategoriesServices extends DatabaseObject {
 		return fieldValues;		
 	}
 	
+    /**
+     * Return array list of field names of class
+     */	
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
@@ -46,6 +52,9 @@ public class RoomCategoriesServices extends DatabaseObject {
 		return fieldNames;			
 	}
 	
+    /**
+     * Return an object
+     */
 	public static RoomCategoriesServices select() {
 
 		ArrayList<RoomCategoriesServices> roomCategoriesServicesList = InformationProcessing.retrieveAllRoomCategoriesServices();

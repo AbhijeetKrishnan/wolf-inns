@@ -54,7 +54,10 @@ public class Rooms extends DatabaseObject {
                         maxAllowedOcc==r.maxAllowedOcc && rate==r.rate &&
                         categoryCode.equals(r.categoryCode) && available.equals(r.available));
 	}
-	
+    
+    /**
+     * Return array list of field names of class
+     */	
 	public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
@@ -68,7 +71,10 @@ public class Rooms extends DatabaseObject {
 		
 		return fieldValues;		
 	}
-	
+    
+	/**
+     * Return array list of field names of class
+     */	
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
@@ -83,6 +89,9 @@ public class Rooms extends DatabaseObject {
 		return fieldNames;			
 	}
 	
+    /**
+     * Return an object
+     */
 	public static Rooms select() {
 		// Get the list of service staff records to be selected from
 		ArrayList<Rooms> roomsList = InformationProcessing.retrieveAllRooms();

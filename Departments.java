@@ -16,7 +16,10 @@ public class Departments extends DatabaseObject {
 	public void setDeptDesc(String deptDesc) {
 		this.deptDesc = deptDesc;
 	}
-
+    
+    /**
+     * Return array list of field values of object
+     */
 	public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
@@ -28,6 +31,9 @@ public class Departments extends DatabaseObject {
 		return fieldValues;		
 	}
 	
+    /**
+     * Return array list of field names of class
+     */
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
@@ -38,6 +44,9 @@ public class Departments extends DatabaseObject {
 		return fieldNames;			
 	}
 	
+    /**
+     * Return an object
+     */
 	public static Departments select() {
 		ArrayList<Departments> deptList = InformationProcessing.retrieveAllDepartments();
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) deptList);
@@ -46,6 +55,7 @@ public class Departments extends DatabaseObject {
 		
 		return selectedRecord;
 	}
+    
 	@Override
 	public boolean equals(Object o) {
 		if (o==this) {return true;}
@@ -54,5 +64,4 @@ public class Departments extends DatabaseObject {
 		return (deptCode.equals(d.deptCode) &&
                         deptDesc.equals(d.deptDesc));
 	}
-	
 }

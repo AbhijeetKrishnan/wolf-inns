@@ -26,6 +26,9 @@ public class PaymentMethods extends DatabaseObject{
                         payMethodDesc.equals(p.payMethodDesc));
 	}
 	
+    /**
+     * Return array list of field values of object
+     */
     public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
@@ -36,6 +39,9 @@ public class PaymentMethods extends DatabaseObject{
 		return fieldValues;		
 	}
 	
+    /**
+     * Return array list of field names of class
+     */
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
@@ -46,6 +52,9 @@ public class PaymentMethods extends DatabaseObject{
 		return fieldNames;			
 	}
 	
+    /**
+     * Return an object
+     */
 	public static PaymentMethods select() {
 
 		ArrayList<PaymentMethods> paymentMethodsList = MaintainBillingRecords.retrieveAllPaymentMethods();

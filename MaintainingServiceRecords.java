@@ -131,6 +131,14 @@ public class MaintainingServiceRecords {
 		}
 	}
 	
+    /**
+     * Create a service record representing check-in and check-out for a particular stay
+     * @param stayId
+     * @param staffId responsible for the check-in/check-out
+     * @param checkinFlag true represents check-in, false represents check-out
+     * @param connection
+     * @return ServiceRecords object
+     */
 	public static ServiceRecords createCheckinCheckoutRecord(int stayId, int staffId, boolean checkinFlag, Connection connection) {
 		String sqlStatement = "INSERT INTO service_records(stayId, serviceCode, staffId, serviceDate, serviceTime) VALUES (?, ?, ?, ?, ?);";
 		PreparedStatement statement = null;
@@ -181,7 +189,7 @@ public class MaintainingServiceRecords {
 	}
 	
 	/**
-     * 
+     * Return a list of all service_records for all hotels
      * @return all service records for all hotels
      */
     static ArrayList<ServiceRecords> retrieveAllServiceRecords() {
