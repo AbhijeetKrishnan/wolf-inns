@@ -2281,16 +2281,12 @@ public class InformationProcessing {
      * @param dd department description
      * @return true iff success
      */
-    public static boolean createDepartment(String dc,
-            String dd) {
+    public static boolean createDepartment(String dc, String dd) {
 
         Connection connection = null;
         PreparedStatement statement = null;
         int rowsAffected = -1;
-        String sqlStatement = "CREATE TABLE IF NOT EXISTS " + "departments"
-                + "deptCode CHAR(4) NOT NULL, "
-                + "deptDesc VARCHAR(50),"
-                + "PRIMARY KEY (deptCode));";
+        String sqlStatement = "INSERT INTO departments (deptCode, deptDesc) VALUES (?,?);";
         try {
             connection = DatabaseConnection.getConnection();
             statement = connection.prepareStatement(sqlStatement);
@@ -2470,7 +2466,7 @@ public class InformationProcessing {
      * @return true on success, false on failure
      */
     public static boolean deleteDepartment(String dc) {
-        String sqlStatement = "Delete departments where deptCode = ?;";
+        String sqlStatement = "Delete FROM departments where deptCode = ?;";
         Connection connection = null;
         PreparedStatement pst = null;
         int rowsDeleted = -1;
@@ -2482,11 +2478,11 @@ public class InformationProcessing {
             pst.setString(1, dc);
 
             // process query results
-            System.out.println("Deleting a row from Services Table of WollfInns Database:");
+            System.out.println("Deleting a row from Departments Table of WollfInns Database:");
 
             rowsDeleted = pst.executeUpdate();
             if (rowsDeleted > 0) {
-                System.out.println("an existing service was deleted.");
+                System.out.println("an existing department was deleted.");
             }
 
         } catch (SQLException ex) {

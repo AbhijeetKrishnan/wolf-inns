@@ -1291,7 +1291,7 @@ public class MenuInformationProcessing {
         }
 
         if (result) {
-            System.out.println("Job title created successfully");
+            System.out.println("Department created successfully");
         } else {
             System.out.println("There was an error");
         }
@@ -1332,7 +1332,7 @@ public class MenuInformationProcessing {
         }
         
         if (result) {
-            System.out.println("Job title deleted successfully");
+            System.out.println("Department deleted successfully");
         } else {
             System.out.println("There was an error");
         }
