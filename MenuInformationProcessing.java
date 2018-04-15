@@ -41,7 +41,7 @@ public class MenuInformationProcessing {
                     menuStaffMain();
                     break;
                     case 4:
-                    //menuServiceStaffMain();
+                    menuServiceStaffMain();
                     break;
                     case 5:
                     menuCustomersMain();
@@ -433,10 +433,10 @@ public class MenuInformationProcessing {
             c.setDeptCode(update[2]);
             c.setAddress(update[3]);
 
-            c.setCity(update[1]);
-            c.setState(update[2]);
-            c.setPhone(update[3]);
-            c.setDob(update[3]);
+            c.setCity(update[4]);
+            c.setState(update[5]);
+            c.setPhone(update[6]);
+            c.setDob(update[7]);
 
             if (InformationProcessing.updateStaff(c)) {
                 System.out.println("Record updated successfully.");
@@ -449,7 +449,7 @@ public class MenuInformationProcessing {
 
     private static void menuOptionDeleteStaff() {
         System.out.println("+---------------------------------------------------------------------+");
-        System.out.println("| DELETE STAFF RECORD                                              |");
+        System.out.println("| DELETE STAFF RECORD                                                 |");
         System.out.println("+---------------------------------------------------------------------+\n\n");
         Staff c = Staff.select();
         if (null == c) {
@@ -646,7 +646,7 @@ public class MenuInformationProcessing {
                     menuJobTitlesMain();
                     break;
                     case 2:
-                    //menuDepartmentsMain();
+                    menuDepartmentsMain();
                     break;
                     case 3:
                     menuRoomCategoriesMain();
@@ -911,7 +911,51 @@ public class MenuInformationProcessing {
 			}
 		}
 	}
-	
+
+    public static void menuServiceStaffMain() {
+        try {	
+        
+            boolean isExit = false;
+            Scanner in = new Scanner(System.in);
+            int choice;
+            do {
+                
+                System.out.println("+---------------------------------------------------------------------+");
+                System.out.println("| SERVICE STAFF                                                       |");
+                System.out.println("+---------------------------------------------------------------------+\n\n");
+                
+                System.out.println("1. Create a service staff member");
+                System.out.println("2. Update a service staff member");
+                System.out.println("3. Delete a service staff member");
+                System.out.println("9. Back\n");
+                
+                System.out.print(">> ");
+                choice = in.nextInt();
+                
+                switch (choice) {
+                    case 1:
+                    menuOptionCreateServiceStaff();
+                    break;
+                    case 2:
+                    menuOptionUpdateServiceStaff();
+                    break;
+                    case 3:
+                    menuOptionDeleteServiceStaff();
+                    break;
+                    case 9:
+                    isExit = true;
+                    break;
+                    default:
+                    System.out.println("Incorrect option. Please try again");
+                    break;
+                }
+            } while (!isExit);    
+		} catch (RuntimeException ex) {
+			System.err.println(ex.getMessage());
+			ex.printStackTrace();
+		}
+    }
+
 	// Accepts nothing and returns nothing. Fully encapsulated dialog for service staff entry!
 	public static void menuOptionCreateServiceStaff() {
 		System.out.println("+---------------------------------------------------------------------+");
@@ -1297,8 +1341,8 @@ public class MenuInformationProcessing {
     
     public static void menuOptionCheckin() {
     	System.out.println("+---------------------------------------------------------------------+");
-		System.out.println("| CHECKIN                                                             |");
-		System.out.println("+---------------------------------------------------------------------+\n\n");
+	System.out.println("| CHECKIN                                                             |");
+	System.out.println("+---------------------------------------------------------------------+\n\n");
 		
         Scanner scanner = new Scanner(System.in);
         
@@ -1398,44 +1442,43 @@ public class MenuInformationProcessing {
     
     public static void menuOptionCheckout() {
     	System.out.println("+---------------------------------------------------------------------+");
-		System.out.println("| CHECKOUT                                                            |");
-		System.out.println("+---------------------------------------------------------------------+\n\n");
-		
-		ArrayList<Stays> staysList = InformationProcessing.retrieveAllCheckedInStays();
-		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staysList);		
-		Stays stay = (Stays)MenuUtilities.paginatedRecordSelection(databaseObjectList);
-		
-		ServiceStaff servicingStaff = ServiceStaff.select();
-		
-		boolean checkoutResult = HotelStayOperations.checkoutStay(stay, servicingStaff.getStaffId());
-		
-		if (!checkoutResult) {
-			System.out.println("Something unexpected happened while attempting to checkout.");
-		} else {
-			System.out.println("Customer successfully checked in.");
-		}
+	System.out.println("| CHECKOUT                                                            |");
+	System.out.println("+---------------------------------------------------------------------+\n\n");
+	
+	ArrayList<Stays> staysList = InformationProcessing.retrieveAllCheckedInStays();
+	ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staysList);		
+	Stays stay = (Stays)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+	
+	ServiceStaff servicingStaff = ServiceStaff.select();
+	
+	boolean checkoutResult = HotelStayOperations.checkoutStay(stay, servicingStaff.getStaffId());
+	
+	if (!checkoutResult) {
+		System.out.println("Something unexpected happened while attempting to checkout.");
+	} else {
+		System.out.println("Customer successfully checked in.");
+	}
     }
     
     
     public static void menuOptionSearchAvailableRooms() {
     	System.out.println("+---------------------------------------------------------------------+");
-		System.out.println("| SEARCH FOR AVAILABLE ROOMS                                          |");
-		System.out.println("+---------------------------------------------------------------------+\n\n");
+	System.out.println("| SEARCH FOR AVAILABLE ROOMS                                          |");
+	System.out.println("+---------------------------------------------------------------------+\n\n");
 		
-		System.out.println("Select the hotel to search.");
-		Hotels hotel = Hotels.select();
-		
-		System.out.println("Select the category of room requested.");
-		RoomCategories roomCategory = RoomCategories.select();
-		
-		ArrayList<Rooms> availableRooms = HotelStayOperations.retrieveAvailableRooms(hotel.getHotelId(), roomCategory.getCategoryCode());
-		
-		if (null == availableRooms || availableRooms.size() == 0) {
-			System.out.println("No rooms are available.");
-		} else {
-			
-			ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) availableRooms);
-			MenuUtilities.paginatedRecordSelection(databaseObjectList);
-		}
+	System.out.println("Select the hotel to search.");
+	Hotels hotel = Hotels.select();
+	
+	System.out.println("Select the category of room requested.");
+	RoomCategories roomCategory = RoomCategories.select();
+	
+	ArrayList<Rooms> availableRooms = HotelStayOperations.retrieveAvailableRooms(hotel.getHotelId(), roomCategory.getCategoryCode());
+	
+	if (null == availableRooms || availableRooms.size() == 0) {
+		System.out.println("No rooms are available.");
+	} else {
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) availableRooms);
+		MenuUtilities.paginatedRecordSelection(databaseObjectList);
+	}
     }
 }
