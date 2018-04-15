@@ -198,7 +198,7 @@ public class Reporting {
      * @param endDate
      */
     public static void reportRevenue(int hotelId, String startDate, String endDate) {
-        System.out.print("Total revenue earned in the period between" + startDate + " and " + endDate + "\n");
+        System.out.print("Total revenue earned in the period between " + startDate + " and " + endDate + "\n");
         String sqlStatement = "SELECT SUM(totalCharges) AS \"Revenue $\" FROM stays NATURAL JOIN billing_info "
                 + "WHERE (checkoutDate BETWEEN \""
                 + startDate
