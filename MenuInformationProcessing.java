@@ -38,7 +38,7 @@ public class MenuInformationProcessing {
                     menuRoomsMain();
                     break;
                     case 3:
-                    //menuStaffMain();
+                    menuStaffMain();
                     break;
                     case 4:
                     //menuServiceStaffMain();
