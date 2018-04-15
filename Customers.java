@@ -67,7 +67,6 @@ public class Customers extends DatabaseObject {
     /**
      * Return array list of field names of class
      */
-	publ
 	public ArrayList<String> getFieldNamesList() {
 		
 		ArrayList<String> fieldNames = new ArrayList<String>();
