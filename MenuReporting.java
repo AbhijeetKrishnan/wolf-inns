@@ -20,7 +20,7 @@ public class MenuReporting {
                 System.out.println("5. Staff information ordered by role");
                 System.out.println("6. Staff information given stay");
                 System.out.println("7. Revenue for given hotel during given date range");
-                System.out.println("8. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -47,7 +47,7 @@ public class MenuReporting {
                     case 7:
                     menuReportRevenueMain();
                     break;
-                    case 8:
+                    case 9:
                     isExit = true;
                     break;
                     default:

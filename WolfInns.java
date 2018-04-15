@@ -9,36 +9,36 @@ public class WolfInns {
         
             boolean isExit = false;
             Scanner in = new Scanner(System.in);
-            int choice;
+            String choice;
             do {
                 
                 System.out.println("|---------------------------------------------------------------------|");
-                System.out.println("| WOLFINNS HOTEL MANAGEMENT SYSTEM                                    |");
+                System.out.println("| WOLF INNS HOTEL MANAGEMENT SYSTEM                                   |");
                 System.out.println("|---------------------------------------------------------------------|\n\n");
                 
                 System.out.println("1. Information Processing");
                 System.out.println("2. Maintaining Service Records");
                 System.out.println("3. Maintaining Billing Accounts");
                 System.out.println("4. Reports");
-                System.out.println("5. Exit\n");
+                System.out.println("Q. Exit\n");
                 
                 System.out.print(">> ");
-                choice = in.nextInt();
+                choice = in.next();
                 
                 switch (choice) {
-                    case 1:
+                    case "1":
                     MenuInformationProcessing.menuInformationProcessingMain();
                     break;
-                    case 2:
+                    case "2":
                     MenuMaintainServiceRecords.menuMaintainServiceRecordsMain();                    
                     break;
-                    case 3:
+                    case "3":
                     MenuMaintainBillingRecords.menuMaintainBillingRecordsMain();
                     break;
-                    case 4:
+                    case "4":
                     MenuReporting.menuReportingMain();
                     break;
-                    case 5:
+                    case "Q":
                     isExit = true;
                     System.out.println("Exiting...");
                     break;

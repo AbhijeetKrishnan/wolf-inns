@@ -83,7 +83,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Create a hotel");
                 System.out.println("2. Update a hotel");
                 System.out.println("3. Delete a hotel");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -98,7 +98,7 @@ public class MenuInformationProcessing {
                     case 3:
                     menuOptionDeleteHotel();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -228,7 +228,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Create a room");
                 System.out.println("2. Update a room");
                 System.out.println("3. Delete a room");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -243,7 +243,7 @@ public class MenuInformationProcessing {
                     case 3:
                     menuOptionDeleteRoom();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -345,7 +345,7 @@ public class MenuInformationProcessing {
             System.out.println("1. Create a staff");
             System.out.println("2. Update a staff");
             System.out.println("3. Delete a staff");
-            System.out.println("4. Back\n");
+            System.out.println("9. Back\n");
 
             System.out.print(">> ");
             choice = in.nextInt();
@@ -360,7 +360,7 @@ public class MenuInformationProcessing {
                 case 3:
                     menuOptionDeleteStaff();
                     break;
-                case 4:
+                case 9:
                     isExit = true;
                     break;
                 default:
@@ -492,7 +492,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Create a customer");
                 System.out.println("2. Update a customer");
                 System.out.println("3. Delete a customer");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -507,7 +507,7 @@ public class MenuInformationProcessing {
                     case 3:
                     menuOptionDeleteCustomer();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -635,7 +635,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Job Titles");
                 System.out.println("2. Departments");
                 System.out.println("3. Room Categories");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -650,7 +650,7 @@ public class MenuInformationProcessing {
                     case 3:
                     menuRoomCategoriesMain();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -679,7 +679,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Create a job title");
                 System.out.println("2. Update a job title");
                 System.out.println("3. Delete a job title");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -694,7 +694,7 @@ public class MenuInformationProcessing {
                     case 3:
                     menuOptionDeleteJobTitle();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -786,7 +786,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Create a room category");
                 System.out.println("2. Update a room category");
                 System.out.println("3. Delete a room category");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -801,7 +801,7 @@ public class MenuInformationProcessing {
                     case 3:
                     menuOptionDeleteRoomCategory();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -1142,7 +1142,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Checkin");
                 System.out.println("2. Checkout");
                 System.out.println("3. Reprint Itemized Receipt");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -1157,7 +1157,7 @@ public class MenuInformationProcessing {
                     case 3:
                         menuOptionReprintItemizedReceipt();
                         break;
-                    case 4:
+                    case 9:
                         isExit = true;
                         break;
                     default:
@@ -1202,7 +1202,7 @@ public class MenuInformationProcessing {
                 System.out.println("1. Create a department");
                 System.out.println("2. Update a department");
                 System.out.println("3. Delete a department");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -1217,7 +1217,7 @@ public class MenuInformationProcessing {
                     case 3:
                         menuOptionDeleteDepartment();
                         break;
-                    case 4:
+                    case 9:
                         isExit = true;
                         break;
                     default:

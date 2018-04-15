@@ -18,7 +18,7 @@ public class MenuMaintainBillingRecords {
                 
                 System.out.println("1. Payment Methods");
                 System.out.println("2. Billing Info");
-                System.out.println("3. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -30,7 +30,7 @@ public class MenuMaintainBillingRecords {
                     case 2:
                     menuBillingInfoMain();
                     break;
-                    case 3:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -59,7 +59,7 @@ public class MenuMaintainBillingRecords {
                 System.out.println("1. Create a payment method");
                 System.out.println("2. Update a payment method");
                 System.out.println("3. Delete a payment method");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -74,7 +74,7 @@ public class MenuMaintainBillingRecords {
                     case 3:
                     menuOptionDeletePaymentMethod();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -101,7 +101,7 @@ public class MenuMaintainBillingRecords {
                 System.out.println("|---------------------------------------------------------------------|\n\n");
                 
                 System.out.println("1. Update a billing info");
-                System.out.println("2. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -110,7 +110,7 @@ public class MenuMaintainBillingRecords {
                     case 1:
                     menuOptionUpdateBillingInfo();
                     break;
-                    case 2:
+                    case 9:
                     isExit = true;
                     break;
                     default:

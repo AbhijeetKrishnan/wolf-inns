@@ -526,16 +526,12 @@ public class HotelStayOperations {
 				itemizedCharges.add(receiptRow);
 			}				
 			
-			System.out.println(billingInfo.getBillingId() + " | " + billingInfo.getPayMethodCode() + " | " + billingInfo.getTotalCharges());
-			
 			// Add total line
 			receiptRow = new ArrayList<String>();
 			receiptRow.add("");
 			receiptRow.add("Total $");
 			receiptRow.add(Double.toString(billingInfo.getTotalCharges()));
 			itemizedCharges.add(receiptRow);
-			
-			System.out.println(itemizedCharges.toString());
 			
 			String[] headers = {"Date",  "Service", "Charge $"};
 			Reporting.printItemizedReceipt(headers, itemizedCharges);

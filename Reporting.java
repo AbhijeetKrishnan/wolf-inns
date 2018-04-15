@@ -267,15 +267,23 @@ public class Reporting {
 	
     public static void printItemizedReceipt(String[] headers, ArrayList<ArrayList<String>> receiptData) {
     	
+    	System.out.println("Itemized Receipt For Your Stay");
+    	
     	// Create rows of data in a dual-dimensional array
 		String[][] data = new String[receiptData.size()][headers.length];
 		
 		for (int row=0; row < receiptData.size(); row++) {
 			for (int col=0; col < headers.length; col++) {
-				data[row][col] = receiptData.get(row).get(col);
+				if (null == receiptData.get(row).get(col)) {
+					data[row][col] = "";
+				} else {
+				    data[row][col] = receiptData.get(row).get(col);
+				}
 			}
 		}
 		
 		printTable(headers, data);
+		
+		System.out.println("Thank you for staying at Wolf Inns.");
     }
 }

@@ -18,7 +18,7 @@ public class MenuMaintainServiceRecords {
                 
                 System.out.println("1. Services");
                 System.out.println("2. Service Records");
-                System.out.println("3. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -30,7 +30,7 @@ public class MenuMaintainServiceRecords {
                     case 2:
                     menuServiceRecordsMain();
                     break;
-                    case 3:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -59,7 +59,7 @@ public class MenuMaintainServiceRecords {
                 System.out.println("1. Create a service");
                 System.out.println("2. Update a service");
                 System.out.println("3. Delete a service");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
                 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -74,7 +74,7 @@ public class MenuMaintainServiceRecords {
                     case 3:
                     menuOptionDeleteService();
                     break;
-                    case 4:
+                    case 9:
                     isExit = true;
                     break;
                     default:
@@ -169,7 +169,7 @@ private static void menuServiceRecordsMain() {
                 System.out.println("1. Create a service record");
                 System.out.println("2. Update a service record");
                 System.out.println("3. List services used during a stay");
-                System.out.println("4. Back\n");
+                System.out.println("9. Back\n");
 
                 System.out.print(">> ");
                 choice = in.nextInt();
@@ -184,7 +184,7 @@ private static void menuServiceRecordsMain() {
                     case 3:
                         menuOptionListServicesDuringAStay();
                         break;
-                    case 4:
+                    case 9:
                         isExit = true;
                         break;
                     default:
