@@ -51,7 +51,11 @@ public class Reporting {
 		
 		for (int row=0; row < reportData.size(); row++) {
 			for (int col=0; col < columns.size(); col++) {
-				data[row][col] = reportData.get(row).get(headers[col]);
+				if (null == reportData.get(row).get(headers[col])) {
+					data[row][col] = "";
+				} else {
+					data[row][col] = reportData.get(row).get(headers[col]);
+				}
 			}
 		}
 	
