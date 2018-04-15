@@ -741,7 +741,7 @@ public class MenuInformationProcessing {
             System.out.print("New Title description: ");
             String td = in.nextLine();
             
-            // result = InformationProcessing.updateJobTitle(otc, ntc, td); // Method was removed in previous commit. This now fails build. Commented until corrected.
+            result = InformationProcessing.updateJobTitle(otc, ntc, td);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
