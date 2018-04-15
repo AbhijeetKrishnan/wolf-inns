@@ -13,14 +13,13 @@ public class MenuUtilities {
 	public static int easyList(List<DatabaseObject> objectList, int currentRecordId) {
 		
 		ArrayList<String> objectFieldNames = objectList.get(0).getFieldNamesList();
+		
 		objectFieldNames.add(0, "Record Id"); // Add record Id heading
 		String[] headers = objectFieldNames.toArray(new String[objectFieldNames.size()]);
 		
 		// Create rows of records in a dual-dimensional array
 		String[][] records = new String[objectList.size()][headers.length];
 		
-		//System.out.println("List size: " + objectList.size());
-		//System.out.println("current record Id: " + currentRecordId);
 		for (int row=0; row < objectList.size(); row++) {
 			records[row][0] = Integer.toString(currentRecordId++); // Add record Id to row
 			ArrayList<String> values = objectList.get(row).toStringArrayList();

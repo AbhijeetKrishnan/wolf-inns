@@ -86,7 +86,7 @@ public class Stays extends DatabaseObject {
 	}
 	
 	
-public ArrayList<String> toStringArrayList() {
+    public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
 		

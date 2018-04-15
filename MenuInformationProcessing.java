@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -49,7 +50,7 @@ public class MenuInformationProcessing {
                     menuStaysMain();
                     break;
                     case 7:
-                    //menuSearchAvailableRoomsMain();
+                    menuOptionSearchAvailableRooms();
                     break;
                     case 8:
                     menuOtherMain();
@@ -1263,12 +1264,12 @@ public class MenuInformationProcessing {
             System.out.print("New department description: ");
             String td = in.nextLine();
 
-            result = InformationProcessing.updateDepartment(otc, ntc, td); // Method was removed in previous commit. This now fails build. Commented until corrected.
+            result = InformationProcessing.updateDepartment(otc, ntc, td);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
         if (result) {
-            System.out.println("The department updated successfully");
+            System.out.println("Department updated successfully");
         } else {
             System.out.println("There was an error");
         }
@@ -1412,6 +1413,29 @@ public class MenuInformationProcessing {
 			System.out.println("Something unexpected happened while attempting to checkout.");
 		} else {
 			System.out.println("Customer successfully checked in.");
+		}
+    }
+    
+    
+    public static void menuOptionSearchAvailableRooms() {
+    	System.out.println("+---------------------------------------------------------------------+");
+		System.out.println("| SEARCH FOR AVAILABLE ROOMS                                          |");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
+		
+		System.out.println("Select the hotel to search.");
+		Hotels hotel = Hotels.select();
+		
+		System.out.println("Select the category of room requested.");
+		RoomCategories roomCategory = RoomCategories.select();
+		
+		ArrayList<Rooms> availableRooms = HotelStayOperations.retrieveAvailableRooms(hotel.getHotelId(), roomCategory.getCategoryCode());
+		
+		if (null == availableRooms || availableRooms.size() == 0) {
+			System.out.println("No rooms are available.");
+		} else {
+			
+			ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) availableRooms);
+			MenuUtilities.paginatedRecordSelection(databaseObjectList);
 		}
     }
 }

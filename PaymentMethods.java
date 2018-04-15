@@ -26,7 +26,7 @@ public class PaymentMethods extends DatabaseObject{
                         payMethodDesc.equals(p.payMethodDesc));
 	}
 	
-public ArrayList<String> toStringArrayList() {
+    public ArrayList<String> toStringArrayList() {
 		
 		ArrayList<String> fieldValues = new ArrayList<String>();
 		

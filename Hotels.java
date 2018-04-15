@@ -96,6 +96,7 @@ public class Hotels extends DatabaseObject {
 	
 	public static Hotels select() {
 		ArrayList<Hotels> hotelList = InformationProcessing.retrieveAllHotels();
+		System.out.println(hotelList.get(0).toStringArrayList().toString());
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) hotelList);
 		
 		Hotels selectedRecord = (Hotels)MenuUtilities.paginatedRecordSelection(databaseObjectList);

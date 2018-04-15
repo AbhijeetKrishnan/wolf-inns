@@ -28,31 +28,31 @@ public class RoomCategories extends DatabaseObject {
 	
 	 public ArrayList<String> toStringArrayList() {
 			
-			ArrayList<String> fieldValues = new ArrayList<String>();
-			
-			fieldValues.add(this.getCategoryCode());
-			fieldValues.add(this.getCategoryDesc());
-			
-			return fieldValues;		
-		}
+		ArrayList<String> fieldValues = new ArrayList<String>();
 		
-		public ArrayList<String> getFieldNamesList() {
-			
-			ArrayList<String> fieldNames = new ArrayList<String>();
-			
-			fieldNames.add("Room Category Code");
-			fieldNames.add("Description");
-
-			return fieldNames;			
-		}
+		fieldValues.add(this.getCategoryCode());
+		fieldValues.add(this.getCategoryDesc());
 		
-		public static RoomCategories select() {
+		return fieldValues;		
+	}
+		
+	public ArrayList<String> getFieldNamesList() {
+		
+		ArrayList<String> fieldNames = new ArrayList<String>();
+		
+		fieldNames.add("Room Category Code");
+		fieldNames.add("Description");
 
-			ArrayList<RoomCategories> roomCategoriesServicesList = InformationProcessing.retrieveAllRoomCategories();
-			ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) roomCategoriesServicesList);
-			
-			RoomCategories selectedRecord = (RoomCategories)MenuUtilities.paginatedRecordSelection(databaseObjectList);
-			
-			return selectedRecord;
-		}
+		return fieldNames;			
+	}
+		
+	public static RoomCategories select() {
+
+		ArrayList<RoomCategories> roomCategoriesServicesList = InformationProcessing.retrieveAllRoomCategories();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) roomCategoriesServicesList);
+		
+		RoomCategories selectedRecord = (RoomCategories)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		return selectedRecord;
+	}
 }
