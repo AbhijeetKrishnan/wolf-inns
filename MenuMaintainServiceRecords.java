@@ -28,7 +28,7 @@ public class MenuMaintainServiceRecords {
                     menuServicesMain();
                     break;
                     case 2:
-                    //menuServiceRecordsMain();
+                    menuServiceRecordsMain();
                     break;
                     case 3:
                     isExit = true;
