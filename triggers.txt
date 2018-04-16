@@ -1,0 +1,286 @@
+DROP TRIGGER before_hotels_insert;
+DROP TRIGGER before_hotels_update;
+DROP TRIGGER before_service_staff_insert;
+DROP TRIGGER before_service_staff_update;
+DROP TRIGGER before_staff_update;
+DROP TRIGGER before_occupied_presidential_suite_insert;
+DROP TRIGGER before_occupied_presidential_suite_update;
+DROP TRIGGER before_occupied_presidential_suite_delete;
+DROP TRIGGER before_service_records_insert;
+DROP TRIGGER before_service_records_update;
+DROP TRIGGER before_stay_insert;
+DROP TRIGGER before_stay_update;
+
+
+
+CREATE TRIGGER before_hotels_insert
+BEFORE INSERT ON hotels
+FOR EACH ROW BEGIN
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.managerId);
+  IF @title <> "MNGR" THEN
+    SET @error = (SELECT * FROM not_manager);
+  END IF;
+END;
+
+
+CREATE TRIGGER before_hotels_update
+BEFORE UPDATE ON hotels
+FOR EACH ROW BEGIN
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.managerId);
+  IF @title <> "MNGR" THEN
+    SET @error = (SELECT * FROM not_manager);
+  END IF;
+END;
+
+CREATE TRIGGER before_service_staff_insert
+BEFORE INSERT ON service_staff
+FOR EACH ROW BEGIN
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.staffId);
+  IF @title = "MNGR" OR @title = "CEO" THEN
+    SET @error = (SELECT * FROM not_service_staff);
+  END IF;
+END;
+
+
+CREATE TRIGGER before_service_staff_update
+BEFORE UPDATE ON service_staff
+FOR EACH ROW BEGIN
+  IF NEW.staffId <> OLD.staffId THEN
+    SET @error = (SELECT * FROM cannot_update_primary_key);
+  END IF;
+
+  SET @dedicated = (SELECT COUNT(*) FROM occupied_presidential_suite WHERE cateringStaffId=NEW.staffId OR roomServiceStaffId=NEW.staffId);
+  IF @dedicated > 0 THEN
+        SET @error = (SELECT * FROM service_staff_is_dedicated);
+  END IF;
+END;
+
+CREATE TRIGGER before_staff_update
+BEFORE UPDATE ON staff
+FOR EACH ROW BEGIN  
+  IF NEW.titleCode = "MNGR" OR NEW.titleCode = "CEO" THEN
+    SET @service_staff = (SELECT COUNT(*) FROM service_staff WHERE staffId=NEW.staffId);
+    IF @service_staff > 0 THEN
+          SET @error = (SELECT * FROM assigned_service_staff);
+    END IF;
+  END IF;
+
+  SET @dedicated = (SELECT COUNT(*) FROM occupied_presidential_suite WHERE cateringStaffId=NEW.staffId OR roomServiceStaffId=NEW.staffId);
+  IF @dedicated > 0 THEN
+    IF NEW.titleCode <> OLD.titleCode THEN
+        SET @error = (SELECT * FROM service_staff_is_dedicated);
+    END IF;
+  END IF;
+
+  IF OLD.titleCode = "MNGR" AND NEW.titleCode <> "MNGR" THEN
+      SET @manager = (SELECT COUNT(*) FROM hotels WHERE managerId=NEW.staffId);
+      IF @manager > 0 THEN
+        SET @error = (SELECT * FROM manager_assigned_to_hotel);
+      END IF;
+  END IF;
+END;
+
+
+CREATE TRIGGER before_occupied_presidential_suite_insert
+BEFORE INSERT ON occupied_presidential_suite
+FOR EACH ROW BEGIN
+
+  SET @room_category = (SELECT categoryCode FROM rooms WHERE hotelId = NEW.hotelId AND roomNumber = NEW.roomNumber);
+  IF @room_category <> "PRES" THEN
+    SET @error = (SELECT * FROM not_presidential_suite);
+  END IF;
+
+  SELECT hotelId INTO @hotelId FROM service_staff where staffId = NEW.cateringStaffId;
+  IF @hotelId <> NEW.hotelId THEN
+    SET @error = (SELECT * FROM catering_staff_not_assigned_to_hotel);
+  END IF;
+
+  SELECT hotelId INTO @hotelId FROM service_staff where staffId = NEW.roomServiceStaffId;
+  IF @hotelId <> NEW.hotelId THEN
+    SET @error = (SELECT * FROM room_service_staff_not_assigned_to_hotel);
+  END IF;
+
+  SET @activeStay = (SELECT COUNT(*) FROM stays WHERE hotelId = NEW.hotelId AND roomNumber = NEW.roomNumber AND checkoutDate IS NULL);
+  IF @activeStay <> 1 THEN
+    SET @error = (SELECT * FROM stay_not_active);
+  END IF;
+
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.cateringStaffId);
+  IF @title <> "CATS" THEN
+    SET @error = (SELECT * FROM not_catering_staff);
+  END IF;
+
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.roomServiceStaffId);
+  IF @title <> "RSST" THEN
+    SET @error = (SELECT * FROM not_room_service_staff);
+  END IF;
+
+  SET @assigned_staff = (SELECT COUNT(*) FROM occupied_presidential_suite WHERE cateringStaffId = NEW.cateringStaffId OR roomServiceStaffId = NEW.roomServiceStaffId);
+  IF @assigned_staff <> 0 THEN
+    SET @error = (SELECT * FROM staff_already_assigned);
+  END IF;
+END;
+
+CREATE TRIGGER before_occupied_presidential_suite_update
+BEFORE UPDATE ON occupied_presidential_suite
+FOR EACH ROW BEGIN
+
+  SET @room_category = (SELECT categoryCode FROM rooms WHERE hotelId = NEW.hotelId AND roomNumber = NEW.roomNumber);
+  IF @room_category <> "PRES" THEN
+    SET @error = (SELECT * FROM not_presidential_suite);
+  END IF;
+
+  SET @activeStay = (SELECT COUNT(*) FROM stays WHERE hotelId = NEW.hotelId AND roomNumber = NEW.roomNumber AND checkoutDate IS NULL);
+  IF @activeStay <> 1 THEN
+    SET @error = (SELECT * FROM stay_not_active);
+  END IF;
+
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.cateringStaffId);
+  IF @title = "CATS" THEN
+    SET @error = (SELECT * FROM not_catering_staff);
+  END IF;
+
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.roomServiceStaffId);
+  IF @title = "RSST" THEN
+    SET @error = (SELECT * FROM not_room_service_staff);
+  END IF;
+END;
+
+
+CREATE TRIGGER before_occupied_presidential_suite_delete
+BEFORE DELETE ON occupied_presidential_suite
+FOR EACH ROW BEGIN
+  SET @activeStays = (SELECT COUNT(*) FROM stays WHERE hotelId = OLD.hotelId AND roomNumber = OLD.roomNumber AND checkoutDate IS NULL);
+  IF @activeStays <> 0 THEN
+    SET @error = (SELECT * FROM stay_still_active);
+  END IF;
+END;
+
+
+CREATE TRIGGER before_stay_insert
+BEFORE INSERT ON stays
+FOR EACH ROW BEGIN
+  SET @maxOccupancy = (SELECT maxAllowedOcc FROM rooms WHERE hotelId = NEW.hotelId AND roomNumber = NEW.roomNumber);
+  IF NEW.numOfGuests < 0 OR NEW.numOfGuests > @maxOccupancy  THEN
+    SET @error = (SELECT * FROM bad_num_of_guests);
+  END IF;
+
+  SET @room_occupied = (SELECT COUNT(*) FROM stays WHERE hotelId = 1 AND roomNumber = 101 AND (checkoutDate IS NULL OR checkoutDate = NEW.checkinDate));
+  IF @room_occupied = 1 THEN
+    SET @error = (SELECT * FROM room_is_occupied);
+  END IF;
+END;
+
+
+CREATE TRIGGER before_stay_update
+BEFORE UPDATE ON stays
+FOR EACH ROW BEGIN
+  SET @maxOccupancy = (SELECT maxAllowedOcc FROM rooms WHERE hotelId = NEW.hotelId AND roomNumber = NEW.roomNumber);
+  IF NEW.numOfGuests < 0 OR NEW.numOfGuests > @maxOccupancy  THEN
+    SET @error = (SELECT * FROM bad_num_of_guests);
+  END IF;
+
+  SET @room_occupied = (SELECT COUNT(*) FROM stays WHERE hotelId = 1 AND roomNumber = 101 AND (checkoutDate IS NULL OR checkoutDate = NEW.checkinDate));
+  IF @room_occupied = 1 THEN
+    SET @error = (SELECT * FROM room_is_occupied);
+  END IF;
+END;
+
+
+
+DELIMITER //
+CREATE TRIGGER before_service_records_insert
+BEFORE INSERT ON service_records
+FOR EACH ROW BEGIN
+
+  SELECT hotelId, roomNumber INTO @stayHotelId, @stayRoomNumber FROM stays WHERE stayId = NEW.stayId;
+
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.staffId);
+  IF @title = "CATS" THEN
+    SET @assignedToPresidentialSuite = (SELECT COUNT(*) FROM occupied_presidential_suite WHERE cateringStaffId = NEW.staffId);
+    IF @assignedToPresidentialSuite = 1 THEN
+      SELECT hotelId, roomNumber INTO @hotelId, @roomNumber FROM occupied_presidential_suite WHERE cateringStaffId = NEW.staffId;      
+      IF @hotelId <> @stayHotelId OR @roomNumber <> @stayRoomNumber THEN
+        SET @error = (SELECT * FROM catering_staff_assigned_to_another_suite);
+      END IF;
+    END IF;
+  END IF;
+  IF @title = "RSST" THEN
+    SET @assignedToPresidentialSuite = (SELECT COUNT(*) FROM occupied_presidential_suite WHERE roomServiceStaffId = NEW.staffId);
+    IF @assignedToPresidentialSuite = 1 THEN
+      SELECT hotelId, roomNumber INTO @hotelId, @roomNumber FROM occupied_presidential_suite WHERE roomServiceStaffId = NEW.staffId;
+      IF @hotelId <> @stayHotelId OR @roomNumber <> @stayRoomNumber THEN
+        SET @error = (SELECT * FROM room_service_staff_assigned_to_another_suite);
+      END IF;
+    END IF; 
+  END IF;
+
+  SELECT hotelId INTO @hotelId FROM service_staff where staffId = NEW.staffId;
+  IF @hotelId <> @stayHotelId THEN
+    SET @error = (SELECT * FROM staff_not_assigned_to_hotel);
+  END IF;
+
+
+  SET @activeStay = (SELECT COUNT(*) FROM stays WHERE stayId = NEW.stayId AND checkoutDate IS NULL);
+  IF @activeStay < 1 THEN
+    SET @error = (SELECT * FROM stay_not_active);
+  END IF;
+
+END; //
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE TRIGGER before_service_records_update
+BEFORE UPDATE ON service_records
+FOR EACH ROW BEGIN
+
+  SELECT hotelId, roomNumber INTO @stayHotelId, @stayRoomNumber FROM stays WHERE stayId = NEW.stayId;
+
+  SET @title = (SELECT titleCode FROM staff WHERE staffId = NEW.staffId);
+  IF @title = "CATS" THEN
+    SET @assignedToPresidentialSuite = (SELECT COUNT(*) FROM occupied_presidential_suite WHERE cateringStaffId = NEW.staffId);
+    IF @assignedToPresidentialSuite = 1 THEN
+      SELECT hotelId, roomNumber INTO @hotelId, @roomNumber FROM occupied_presidential_suite WHERE cateringStaffId = NEW.staffId;      
+      IF @hotelId <> @stayHotelId OR @roomNumber <> @stayRoomNumber THEN
+        SET @error = (SELECT * FROM catering_staff_assigned_to_another_suite);
+      END IF;
+    END IF;
+  END IF;
+  IF @title = "RSST" THEN
+    SET @assignedToPresidentialSuite = (SELECT COUNT(*) FROM occupied_presidential_suite WHERE roomServiceStaffId = NEW.staffId);
+    IF @assignedToPresidentialSuite = 1 THEN
+      SELECT hotelId, roomNumber INTO @hotelId, @roomNumber FROM occupied_presidential_suite WHERE roomServiceStaffId = NEW.staffId;
+      IF @hotelId <> @stayHotelId OR @roomNumber <> @stayRoomNumber THEN
+        SET @error = (SELECT * FROM room_service_staff_assigned_to_another_suite);
+      END IF;
+    END IF; 
+  END IF;
+
+  SELECT hotelId INTO @hotelId FROM service_staff where staffId = NEW.staffId;
+  IF @hotelId <> @stayHotelId THEN
+    SET @error = (SELECT * FROM staff_not_assigned_to_hotel);
+  END IF;
+
+
+  SET @activeStay = (SELECT COUNT(*) FROM stays WHERE stayId = NEW.stayId AND checkoutDate IS NULL);
+  IF @activeStay < 1 THEN
+    SET @error = (SELECT * FROM stay_not_active);
+  END IF;
+
+END; //
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
