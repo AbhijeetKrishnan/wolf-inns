@@ -391,11 +391,11 @@ public class HotelStayOperations {
 			if (room.getCategoryCode().equals("PRES")) {
 				// Retrieve available catering staff
 				ArrayList<ServiceStaff> cateringStaff = retrieveAvailableCateringStaff(hotelId);
-				if (null == cateringStaff || !cateringStaff.size() > 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				if (null == cateringStaff || !(cateringStaff.size() > 0)) {throw new SQLException("Error seems to have occured. Check the logs.");}
 				
 				// Retrieve available room service staff
 				ArrayList<ServiceStaff> roomServiceStaff = retrieveAvailableRoomServiceStaff(hotelId);
-				if (null == roomServiceStaff || !roomServiceStaff.size() > 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				if (null == roomServiceStaff || !(roomServiceStaff.size() > 0)) {throw new SQLException("Error seems to have occured. Check the logs.");}
 				
 				int cateringStaffId = cateringStaff.get(0).getStaffId();
 				int roomServiceStaffId = roomServiceStaff.get(0).getStaffId();
