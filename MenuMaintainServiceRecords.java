@@ -231,16 +231,12 @@ private static void menuServiceRecordsMain() {
         } else {
             Scanner scanner = new Scanner(System.in);
 
-            String[] field = {"Stay Id", "Service Code", "Staff Id", "Service Date", "Service Time"};
-            String[] current = {Integer.toString(h.getStayId()),
-                h.getServiceCode(), Integer.toString(h.getStaffId()), h.getServiceDate(),
-                h.getServiceTime()};
-            String[] update = {Integer.toString(h.getStayId()),
-                h.getServiceCode(), Integer.toString(h.getStaffId()), h.getServiceDate(),
-                h.getServiceTime()};
-            System.out.println("Current hotel id: " + h.getStayId());
+            String[] field = {"Service Code", "Staff Id"};
+            String[] current = {h.getServiceCode(), Integer.toString(h.getStaffId())};
+            String[] update = {h.getServiceCode(), Integer.toString(h.getStaffId())};
+            System.out.println("Current stay id: " + h.getStayId());
             for (int i = 0; i < field.length; i++) {
-                System.out.println("Current hotel " + field[i] + ": " + current[i]);
+                System.out.println("Current service record " + field[i] + ": " + current[i]);
                 System.out.println("Do you want to update this field? (Y/N)");
                 String response = "";
                 do {
@@ -258,11 +254,8 @@ private static void menuServiceRecordsMain() {
                     update[i] = scanner.nextLine();
                 }
             }
-            h.setStayId(Integer.parseInt(update[0]));
-            h.setServiceCode(update[1]);
-            h.setStaffId(Integer.parseInt(update[2]));
-            h.setServiceDate(update[3]);
-            h.setServiceTime(update[4]);
+            h.setServiceCode(update[0]);
+            h.setStaffId(Integer.parseInt(update[1]));
 
             if (MaintainingServiceRecords.updateServiceRecord(h)) {
                 System.out.println("Record updated successfully.");
