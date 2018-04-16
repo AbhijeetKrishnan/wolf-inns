@@ -377,38 +377,38 @@ public class HotelStayOperations {
 			
 			// Create the billing record
 			BillingInfo billingInfo = MaintainBillingRecords.createBillingInfo(responsiblePartySSN, address, city, state, payMethodCode, cardNumber, connection);
-			if (null == billingInfo) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == billingInfo) {throw new SQLException("Error seems to have occurred while creating the billing record. Check the logs.");}
 			
 			// Create the stays record
 			Stays stay = InformationProcessing.createStay(hotelId, roomNumber, customerId, numOfGuests, billingInfo.getBillingId(), connection);
-			if (null == stay) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == stay) {throw new SQLException("Error seems to have occurred while creating the stays record. Check the logs.");}
 			
 			// Retrieve room information to determine if it is a presidential suite
 			Rooms room = InformationProcessing.retrieveRoom(hotelId, roomNumber);
-			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == room) {throw new SQLException("Error seems to have occurred while retrieving room information. Check the logs.");}
 			
 			// Check for presidential suite
 			if (room.getCategoryCode().equals("PRES")) {
 				// Retrieve available catering staff
 				ArrayList<ServiceStaff> cateringStaff = retrieveAvailableCateringStaff(hotelId);
-				if (null == cateringStaff || !(cateringStaff.size() > 0)) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				if (null == cateringStaff || !(cateringStaff.size() > 0)) {throw new SQLException("Error seems to have occurred while retrieving available catering staff. Check the logs.");}
 				
 				// Retrieve available room service staff
 				ArrayList<ServiceStaff> roomServiceStaff = retrieveAvailableRoomServiceStaff(hotelId);
-				if (null == roomServiceStaff || !(roomServiceStaff.size() > 0)) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				if (null == roomServiceStaff || !(roomServiceStaff.size() > 0)) {throw new SQLException("Error seems to have occurred while retrieving available room service staff. Check the logs.");}
 				
 				int cateringStaffId = cateringStaff.get(0).getStaffId();
 				int roomServiceStaffId = roomServiceStaff.get(0).getStaffId();
 				
 				// Assign dedicated staff to presidential suite
 				if (!assignDedicatedPresidentialSuiteStaff(hotelId, roomNumber, cateringStaffId, roomServiceStaffId, connection)) {
-					throw new SQLException("Error seems to have occured. Check the logs.");
+					throw new SQLException("Error seems to have occured while assigning dedicated staff. Check the logs.");
 				}
 			}
 			
 			// Add a checkin service record
 			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, true, connection);	
-			if (null == serviceRecord) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == serviceRecord) {throw new SQLException("Error seems to have occurred while adding the checkin service record. Check the logs.");}
 			
 			connection.commit();
 			
@@ -416,6 +416,7 @@ public class HotelStayOperations {
 			
 		} catch (SQLException ex) {
 			try { connection.rollback(save1); } catch (Exception e) {};
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
@@ -444,37 +445,37 @@ public class HotelStayOperations {
 			
 			// Add checkout service record
 			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, false, connection);	
-			if (null == serviceRecord) {throw new SQLException("Error seems to have occurred. Check the logs.");}
+			if (null == serviceRecord) {throw new SQLException("Error seems to have occurred while adding the checkout service record. Check the logs.");}
 			
 			connection.commit();
 			
 			if(!HotelStayOperations.updateStayCheckoutDateTime(stay.getStayId(), connection)) {
-				throw new SQLException("Error seems to have occured. Check the logs.");
+				throw new SQLException("Error seems to have occurred while updating the checkout date/time. Check the logs.");
 			}
 			
 			// Retrieve room information to determine if it is a presidential suite
 			Rooms room = InformationProcessing.retrieveRoom(stay.getHotelId(), stay.getRoomNumber());			
-			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == room) {throw new SQLException("Error seems to have occurred while retrieving room information. Check the logs.");}
 			
 			// Check for presidential suite
 			if (room.getCategoryCode().equals("PRES")) {
 				// Unassign dedicated staff for presidential suite
 				if (!unassignDedicatedPresidentialSuiteStaff(stay.getHotelId(), stay.getRoomNumber(), connection)) {
-					throw new SQLException("Error seems to have occured. Check the logs.");
+					throw new SQLException("Error seems to have occurred while unassigning dedicated staff. Check the logs.");
 				}
 			}
 			
 			double totalCharges = MaintainBillingRecords.generateBillingTotal(stay.getStayId());
-			if (totalCharges < 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (totalCharges < 0) {throw new SQLException("Error seems to have occurred while generating the billing total. Check the logs.");}
 			
 			if (!MaintainBillingRecords.updateBillingInfoTotalCharges(stay.getBillingId(), totalCharges, connection)) {
-				throw new SQLException("Error seems to have occured. Check the logs.");
+				throw new SQLException("Error seems to have occurred while updating the billing total. Check the logs.");
 			}
 			
 			connection.commit();	
 			
 			// Generate and print the itemized receipt
-			if(!generateItemizedReceipt(stay)) {throw new SQLException("Error seems to have occured. Check the logs.");}					
+			if(!generateItemizedReceipt(stay)) {throw new SQLException("Error seems to have occurred while printing the receipt. Check the logs.");}					
 			
 			return true;
 			
@@ -499,15 +500,15 @@ public class HotelStayOperations {
     	try {			
     		// Get room information
     		Rooms room = InformationProcessing.retrieveRoom(stay.getHotelId(), stay.getRoomNumber());			
-			if (null == room) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == room) {throw new SQLException("Error seems to have occurred while retrieving room information. Check the logs.");}
 			
 			// Get room charge
 			double roomCharge = MaintainBillingRecords.calculateRoomCharge(stay.getStayId());
-			if (roomCharge < 0) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (roomCharge < 0) {throw new SQLException("Error seems to have occurred while calculating the room charge. Check the logs.");}
 			
 			// Get service charges
 			ArrayList<ServiceRecords> serviceRecords = MaintainingServiceRecords.retrieveServiceRecordsForStay(stay.getStayId());
-			if (null == serviceRecords) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == serviceRecords) {throw new SQLException("Error seems to have occurred while retrieving service records for the stay. Check the logs.");}
 			
 			// Get charges for services
 			ArrayList<ArrayList<String>> itemizedCharges = new ArrayList<ArrayList<String>>();			
@@ -516,7 +517,7 @@ public class HotelStayOperations {
 			
 			for (ServiceRecords record : serviceRecords) {
 				Services service = InformationProcessing.retrieveService(record.getServiceCode());
-				if (null == service) {throw new SQLException("Error seems to have occured. Check the logs.");}
+				if (null == service) {throw new SQLException("Error seems to have occurred while retrieving service information. Check the logs.");}
 				
 				// Only add the service to the receipt if it was a legitimate charge (excludes checkin and checkout)
 			    if (!service.getServiceCode().equals("CKIN") && !service.getServiceCode().equals("CKOT")) {
@@ -533,7 +534,7 @@ public class HotelStayOperations {
 			
 			// Get room category information
 			RoomCategories roomCategory = InformationProcessing.retrieveRoomCategory(room.getCategoryCode());
-			if (null == roomCategory) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == roomCategory) {throw new SQLException("Error seems to have occurred while retrieving room cateogry. Check the logs.");}
 			
 			// Add room charge row
 			receiptRow = new ArrayList<String>();
@@ -559,7 +560,7 @@ public class HotelStayOperations {
 			
 			// Get billing info
 			BillingInfo billingInfo = MaintainBillingRecords.retrieveBillingInfo(stay.getBillingId());
-			if (null == billingInfo) {throw new SQLException("Error seems to have occured. Check the logs.");}
+			if (null == billingInfo) {throw new SQLException("Error seems to have occurred while retrieving billing info. Check the logs.");}
 			
 			// Determine if a discount was applied
 			if (billingInfo.getPayMethodCode().equals("CCWF"))
