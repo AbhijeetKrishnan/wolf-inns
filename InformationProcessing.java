@@ -2208,11 +2208,11 @@ public class InformationProcessing {
             pst.setString(1, jtDesc);
             pst.setString(2, targetJT);
             // process query results
-            System.out.println("Updating into job_titles Table of WollfInns Database:");
+            //System.out.println("Updating into job_titles Table of WollfInns Database:");
 
             rowsUpdated = pst.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("a job title updated.");// non existing
+                //System.out.println("a job title updated.");// non existing
             }
 
         } catch (SQLException ex) {
@@ -2340,7 +2340,7 @@ public class InformationProcessing {
 				dept.setDeptCode(results.getString("deptCode"));
 				dept.setDeptDesc(results.getString("deptDesc"));
 				
-				System.out.println("An existing deptarment was retrieved successfully!");
+				//System.out.println("An existing deptarment was retrieved successfully!");
 				return dept;
 			} else if (0==rowsAffected) {
 				System.out.println("There is no existing Dept with deptCode = " + dc + ".");
@@ -2428,11 +2428,11 @@ public class InformationProcessing {
             pst.setString(1, dd);
             pst.setString(2, dcTarget);
             // process query results
-            System.out.println("UPDATING department Table of WollfInns Database:");
+            //System.out.println("UPDATING department Table of WollfInns Database:");
 
             rowsUpdated = pst.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("an existing department was updated.");
+                //System.out.println("an existing department was updated.");
             }
 
         } catch (SQLException ex) {
@@ -2468,11 +2468,11 @@ public class InformationProcessing {
             pst.setString(1, dc);
 
             // process query results
-            System.out.println("Deleting a row from Departments Table of WollfInns Database:");
+            //System.out.println("Deleting a row from Departments Table of WollfInns Database:");
 
             rowsDeleted = pst.executeUpdate();
             if (rowsDeleted > 0) {
-                System.out.println("an existing department was deleted.");
+                //System.out.println("an existing department was deleted.");
             }
 
         } catch (SQLException ex) {

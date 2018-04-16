@@ -1337,8 +1337,8 @@ public class MenuInformationProcessing {
     
     public static void menuOptionCheckin() {
     	System.out.println("+---------------------------------------------------------------------+");
-	System.out.println("| CHECKIN                                                             |");
-	System.out.println("+---------------------------------------------------------------------+\n\n");
+	    System.out.println("| CHECKIN                                                             |");
+	    System.out.println("+---------------------------------------------------------------------+\n\n");
 		
         Scanner scanner = new Scanner(System.in);
         
@@ -1352,129 +1352,134 @@ public class MenuInformationProcessing {
 		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) roomsList);		
 		Rooms room = (Rooms)MenuUtilities.paginatedRecordSelection(databaseObjectList);
 		
+		if (null != room) {
 		
-		System.out.println("Enter number of guests. (" + room.getMaxAllowedOcc() + " max)");
-		
-		String response = "";
-		int occValue = -1;
-		do {
-			System.out.print("===> ");
-			while (!scanner.hasNextLine()) {
+			System.out.println("Enter number of guests. (" + room.getMaxAllowedOcc() + " max)");
+			
+			String response = "";
+			int occValue = -1;
+			do {
 				System.out.print("===> ");
-			}
-			response = scanner.nextLine();
-			
-			occValue = Integer.parseInt(response);
-		} while (occValue < 0 || occValue > room.getMaxAllowedOcc());		
-		int numOfGuests = occValue;
-		
-		
-		ServiceStaff servicingStaff = ServiceStaff.select();
-		
-		
-		System.out.println("Enter the SSN of the person responsible for payment (9 characters max).");
-		
-		response = "";
-		do {
-			System.out.print("===> ");
-			response = scanner.nextLine();
-		} while (response.length() < 1 || response.length() > 9);
-		
-		String responsiblePartySSN = response;
-		
-        System.out.println("Enter the street address of the person responsible for payment (75 characters max).");
-		
-		response = "";
-		do {
-			System.out.print("===> ");
-			response = scanner.nextLine();
-		} while (response.length() < 1 || response.length() > 75);
-		
-		String address = response;
-		
-        System.out.println("Enter the city of the person responsible for payment (50 characters max).");
-		
-		response = "";
-		do {
-			System.out.print("===> ");
-			response = scanner.nextLine();
-		} while (response.length() < 1 || response.length() > 50);
-		
-		String city = response;
-		
-        System.out.println("Enter the state of the person responsible for payment (2 character state).");
-		
-		response = "";
-		do {
-			System.out.print("===> ");
-			response = scanner.nextLine();
-		} while (response.length() != 2);
-		
-		String state = response;
-		
+				while (!scanner.hasNextLine()) {
+					System.out.print("===> ");
+				}
+				response = scanner.nextLine();
 				
-		PaymentMethods paymentMethod = PaymentMethods.select();
-		String cardNumber = "";
-		if (paymentMethod.getPayMethodCode().equals("CCWF") || paymentMethod.getPayMethodCode().equals("CCON")) {
+				occValue = Integer.parseInt(response);
+			} while (occValue < 0 || occValue > room.getMaxAllowedOcc());		
+			int numOfGuests = occValue;
 			
-			System.out.println("Enter the card number for payment (25 characters max).");
+			
+			ServiceStaff servicingStaff = ServiceStaff.select();
+			
+			
+			System.out.println("Enter the SSN of the person responsible for payment (9 characters max).");
 			
 			response = "";
 			do {
 				System.out.print("===> ");
 				response = scanner.nextLine();
-			} while (response.length() < 1 || response.length() > 25);
-			cardNumber = response;
-		}		
-		
-		boolean checkinResult = HotelStayOperations.checkinStay(room.getHotelId(), room.getRoomNumber(), customer.getCustomerId(), numOfGuests, servicingStaff.getStaffId(), responsiblePartySSN, address, city, state, paymentMethod.getPayMethodCode(), cardNumber);
-		
-		if (!checkinResult) {
-			System.out.println("Something unexpected happened while attempting to checkin.");
-		} else {
-			System.out.println("Customer successfully checked in.");
-		}	
+			} while (response.length() < 1 || response.length() > 9);
+			
+			String responsiblePartySSN = response;
+			
+	        System.out.println("Enter the street address of the person responsible for payment (75 characters max).");
+			
+			response = "";
+			do {
+				System.out.print("===> ");
+				response = scanner.nextLine();
+			} while (response.length() < 1 || response.length() > 75);
+			
+			String address = response;
+			
+	        System.out.println("Enter the city of the person responsible for payment (50 characters max).");
+			
+			response = "";
+			do {
+				System.out.print("===> ");
+				response = scanner.nextLine();
+			} while (response.length() < 1 || response.length() > 50);
+			
+			String city = response;
+			
+	        System.out.println("Enter the state of the person responsible for payment (2 character state).");
+			
+			response = "";
+			do {
+				System.out.print("===> ");
+				response = scanner.nextLine();
+			} while (response.length() != 2);
+			
+			String state = response;
+			
+					
+			PaymentMethods paymentMethod = PaymentMethods.select();
+			String cardNumber = "";
+			if (paymentMethod.getPayMethodCode().equals("CCWF") || paymentMethod.getPayMethodCode().equals("CCON")) {
+				
+				System.out.println("Enter the card number for payment (25 characters max).");
+				
+				response = "";
+				do {
+					System.out.print("===> ");
+					response = scanner.nextLine();
+				} while (response.length() < 1 || response.length() > 25);
+				cardNumber = response;
+			}		
+			
+			boolean checkinResult = HotelStayOperations.checkinStay(room.getHotelId(), room.getRoomNumber(), customer.getCustomerId(), numOfGuests, servicingStaff.getStaffId(), responsiblePartySSN, address, city, state, paymentMethod.getPayMethodCode(), cardNumber);
+			
+			if (!checkinResult) {
+				System.out.println("Something unexpected happened while attempting to checkin.");
+			} else {
+				System.out.println("Customer successfully checked in.");
+			}	
+		}
     }
     
     public static void menuOptionCheckout() {
     	System.out.println("+---------------------------------------------------------------------+");
-	System.out.println("| CHECKOUT                                                            |");
-	System.out.println("+---------------------------------------------------------------------+\n\n");
-	
-	ArrayList<Stays> staysList = InformationProcessing.retrieveAllCheckedInStays();
-	ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staysList);		
-	Stays stay = (Stays)MenuUtilities.paginatedRecordSelection(databaseObjectList);
-	
-	ServiceStaff servicingStaff = ServiceStaff.select();
-	
-	boolean checkoutResult = HotelStayOperations.checkoutStay(stay, servicingStaff.getStaffId());
-	
-	if (!checkoutResult) {
-		System.out.println("Something unexpected happened while attempting to checkout.");
-	} else {
-		System.out.println("Customer successfully checked in.");
-	}
+		System.out.println("| CHECKOUT                                                            |");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
+		
+		ArrayList<Stays> staysList = InformationProcessing.retrieveAllCheckedInStays();
+		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) staysList);	
+		System.out.println("Select the stay you want to checkout.");
+		Stays stay = (Stays)MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		
+		if (null != stay) {
+			ServiceStaff servicingStaff = ServiceStaff.select();
+			
+			boolean checkoutResult = HotelStayOperations.checkoutStay(stay, servicingStaff.getStaffId());
+			
+			if (!checkoutResult) {
+				System.out.println("Something unexpected happened while attempting to checkout.");
+			} else {
+				System.out.println("Customer successfully checked out.");
+			}
+		}
     }
     
     
     public static void menuOptionSearchAvailableRooms() {
     	System.out.println("+---------------------------------------------------------------------+");
-	System.out.println("| SEARCH FOR AVAILABLE ROOMS                                          |");
-	System.out.println("+---------------------------------------------------------------------+\n\n");
+		System.out.println("| SEARCH FOR AVAILABLE ROOMS                                          |");
+		System.out.println("+---------------------------------------------------------------------+\n\n");
+			
+		System.out.println("Select the hotel to search.");
+		Hotels hotel = Hotels.select();
 		
-	System.out.println("Select the hotel to search.");
-	Hotels hotel = Hotels.select();
-	
-	System.out.println("Select the category of room requested.");
-	RoomCategories roomCategory = RoomCategories.select();
-	
-	ArrayList<Rooms> availableRooms = HotelStayOperations.retrieveAvailableRooms(hotel.getHotelId(), roomCategory.getCategoryCode());
-	
-	if (null == availableRooms || availableRooms.size() == 0) {
-		System.out.println("No rooms are available.");
-	} else {
-		ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) availableRooms);
-		MenuUtilities.paginatedRecordSelection(databaseObjectList);
-	}
+		System.out.println("Select the category of room requested.");
+		RoomCategories roomCategory = RoomCategories.select();
+		
+		ArrayList<Rooms> availableRooms = HotelStayOperations.retrieveAvailableRooms(hotel.getHotelId(), roomCategory.getCategoryCode());
+		
+		if (null == availableRooms || availableRooms.size() == 0) {
+			System.out.println("No rooms are available.");
+		} else {
+			ArrayList<DatabaseObject> databaseObjectList = (ArrayList<DatabaseObject>) ((ArrayList<?>) availableRooms);
+			MenuUtilities.paginatedRecordSelection(databaseObjectList);
+		}
     }
 }

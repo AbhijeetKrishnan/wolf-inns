@@ -196,7 +196,8 @@ public class HotelStayOperations {
 			statement.setString(2, categoryCode);
 			statement.setString(3, "Y");
 			statement.setInt(4, hotelId);
-			results = statement.executeQuery();
+			System.out.println(statement.toString());			results = statement.executeQuery();
+			
 			while (results.next()) {
 				Rooms room = new Rooms();
 				room.setHotelId(results.getInt("hotelId"));
@@ -207,7 +208,7 @@ public class HotelStayOperations {
 				room.setAvailable(results.getString("available"));
 				rooms.add(room);
 			}
-			System.out.println("A list of available rooms in hotelId = " + hotelId + " was retrieved successfully!");
+			
 			return rooms;
 		} catch (SQLException ex) {
 			// Log and return null
@@ -245,7 +246,7 @@ public class HotelStayOperations {
 				rss.setStaffId(results.getInt("staffId"));
 				roomServiceStaff.add(rss);
 			}
-			System.out.println("A list of available room service staff in hotelId = " + hotelId + " was retrieved successfully!");
+			
 			return roomServiceStaff;
 		} catch (SQLException ex) {
 			// Log and return null
@@ -339,6 +340,7 @@ public class HotelStayOperations {
 			
 		} catch (SQLException ex) {
 			// Log and return false
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
@@ -365,12 +367,13 @@ public class HotelStayOperations {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
+		Savepoint save1 = null;
 		
 		try {
 			
 			connection = DatabaseConnection.getConnection();
 			connection.setAutoCommit(false);			
-			Savepoint save1 = connection.setSavepoint();
+			save1 = connection.setSavepoint();
 			
 			// Create the billing record
 			BillingInfo billingInfo = MaintainBillingRecords.createBillingInfo(responsiblePartySSN, address, city, state, payMethodCode, cardNumber, connection);
@@ -412,7 +415,7 @@ public class HotelStayOperations {
 			return true;
 			
 		} catch (SQLException ex) {
-			try { connection.rollback(); } catch (Exception e) {};
+			try { connection.rollback(save1); } catch (Exception e) {};
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.
@@ -431,11 +434,19 @@ public class HotelStayOperations {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
+		Savepoint save1 = null;
+		
 		
 		try {			
 			connection = DatabaseConnection.getConnection();
 			connection.setAutoCommit(false);			
-			Savepoint save1 = connection.setSavepoint();			
+			save1 = connection.setSavepoint();		
+			
+			// Add checkout service record
+			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, false, connection);	
+			if (null == serviceRecord) {throw new SQLException("Error seems to have occurred. Check the logs.");}
+			
+			connection.commit();
 			
 			if(!HotelStayOperations.updateStayCheckoutDateTime(stay.getStayId(), connection)) {
 				throw new SQLException("Error seems to have occured. Check the logs.");
@@ -460,10 +471,6 @@ public class HotelStayOperations {
 				throw new SQLException("Error seems to have occured. Check the logs.");
 			}
 			
-			// Add checkout service record
-			ServiceRecords serviceRecord = MaintainingServiceRecords.createCheckinCheckoutRecord(stay.getStayId(), servicingStaffId, false, connection);	
-			if (null == serviceRecord) {throw new SQLException("Error seems to have occured. Check the logs.");}
-			
 			connection.commit();	
 			
 			// Generate and print the itemized receipt
@@ -472,7 +479,8 @@ public class HotelStayOperations {
 			return true;
 			
 		} catch (SQLException ex) {
-			try { connection.rollback(); } catch (Exception e) {};
+			try { connection.rollback(save1); } catch (Exception e) {};
+			ex.printStackTrace();
 			return false;
 		} finally {
 			// Attempt to close all resources, ignore failures.

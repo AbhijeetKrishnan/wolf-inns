@@ -51,86 +51,91 @@ public class MenuUtilities {
 	
 	public static DatabaseObject paginatedRecordSelection(ArrayList<DatabaseObject> recordList) {
 		
-		Scanner scanner = new Scanner(System.in);
-		
-		int currentRecordId = 1;
-		int currentPageNumber = 1;
-		int recordListSize = recordList.size();
-		
 		DatabaseObject selectedRecordObject = null;
 		
-		//Determine number of pages at current threshold
-		int numberOfPages = recordListSize/PAGINATION_THRESHOLD;
-		if (recordListSize%PAGINATION_THRESHOLD != 0) {numberOfPages += 1;} // Add one more pages if the record list isn't divided evenly
+		if (null != recordList && recordList.size() > 0) {
 		
-		boolean loop = true;
-		while (loop) {
+	        Scanner scanner = new Scanner(System.in);
 			
-			System.out.println("Page: [" + currentPageNumber + " of " + numberOfPages + "]");
-			if (currentPageNumber < numberOfPages) {
-				System.out.println("Enter the record Id of the record you want to work with, press enter to go to next page, or enter 'X' to exit.");
-				currentRecordId = easyList(recordList.subList((currentRecordId-1), (currentRecordId-1+PAGINATION_THRESHOLD)), currentRecordId);
-				System.out.print("===> ");
+			int currentRecordId = 1;
+			int currentPageNumber = 1;
+			int recordListSize = recordList.size();
+			
+			//Determine number of pages at current threshold
+			int numberOfPages = recordListSize/PAGINATION_THRESHOLD;
+			if (recordListSize%PAGINATION_THRESHOLD != 0) {numberOfPages += 1;} // Add one more pages if the record list isn't divided evenly
+			
+			boolean loop = true;
+			while (loop) {
 				
-				String input = scanner.nextLine();
-				
-				if (input.equals("X")) {
-					loop = false;
+				System.out.println("Page: [" + currentPageNumber + " of " + numberOfPages + "]");
+				if (currentPageNumber < numberOfPages) {
+					System.out.println("Enter the record Id of the record you want to work with, press enter to go to next page, or enter 'X' to exit.");
+					currentRecordId = easyList(recordList.subList((currentRecordId-1), (currentRecordId-1+PAGINATION_THRESHOLD)), currentRecordId);
+					System.out.print("===> ");
 					
-				} else {
-					try { // See if it was a valid record selected
-						int selectedRecordId = Integer.parseInt(input);
+					String input = scanner.nextLine();
+					
+					if (input.equals("X")) {
+						loop = false;
 						
-						if (selectedRecordId >= 1 && selectedRecordId <= recordListSize) {
-							selectedRecordObject = recordList.get(selectedRecordId-1);
-							loop = false;
-						} else {
-							System.out.println(selectedRecordId + " is not a valid record Id.");
+					} else {
+						try { // See if it was a valid record selected
+							int selectedRecordId = Integer.parseInt(input);
+							
+							if (selectedRecordId >= 1 && selectedRecordId <= recordListSize) {
+								selectedRecordObject = recordList.get(selectedRecordId-1);
+								loop = false;
+							} else {
+								System.out.println(selectedRecordId + " is not a valid record Id.");
+							}
+							
+						} catch (Exception ex) {
+							// It is not an integer so move on to the next thing
 						}
 						
-					} catch (Exception ex) {
-						// It is not an integer so move on to the next thing
+						if (loop) {
+							currentPageNumber++;
+						}
 					}
 					
-					if (loop) {
-						currentPageNumber++;
+				} else {
+					System.out.println("Enter the record Id of the record you want to work with, press enter to restart from page 1, or enter 'X' to exit.");
+					currentRecordId = easyList(recordList.subList((currentRecordId-1), recordList.size()), currentRecordId);
+					System.out.print("===> ");
+					
+					String input = scanner.nextLine();
+					
+					if (input.equals("X")) {
+						loop = false;
+						
+					} else {
+						try { // See if it was a valid record selected
+							int selectedRecordId = Integer.parseInt(input);
+							
+							if (selectedRecordId >= 1 && selectedRecordId <= recordListSize) {
+								selectedRecordObject = recordList.get(selectedRecordId-1);
+								loop = false;
+							} else {
+								System.out.println(selectedRecordId + " is not a valid record Id.");
+							}
+							
+						} catch (Exception ex) {
+							// It is not an integer so move on to the next thing
+						}
+						
+						if (loop) {
+							// We haven't exited or chosen a record so start back from page 1 and record Id 1
+							currentPageNumber = 1;
+							currentRecordId = 1;
+						}
 					}
 				}
 				
-			} else {
-				System.out.println("Enter the record Id of the record you want to work with, press enter to restart from page 1, or enter 'X' to exit.");
-				currentRecordId = easyList(recordList.subList((currentRecordId-1), recordList.size()), currentRecordId);
-				System.out.print("===> ");
-				
-				String input = scanner.nextLine();
-				
-				if (input.equals("X")) {
-					loop = false;
-					
-				} else {
-					try { // See if it was a valid record selected
-						int selectedRecordId = Integer.parseInt(input);
-						
-						if (selectedRecordId >= 1 && selectedRecordId <= recordListSize) {
-							selectedRecordObject = recordList.get(selectedRecordId-1);
-							loop = false;
-						} else {
-							System.out.println(selectedRecordId + " is not a valid record Id.");
-						}
-						
-					} catch (Exception ex) {
-						// It is not an integer so move on to the next thing
-					}
-					
-					if (loop) {
-						// We haven't exited or chosen a record so start back from page 1 and record Id 1
-						currentPageNumber = 1;
-						currentRecordId = 1;
-					}
-				}
+				System.out.println("\n"); // Add blanks lines between pages
 			}
-			
-			System.out.println("\n"); // Add blanks lines between pages
+		} else {
+			System.out.println("There are no records available.");
 		}
 		
 		return selectedRecordObject;
