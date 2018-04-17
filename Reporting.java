@@ -29,7 +29,7 @@ public class Reporting {
      * Report occupancy by room type
      */
 	public static void occupancyByRoomType() {
-		String sqlStatement = "SELECT categoryDesc AS \"Room Type\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms, 0)/COALESCE(total_rooms, 0)*100) AS \"Percentage Occupied\" " +
+		String sqlStatement = "SELECT categoryDesc AS \"Room Type\", COALESCE(occupied_rooms, 0) AS \"Total Occupancy\", (COALESCE(occupied_rooms/total_rooms, 0)*100) AS \"Percentage Occupied\" " +
             "FROM (SELECT  categoryCode, COUNT(stayId) AS occupied_rooms FROM rooms NATURAL JOIN stays WHERE checkoutDate IS NULL GROUP BY categoryCode) AS occ " +
             "RIGHT JOIN (SELECT rooms.categoryCode, COUNT(roomNumber) AS total_rooms, room_categories.categoryDesc FROM rooms RIGHT JOIN room_categories " +
             "ON rooms.categoryCode=room_categories.categoryCode GROUP BY categoryCode) AS avail ON occ.categoryCode=avail.categoryCode;";
@@ -89,7 +89,7 @@ public class Reporting {
 	public static void occupancyByDateRange(String beginDate, String endDate) {
 		
 		String sqlStatement = 
-              "SELECT total_occupancy AS \"Total Occupancy\", (total_occupancy/total_rooms) AS \"Percentage Occupied\"\n"
+              "SELECT total_occupancy AS \"Total Occupancy\", (COALESCE(total_occupancy/total_rooms)*100) AS \"Percentage Occupied\"\n"
             + "FROM\n"
             + "(\n"
 			+   "SELECT (COUNT(roomNumber)*(DATEDIFF('" + endDate + "', '" + beginDate + "')+1)) AS total_rooms FROM rooms\n"
