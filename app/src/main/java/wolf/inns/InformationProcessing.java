@@ -1,4 +1,4 @@
-package app.src.main.java.wolf.inns;
+package wolf.inns;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -2822,7 +2822,7 @@ public class InformationProcessing {
    */
   static ArrayList<JobTitles> retrieveAllJobTitles() {
 
-    ArrayList<JobTitles> jtList = new ArrayList();
+    ArrayList<JobTitles> jtList = new ArrayList<JobTitles>();
     String sqlStatement = "SELECT * FROM job_titles;";
     Connection connection = null;
     Statement statement = null;
@@ -3084,7 +3084,7 @@ public class InformationProcessing {
    */
   public static ArrayList<Departments> retrieveAllDepartments() {
     // public ArrayList<Departments> retrieveDepartments() {
-    ArrayList<Departments> deptList = new ArrayList();
+    ArrayList<Departments> deptList = new ArrayList<Departments>();
     String sqlStatement = "SELECT * FROM departments;";
     Connection connection = null;
     Statement statement = null;

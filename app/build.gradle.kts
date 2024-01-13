@@ -44,3 +44,7 @@ application {
     // Define the main class for the application.
     mainClass.set("app.src.main.java.wolf.inns.WolfInns")
 }
+
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.addAll(listOf("-Xmaxerrs", "200", "-Xmaxwarns", "200"))
+}

@@ -21,15 +21,16 @@ public class TestJunit {
     expected.setDob("1988-01-01");
 
     // Create a staff
-    Staff actual_c = InformationProcessing.createStaff(
-        "Xiaohui",
-        "MNGR",
-        "MNGD",
-        "Sturdivant dr.",
-        "Raleigh",
-        "NC",
-        "1234567890",
-        "1988-01-01");
+    Staff actual_c =
+        InformationProcessing.createStaff(
+            "Xiaohui",
+            "MNGR",
+            "MNGD",
+            "Sturdivant dr.",
+            "Raleigh",
+            "NC",
+            "1234567890",
+            "1988-01-01");
     expected.setStaffId(actual_c.getStaffId()); // I don't know how to get around this.
     assertEquals("Create a staff", expected, actual_c);
 
@@ -51,15 +52,16 @@ public class TestJunit {
   @Test
   public void testHotelsCRUD() {
     // Create manager for new hotel
-    Staff mgn = InformationProcessing.createStaff(
-        "Xiaohui",
-        "MNGR",
-        "MNGD",
-        "Sturdivant dr.",
-        "Raleigh",
-        "NC",
-        "1234567890",
-        "1988-01-01");
+    Staff mgn =
+        InformationProcessing.createStaff(
+            "Xiaohui",
+            "MNGR",
+            "MNGD",
+            "Sturdivant dr.",
+            "Raleigh",
+            "NC",
+            "1234567890",
+            "1988-01-01");
 
     Hotels expected = new Hotels();
     expected.setName("No.1 Hotel");
@@ -70,8 +72,9 @@ public class TestJunit {
     expected.setManagerId(mgn.getStaffId());
 
     // Create a hotel
-    Hotels actual_c = InformationProcessing.createHotel(
-        "No.1 Hotel", "No.1 st.", "Raleigh", "NC", "8888888888", mgn.getStaffId());
+    Hotels actual_c =
+        InformationProcessing.createHotel(
+            "No.1 Hotel", "No.1 st.", "Raleigh", "NC", "8888888888", mgn.getStaffId());
     expected.setHotelId(actual_c.getHotelId());
     assertEquals("Create a hotel", expected, actual_c);
 
@@ -96,15 +99,16 @@ public class TestJunit {
   @Test
   public void testServiceStaffCRUD() {
     // Create service staff for a hotel
-    Staff s = InformationProcessing.createStaff(
-        "Xiaohui",
-        "FREP",
-        "FRND",
-        "Sturdivant dr.",
-        "Raleigh",
-        "NC",
-        "1234567890",
-        "1988-01-01");
+    Staff s =
+        InformationProcessing.createStaff(
+            "Xiaohui",
+            "FREP",
+            "FRND",
+            "Sturdivant dr.",
+            "Raleigh",
+            "NC",
+            "1234567890",
+            "1988-01-01");
 
     ServiceStaff expected = new ServiceStaff();
     expected.setStaffId(s.getStaffId());
@@ -177,7 +181,8 @@ public class TestJunit {
     ArrayList<ServiceRecords> old_tmp = MaintainingServiceRecords.retrieveServiceRecordsForStay(5);
 
     // Create a service record
-    ServiceRecords actual_c = MaintainingServiceRecords.createServiceRecord(5, "RMSV", 3, "2018-03-08", "08:08:08");
+    ServiceRecords actual_c =
+        MaintainingServiceRecords.createServiceRecord(5, "RMSV", 3, "2018-03-08", "08:08:08");
     assertEquals("Create a service record", expected, actual_c);
 
     // Retrieve all service records for stay 5 after creating a new service record
@@ -247,15 +252,16 @@ public class TestJunit {
     ArrayList<ServiceStaff> b = HotelStayOperations.retrieveAvailableRoomServiceStaff(1);
     assertEquals("0 room service staff is available", before, b.size());
 
-    Staff s = InformationProcessing.createStaff(
-        "Xiaohui",
-        "RSST",
-        "SRVD",
-        "Sturdivant dr.",
-        "Raleigh",
-        "NC",
-        "1234567890",
-        "1988-01-01");
+    Staff s =
+        InformationProcessing.createStaff(
+            "Xiaohui",
+            "RSST",
+            "SRVD",
+            "Sturdivant dr.",
+            "Raleigh",
+            "NC",
+            "1234567890",
+            "1988-01-01");
     ServiceStaff ss = InformationProcessing.createServiceStaff(s.getStaffId(), 1);
     ArrayList<ServiceStaff> a = HotelStayOperations.retrieveAvailableRoomServiceStaff(1);
     assertEquals("1 room service staff is available", after, a.size());
@@ -284,8 +290,9 @@ public class TestJunit {
     /* Create */
     Connection connection = DatabaseConnection.getConnection();
     System.out.println("Testing createBillingInfo...");
-    BillingInfo actual = MaintainBillingRecords.createBillingInfo(
-        "--Test---", "Test", "Test", "TT", "CCWF", "Test", connection);
+    BillingInfo actual =
+        MaintainBillingRecords.createBillingInfo(
+            "--Test---", "Test", "Test", "TT", "CCWF", "Test", connection);
     expected.setBillingId(actual.getBillingId()); // necessary since billingId is autoincrement
     assertEquals("Create a BillingInfo record", expected, actual);
     System.out.println("Test for createBillingInfo passed!");
@@ -361,7 +368,8 @@ public class TestJunit {
 
     /* Retrieve */
     System.out.println("Testing retrieveRoom...");
-    Rooms retrieved = InformationProcessing.retrieveRoom(actual.getHotelId(), actual.getRoomNumber());
+    Rooms retrieved =
+        InformationProcessing.retrieveRoom(actual.getHotelId(), actual.getRoomNumber());
     assertEquals("Retrieve a Rooms record", expected, retrieved);
     System.out.println("Test for retrieveRoom passed!");
 
@@ -426,16 +434,20 @@ public class TestJunit {
     // create room in hotel 1
     Rooms r = InformationProcessing.createRoom(1, "Test", 4, 2.0, "PRES", "Y");
     // create new staff to assign to hotel
-    Staff s_rsst = InformationProcessing.createStaff(
-        "Test RSST", "RSST", "SRVD", "Test", "Test", "TT", "Test1", "2018-01-01");
-    Staff s_cats = InformationProcessing.createStaff(
-        "Test CATS", "CATS", "SRVD", "Test", "Test", "TT", "Test2", "2018-01-01");
+    Staff s_rsst =
+        InformationProcessing.createStaff(
+            "Test RSST", "RSST", "SRVD", "Test", "Test", "TT", "Test1", "2018-01-01");
+    Staff s_cats =
+        InformationProcessing.createStaff(
+            "Test CATS", "CATS", "SRVD", "Test", "Test", "TT", "Test2", "2018-01-01");
     // assign staff to hotel 1
     ServiceStaff ss_rsst = InformationProcessing.createServiceStaff(s_rsst.getStaffId(), 1);
     ServiceStaff ss_cats = InformationProcessing.createServiceStaff(s_cats.getStaffId(), 1);
 
-    ArrayList<ServiceStaff> availCateringStaff = HotelStayOperations.retrieveAvailableCateringStaff(1);
-    ArrayList<ServiceStaff> availRoomServiceStaff = HotelStayOperations.retrieveAvailableRoomServiceStaff(1);
+    ArrayList<ServiceStaff> availCateringStaff =
+        HotelStayOperations.retrieveAvailableCateringStaff(1);
+    ArrayList<ServiceStaff> availRoomServiceStaff =
+        HotelStayOperations.retrieveAvailableRoomServiceStaff(1);
 
     Connection connection = DatabaseConnection.getConnection();
 

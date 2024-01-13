@@ -1,4 +1,4 @@
-package app.src.main.java.wolf.inns;
+package wolf.inns;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import java.util.ArrayList;
@@ -146,6 +146,7 @@ public class MenuUtilities {
 
         System.out.println("\n"); // Add blanks lines between pages
       }
+      scanner.close();
     } else {
       System.out.println("There are no records available.");
     }

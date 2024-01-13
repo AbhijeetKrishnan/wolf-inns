@@ -1,4 +1,4 @@
-package app.src.main.java.wolf.inns;
+package wolf.inns;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import com.bethecoder.ascii_table.ASCIITableHeader;

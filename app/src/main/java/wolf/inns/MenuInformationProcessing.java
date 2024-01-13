@@ -1,4 +1,4 @@
-package app.src.main.java.wolf.inns;
+package wolf.inns;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -66,6 +66,7 @@ public class MenuInformationProcessing {
             break;
         }
       } while (!isExit);
+      in.close();
     } catch (RuntimeException ex) {
       System.err.println(ex.getMessage());
       ex.printStackTrace();
@@ -113,6 +114,7 @@ public class MenuInformationProcessing {
             break;
         }
       } while (!isExit);
+      in.close();
     } catch (RuntimeException ex) {
       System.err.println(ex.getMessage());
       ex.printStackTrace();
@@ -135,6 +137,7 @@ public class MenuInformationProcessing {
       }
       response[i] = scanner.nextLine();
     }
+    scanner.close();
     Hotels h =
         InformationProcessing.createHotel(
             response[0],
@@ -197,6 +200,7 @@ public class MenuInformationProcessing {
           update[i] = scanner.nextLine();
         }
       }
+      scanner.close();
       h.setName(update[0]);
       h.setAddress(update[1]);
       h.setCity(update[2]);
@@ -231,6 +235,7 @@ public class MenuInformationProcessing {
         }
         response = scanner.nextLine();
       } while (!response.equals("Y") && !response.equals("N"));
+      scanner.close();
       if (response.equals("Y")) {
         if (InformationProcessing.deleteHotel(h)) {
           System.out.println("Record deleted successfully.");

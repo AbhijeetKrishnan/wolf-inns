@@ -1,4 +1,4 @@
-package app.src.main.java.wolf.inns;
+package wolf.inns;
 
 import java.util.Scanner;
 
@@ -51,6 +51,7 @@ public class WolfInns {
             break;
         }
       } while (!isExit);
+      in.close();
     } catch (RuntimeException ex) {
       System.err.println(ex.getMessage());
       ex.printStackTrace();

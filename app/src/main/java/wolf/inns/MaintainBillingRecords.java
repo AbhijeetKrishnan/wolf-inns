@@ -1,4 +1,4 @@
-package app.src.main.java.wolf.inns;
+package wolf.inns;
 
 import java.sql.*;
 import java.util.ArrayList;

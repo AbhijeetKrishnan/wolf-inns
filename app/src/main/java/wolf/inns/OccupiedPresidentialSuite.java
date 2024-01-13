@@ -1,4 +1,4 @@
-package app.src.main.java.wolf.inns;
+package wolf.inns;
 
 public class OccupiedPresidentialSuite {
   private int hotelId;
