@@ -6,18 +6,16 @@ Management Systems course taught in Spring 2018 by [Dr. Rada Chirkova](https://w
 ## Compiling
 
 ```bash
-javac -cp :lib/*: -Xlint:unchecked *.java
+./gradlew build
 ```
 
 ## Running
 
 ```bash
-java -cp :lib/*: WolfInns
+./gradlew run
 ```
 
 Run tests with the command -
 ```bash
-java -cp :lib/*: TestRunner
+./gradlew test
 ```
-
-We run the tests using JUnit 4.12
