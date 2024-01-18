@@ -6,10 +6,10 @@ import java.util.LinkedHashMap;
 
 public class DatabaseConnection {
 
-  private static final String user = "xzheng6";
-  private static final String password = "200016878";
+  private static final String user = "akrish13";// TODO: remove this hardcoding
+  private static final String password = "";
 
-  private static final String connectionURL = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/" + user;
+  private static final String connectionURL = "jdbc:mariadb://127.0.0.1:3306" + user;
 
   /**
    * This method will create and return a new Connection object that is attached to the database
@@ -20,9 +20,8 @@ public class DatabaseConnection {
    */
   public static Connection getConnection() {
     try {
-      Class.forName("org.mariadb.jdbc.Driver");
       return DriverManager.getConnection(connectionURL, user, password);
-    } catch (SQLException | ClassNotFoundException ex) {
+    } catch (SQLException ex) {
       // Throw a RuntimeException to go back to main to be caught so the program
       // exits. We cannot
       // continue.
