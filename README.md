@@ -28,10 +28,10 @@ Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-MariaDB [(none)]> CREATE DATABASE wolf_inns;
+MariaDB [(none)]> CREATE DATABASE test;
 Query OK, 1 row affected (0.001 sec)
 
-MariaDB [(none)]> USE wolf_inns;
+MariaDB [(none)]> USE test;
 Database changed
 MariaDB [wolf_inns]> SOURCE database_refresh.sql;
 ```
@@ -46,3 +46,5 @@ Run tests with the command -
 ```bash
 ./gradlew test
 ```
+
+There are still failing tests.
