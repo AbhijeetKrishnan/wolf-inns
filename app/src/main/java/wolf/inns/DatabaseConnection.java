@@ -6,10 +6,11 @@ import java.util.LinkedHashMap;
 
 public class DatabaseConnection {
 
-  private static final String user = "akrish13";// TODO: remove this hardcoding
+  private static final String user = "akrish13"; // TODO: remove this hardcoding
+  private static final String dbName = "test";
   private static final String password = "";
 
-  private static final String connectionURL = "jdbc:mariadb://127.0.0.1:3306" + user;
+  private static final String connectionURL = "jdbc:mariadb://localhost:3306/" + dbName;
 
   /**
    * This method will create and return a new Connection object that is attached to the database
