@@ -6,6 +6,10 @@ public class ServiceStaff extends DatabaseObject {
   private int staffId;
   private int hotelId;
 
+  public String toString() {
+    return "<ServiceStaff: " + staffId + ", " + hotelId + ">";
+  }
+
   public int getStaffId() {
     return staffId;
   }

@@ -237,11 +237,11 @@ public class TestJunit {
     int econ = 1;
     int pres = 0;
 
-    ArrayList<Rooms> e = HotelStayOperations.retrieveAvailableRooms(3, "ECON");
+    ArrayList<Rooms> e = HotelStayOperations.retrieveAvailableRooms(2, "ECON");
     ArrayList<Rooms> p = HotelStayOperations.retrieveAvailableRooms(3, "PRES");
 
-    assertEquals("1 economy room in hotel 3 is available", econ, e.size());
-    assertEquals("0 residential room in hotel 3 is available", pres, p.size());
+    assertEquals("1 economy room in hotel 2 is available", econ, e.size());
+    assertEquals("0 presidential room in hotel 3 is available", pres, p.size());
   }
 
   @Test

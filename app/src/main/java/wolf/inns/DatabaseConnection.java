@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 
 public class DatabaseConnection {
 
-  private static final String user = "root"; // TODO: remove this hardcoding
+  private static final String user = "akrish13"; // TODO: remove this hardcoding
   private static final String dbName = "test";
   private static final String password = "";
 
